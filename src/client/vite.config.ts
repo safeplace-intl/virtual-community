@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "production ") {
       },
     },
     server: {
-      origin: "http://127.0.0.1:3000",
+      origin: "http://127.0.0.1:8081",
     },
   };
 } else {
@@ -38,8 +38,8 @@ if (process.env.NODE_ENV === "production ") {
       },
     },
     server: {
-      port: 5000,
-      origin: "http://127.0.0.1:3000",
+      port: 3001,
+      origin: "http://127.0.0.1:8081",
     },
   };
 }

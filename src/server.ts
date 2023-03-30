@@ -9,7 +9,7 @@ import EnvInit from "@middleware/env.middleware";
 
 // initialize server variables
 EnvInit();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8081;
 const mode = GetApplicationMode();
 const server: Express = express();
 
