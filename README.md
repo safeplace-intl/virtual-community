@@ -16,7 +16,11 @@ To get the app running on your machine, follow the commands below:
 git clone https://github.com/safeplace-intl/virtual-community
 ```
 
+### Docker
+
 Download `Docker Desktop` for [Mac](https://docs.docker.com/desktop/install/mac-install/) or [Windows](https://docs.docker.com/desktop/install/windows-install/). We will be using dev containers to work on this project, and this software will help facilitate the use of the container on your machine. This will ensure that the team is all working with the same development environment.
+
+### Dev Containers VSCode extension
 
 Open up VSCode and install the `Dev Containers` VSCode extension
 
@@ -36,13 +40,13 @@ Open an integrated terminal `Terminal -> New Terminal` and you can view the conf
 
 <img src="https://res.cloudinary.com/eleni/image/upload/v1680124651/dev-container-4_blhzgz.png">
 
-### Why dev containers?
+## Why dev containers?
 
 Using a dev container, we make sure that everyone on the team is using the same working environment, and reducing errors caused by different local environments and configurations.
 
 The container includes some pre-installed VSCode extensions, check those out, and let us know if there are any that you think the team should be using!
 
-### Links
+## Links
 
 1. [Dev container specs](https://containers.dev/)
 2. [VSCode & Github info](https://code.visualstudio.com/docs/devcontainers/containers#_opening-a-terminal)
