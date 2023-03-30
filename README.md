@@ -32,9 +32,9 @@ Once the extension is installed, you should see this light green icon in the bot
 
 Click it to reveal the following options:
 
-<img src="https://res.cloudinary.com/eleni/image/upload/v1680124472/dev-container-3_idbatq.png">
+<img src="https://res.cloudinary.com/eleni/image/upload/v1680213092/Screenshot_2023-03-30_at_5.49.54_PM_ldtcux.png">
 
-Choose `Reopen Folder Locally` to initialize the repository in a dev container. The container will run all of the setup and installation commands, and then start up the development server.
+Choose `Reopen in Container` to initialize the repository in a dev container. The container will run all of the setup and installation commands, and then start up the development server.
 
 Open an integrated terminal `Terminal -> New Terminal` and you can view the config as it runs the container setup. You will see something like this:
 
