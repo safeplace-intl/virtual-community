@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build --emptyOutDir",
-    "preview": "vite preview"
+    "dev": "npx vite",
+    "build": "tsc && npx vite build --emptyOutDir",
+    "preview": "npx vite preview"
   },
   "dependencies": {
     "react": "^18.2.0",
