@@ -12,8 +12,12 @@ Dev leads will need your github username to add you as a contributor.
 
 To get the app running on your machine, follow the commands below:
 
+1. Fork the repository
+
+2. Clone the forked repository onto your local machine
+
 ```bash
-git clone https://github.com/safeplace-intl/virtual-community
+git clone https://github.com/< your-github-username >/virtual-community
 ```
 
 ### Docker
@@ -22,15 +26,15 @@ Download `Docker Desktop` for [Mac](https://docs.docker.com/desktop/install/mac-
 
 ### Dev Containers VSCode extension
 
-Open up VSCode and install the `Dev Containers` VSCode extension
+Open up VSCode and install the `Dev Containers` and `Remote Development` VSCode extensions
 
 <img src="https://res.cloudinary.com/eleni/image/upload/v1680124298/dev-container-2_ctewiq.png">
 
-Once the extension is installed, you should see this light green icon in the bottom left corner of your code editor
+### Once the extensions are installed, you should see this light green icon in the bottom left corner of your code editor
 
 <img src="https://res.cloudinary.com/eleni/image/upload/v1680124126/dev-container-1_cefm7p.png">
 
-Click it to reveal the following options:
+### Click it to reveal the following options:
 
 <img src="https://res.cloudinary.com/eleni/image/upload/v1680213092/Screenshot_2023-03-30_at_5.49.54_PM_ldtcux.png">
 
