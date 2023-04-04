@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "prettier"],
+  "root": true,
+  "rules": {
+    "no-console": 1, // Means warning
+    "prettier/prettier": 2 // Means error
+  },
+  "settings": {}
+}
+
+// RULES:
+// "off" means 0 (turns the rule off completely)
+// "warn" means 1 (turns the rule on but won't make the linter fail)
+// "error" means 2 (turns the rule on and will make the linter fail)
