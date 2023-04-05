@@ -54,7 +54,7 @@ Using a dev container, we make sure that everyone on the team is using the same 
 
 The container includes some pre-installed VSCode extensions, check those out, and let us know if there are any that you think the team should be using!
 
-## Contributions Process
+## Contributions Process 🤸‍♀️
 
 1. Create your feature branch `git checkout -b feature/your-feature-name`
 2. Commit your changes `git commit -m "commit message describing your changes"`
