@@ -36,7 +36,7 @@ Once the extensions are installed, you should see this light green icon in the b
 
 <img src="https://res.cloudinary.com/eleni/image/upload/v1680124126/dev-container-1_cefm7p.png">
 
-#### Opening into the container
+#### Opening into the container 📦
 
 Click the above light green icon to reveal the following options:
 
