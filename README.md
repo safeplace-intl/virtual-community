@@ -8,7 +8,7 @@ A global virtual community for LGBTQIA+ refugees and asylum seekers to safely co
 
 Dev leads will need your github username to add you as a contributor.
 
-### Development setup
+### Development setup 🧑‍💻
 
 To get the app running on your machine, follow the commands below:
 
