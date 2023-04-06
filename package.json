@@ -7,24 +7,32 @@
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "prettier:format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "dev-server": "nodemon -r tsconfig-paths/register src/server.ts",
+    "dev-server": "nodemon",
     "dev-client": "cd src/client && npm run dev",
     "dev": "concurrently 'npm run dev-server' 'npm run dev-client'",
     "build-server": "tsc && tsc-alias",
     "build-client": "cd src/client && npm run build",
     "build": "npm run build-client && npm run build-server",
     "start": "NODE_ENV=production node build/server.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "generate:prisma": "prisma generate"
   },
   "keywords": [],
   "author": "Safeplace International",
   "license": "MIT",
   "dependencies": {
+    "@apollo/server": "^4.6.0",
+    "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "graphql": "^16.6.0",
+    "graphql-scalars": "^1.21.3",
     "helmet": "^6.0.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^2.0.0-beta.1",
+    "typegraphql-prisma": "^0.24.5"
   },
   "devDependencies": {
     "@prisma/client": "^4.12.0",
@@ -49,5 +57,20 @@
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
-  }
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src",
+      "prisma"
+    ],
+    "exec": "ts-node --esm ./src/server.ts",
+    "ext": ".ts, .js"
+  },
+  "type": "module"
 }

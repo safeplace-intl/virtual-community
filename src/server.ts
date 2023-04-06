@@ -1,13 +1,16 @@
 import express, { Express, Request, Response } from "express";
-import GeneralMiddleware from "@middleware/general.middleware";
-import { GetApplicationMode } from "@utils/mode.util";
+import GeneralMiddleware from "./middlewares/general.middleware.js";
+import { GetApplicationMode } from "./utils/mode.util.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
-} from "@middleware/client.middleware";
-import EnvInit from "@middleware/env.middleware";
+} from "./middlewares/client.middleware.js";
+import EnvInit from "./middlewares/env.middleware.js";
 
 import { PrismaClient } from "@prisma/client";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { schema } from "./schema.js";
 
 // initialize server variables
 EnvInit();
@@ -32,13 +35,6 @@ async function main() {
   prisma.$connect().then(async () => {
     console.log(`Connected to the postgres database with prisma`);
   });
-  // const user = await prisma.user.create({
-  //   data: {
-  //     name: "Eleni",
-  //     email: "eleni1@test.com",
-  //   },
-  // });
-  // console.log(user);
 }
 
 main()
@@ -51,6 +47,7 @@ main()
     process.exit(1);
   });
 
+const apolloServer = new ApolloServer({ schema });
 // serving client and listening on port
 server.use("/", ServeClient);
 server.listen(port, () => {
