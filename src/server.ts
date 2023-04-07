@@ -7,7 +7,7 @@ import {
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { schema } from "./schema.js";
-import { Context, context } from "./context.js";
+// import { Context, context } from "./context.js";
 import { initializeDatabase, prisma } from "./prisma/index.js";
 import { GetApplicationMode } from "./utils/mode.util.js";
 
@@ -17,7 +17,8 @@ const port = Number(process.env.PORT) || 8081;
 const mode = GetApplicationMode();
 // const app: Express = express();
 
-const apolloServer = new ApolloServer<Context>({
+// add in <Context> when tokens etc are ready
+const apolloServer = new ApolloServer({
   schema,
   introspection: true,
   plugins: [
@@ -31,7 +32,7 @@ const apolloServer = new ApolloServer<Context>({
 });
 
 const { url } = await startStandaloneServer(apolloServer, {
-  context,
+  // context,
   listen: { port },
 });
 
