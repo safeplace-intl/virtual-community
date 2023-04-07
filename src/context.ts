@@ -1,11 +1,21 @@
 import { PrismaClient } from "@prisma/client";
+import { decodeAuthHeader } from "./utils/auth-header.util.js";
+import { IncomingMessage } from "http";
+import { prisma } from "./prisma/index.js";
 
 export interface Context {
   prisma: PrismaClient;
+  userId?: number;
 }
 
-const prisma = new PrismaClient();
+export async function context({ req }: { req: IncomingMessage }) {
+  const token =
+    req && req.headers.authorization
+      ? decodeAuthHeader(req.headers.authorization)
+      : null;
 
-export const createContext = async () => ({
-  prisma: prisma,
-});
+  return {
+    prisma,
+    userId: token?.userId,
+  };
+}

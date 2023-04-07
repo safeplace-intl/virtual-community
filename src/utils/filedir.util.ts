@@ -1,17 +1,10 @@
 import path from "path";
 
-// export function GetRootDir() {
-//   return path.resolve(__dirname, "..", "..");
-// }
-
 export function GetRootDir() {
   const currentFileUrl = new URL(import.meta.url);
   return path.resolve(currentFileUrl.pathname, "..", "..");
 }
 
-// export function GetSrcDir() {
-//   return path.resolve(__dirname, "..");
-// }
 export function GetSrcDir() {
   const currentFileUrl = new URL(import.meta.url);
   return path.resolve(currentFileUrl.pathname, "..");
