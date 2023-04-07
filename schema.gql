@@ -3,12 +3,49 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type AuthPayload {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type AuthTokenPayload {
+  userId: Float!
+}
+
+type CreateUserInput {
+  confirmPassword: String!
+  email: String!
+  fullName: String!
+  id: ID!
+  password: String!
+  pronouns: String!
+}
+
+type CreateUserResult {
+  authPayload: AuthPayload!
+  email: String!
+  fullName: String!
+  id: ID!
+  pronouns: String!
+}
+
+type LoginInput {
+  email: String!
+  password: String!
+}
+
+type LoginResult {
+  authPayload: AuthPayload!
+  user: User!
+}
+
 type Query {
   users: [User!]!
 }
 
 type User {
   email: String!
-  id: Float!
-  name: String!
+  fullName: String!
+  id: ID!
+  pronouns: String!
 }

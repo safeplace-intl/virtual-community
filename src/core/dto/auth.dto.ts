@@ -1,6 +1,15 @@
 import { Field, ObjectType } from "type-graphql";
 import "reflect-metadata";
-import { User } from "../entities/user.entity";
+import { User } from "../entities/user.entity.js";
+
+@ObjectType()
+export class AuthPayload {
+  @Field()
+  accessToken!: string;
+
+  @Field()
+  refreshToken!: string;
+}
 
 @ObjectType()
 export class LoginInput {
@@ -18,15 +27,6 @@ export class LoginResult {
 
   @Field()
   authPayload!: AuthPayload;
-}
-
-@ObjectType()
-export class AuthPayload {
-  @Field()
-  accessToken!: string;
-
-  @Field()
-  refreshToken!: string;
 }
 
 @ObjectType()
