@@ -1,10 +1,3 @@
-// import express, { Express, Request, Response } from "express";
-// import GeneralMiddleware from "./middlewares/general.middleware.js";
-// import { GetApplicationMode } from "./utils/mode.util.js";
-// import {
-//   ServeClient,
-//   ServeClientStaticAssets,
-// } from "./middlewares/client.middleware.js";
 import EnvInit from "./middlewares/env.middleware.js";
 import {
   ApolloServerPluginLandingPageLocalDefault,
@@ -14,19 +7,21 @@ import {
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { schema } from "./schema.js";
-import { context } from "./context.js";
+import { Context, context } from "./context.js";
+import { initializeDatabase, prisma } from "./prisma/index.js";
+import { GetApplicationMode } from "./utils/mode.util.js";
 
 // initialize server variables
 EnvInit();
 const port = Number(process.env.PORT) || 8081;
-// const mode = GetApplicationMode();
-// const server: Express = express();
+const mode = GetApplicationMode();
+// const app: Express = express();
 
-const apolloServer = new ApolloServer({
+const apolloServer = new ApolloServer<Context>({
   schema,
   introspection: true,
   plugins: [
-    process.env.NODE_ENV === "production"
+    mode === "production"
       ? ApolloServerPluginLandingPageProductionDefault({
           graphRef: "my-graph-id@my-graph-variant", // needs update
           footer: false,
@@ -36,20 +31,23 @@ const apolloServer = new ApolloServer({
 });
 
 const { url } = await startStandaloneServer(apolloServer, {
-  // context,
+  context,
   listen: { port },
 });
 
 console.log(`🚀  Server ready at ${url}`);
 
-//intialize server
+initializeDatabase()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
+
+// ? What to do with these?
 // server.use(ServeClientStaticAssets());
 // server.use(GeneralMiddleware);
-
-// serving client and listening on port
 // server.use("/", ServeClient);
-// server.listen(port, () => {
-//   console.log(
-//     `[server]: Server is running at http://localhost:${port} in ${mode} mode`
-//   );
-// });
