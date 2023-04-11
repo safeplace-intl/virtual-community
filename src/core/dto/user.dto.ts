@@ -1,19 +1,24 @@
 import "reflect-metadata";
-import { Field, ObjectType } from "type-graphql";
+import { ArgsType, Field, InputType } from "type-graphql";
 import { User } from "../entities/user.entity.js";
-import { AuthPayload } from "./auth.dto.js";
 
-@ObjectType()
-export class CreateUserInput extends User {
+@InputType()
+export class CreateUserInput implements Partial<User> {
+  @Field()
+  email!: string;
+
+  @Field()
+  fullName!: string;
+
+  @Field()
+  pronouns!: string;
+
   @Field()
   password!: string;
-
-  @Field()
-  confirmPassword!: string;
 }
 
-@ObjectType()
-export class CreateUserResult extends User {
-  @Field(() => AuthPayload)
-  authPayload!: AuthPayload;
+@ArgsType()
+export class GetUserArgs {
+  @Field()
+  userId!: number;
 }

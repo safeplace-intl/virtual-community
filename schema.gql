@@ -12,40 +12,32 @@ type AuthTokenPayload {
   userId: Float!
 }
 
-type CreateUserInput {
-  confirmPassword: String!
+input CreateUserInput {
   email: String!
   fullName: String!
-  id: ID!
   password: String!
   pronouns: String!
 }
 
-type CreateUserResult {
-  authPayload: AuthPayload!
-  email: String!
-  fullName: String!
-  id: ID!
-  pronouns: String!
-}
-
-type LoginInput {
+input LoginInput {
   email: String!
   password: String!
 }
 
-type LoginResult {
-  authPayload: AuthPayload!
-  user: User!
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
 }
 
 type Query {
-  users: [User!]!
+  getUser(userId: Float!): User
 }
 
 type User {
+  authPayload: AuthPayload
   email: String!
   fullName: String!
-  id: ID!
+  id: Int!
+  password: String
+  passwordHash: String
   pronouns: String!
 }

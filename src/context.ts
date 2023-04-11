@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { decodeAuthHeader } from "./services/auth.service.js";
+import { decodeAuthHeader } from "./modules/auth/auth.service.js";
 import { IncomingMessage } from "http";
 import { prisma } from "./prisma/index.js";
 
