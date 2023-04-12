@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
-import { GetApplicationMode } from "../utils/mode.util.js";
-import { GetBuildClientDir, GetClientRootDir } from "../utils/filedir.util.js";
 import path from "path";
+
+import { GetBuildClientDir, GetClientRootDir } from "../utils/filedir.util.js";
+import { GetApplicationMode } from "../utils/mode.util.js";
 
 // serve static assets
 export function ServeClientStaticAssets() {

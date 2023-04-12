@@ -1,7 +1,8 @@
-import express from "express";
-import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import express from "express";
 import helmet from "helmet";
+import morgan from "morgan";
+
 import { GetApplicationMode } from "../utils/mode.util.js";
 
 const mode = GetApplicationMode();

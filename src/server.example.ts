@@ -1,20 +1,21 @@
-import express, { Express } from "express";
-import EnvInit from "./middlewares/env.middleware.js";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from "@apollo/server/plugin/landingPage/default";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import http from "http";
-import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@apollo/server/express4";
 import cors from "cors";
-import { schema } from "./schema.js";
+import express, { Express } from "express";
+import http from "http";
+
 import { context } from "./context.js";
-import { initializeDatabase, prisma } from "./prisma/index.js";
-import { GetApplicationMode } from "./utils/mode.util.js";
 import { ServeClientStaticAssets } from "./middlewares/client.middleware.js";
+import EnvInit from "./middlewares/env.middleware.js";
 import GeneralMiddleware from "./middlewares/general.middleware.js";
+import { initializeDatabase, prisma } from "./prisma/index.js";
+import { schema } from "./schema.js";
+import { GetApplicationMode } from "./utils/mode.util.js";
 
 // initialize application variables
 EnvInit();

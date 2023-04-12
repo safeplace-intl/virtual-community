@@ -26,7 +26,6 @@ export async function context({
       },
     });
   }
-  console.log(user);
 
   if (!user)
     throw new GraphQLError("you must be logged in to query this schema", {

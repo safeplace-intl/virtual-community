@@ -1,5 +1,4 @@
-import type { Context } from "src/context.js";
-import { Arg, Args, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import { AuthPayload } from "../../core/dto/auth.dto.js";
@@ -17,8 +16,7 @@ export class UserResolver {
   ) {}
 
   @Query(() => User, { nullable: true })
-  async getUser(@Args() params: GetUserArgs, @Ctx() ctx: Context) {
-    console.log(ctx.user);
+  async getUser(@Args() params: GetUserArgs) {
     const user = await this.userService.getUserById(params.userId);
     return user;
   }

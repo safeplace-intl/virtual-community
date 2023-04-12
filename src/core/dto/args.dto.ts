@@ -1,5 +1,6 @@
-import { ArgsType, Field, Int } from "type-graphql";
 import "reflect-metadata";
+
+import { ArgsType, Field, Int } from "type-graphql";
 
 @ArgsType()
 export class PaginationArgs {

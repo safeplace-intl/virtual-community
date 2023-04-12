@@ -36,6 +36,7 @@ const { url } = await startStandaloneServer(apolloServer, {
   listen: { port },
 });
 
+// eslint-disable-next-line no-console
 console.log(`🚀  Server ready at ${url}`);
 
 initializeDatabase()
@@ -43,6 +44,7 @@ initializeDatabase()
     await prisma.$disconnect();
   })
   .catch(async (e) => {
+    // eslint-disable-next-line no-console
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);
