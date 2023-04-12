@@ -1,21 +1,55 @@
-import { PrismaClient } from "@prisma/client";
-import { decodeAuthHeader } from "./modules/auth/auth.service.js";
+import { PrismaClient, User } from "@prisma/client";
+import { GraphQLError } from "graphql";
 import { IncomingMessage } from "http";
+import * as jwt from "jsonwebtoken";
+
+import { DecodedAuthHeaderPayload } from "./core/dto/auth.dto.js";
 import { prisma } from "./prisma/index.js";
 
 export interface Context {
   prisma: PrismaClient;
-  userId?: number;
+  user: User;
 }
 
-export async function context({ req }: { req: IncomingMessage }) {
-  const token =
-    req && req.headers.authorization
-      ? decodeAuthHeader(req.headers.authorization)
-      : null;
+export async function context({
+  req,
+}: {
+  req: IncomingMessage;
+}): Promise<Context> {
+  const authPayload = await decodeAuthHeader(req.headers.authorization || "");
+
+  let user;
+  if (authPayload) {
+    user = await prisma.user.findUnique({
+      where: {
+        id: authPayload.userId,
+      },
+    });
+  }
+  console.log(user);
+
+  if (!user)
+    throw new GraphQLError("you must be logged in to query this schema", {
+      extensions: {
+        code: "UNAUTHENTICATED",
+      },
+    });
 
   return {
     prisma,
-    userId: token?.userId,
+    user,
   };
+}
+
+async function decodeAuthHeader(authHeader: string) {
+  const token = authHeader.replace("Bearer ", "");
+
+  if (!token) {
+    throw new Error("No token provided.");
+  }
+
+  return jwt.verify(
+    token,
+    String(process.env.JWT_SECRET)
+  ) as DecodedAuthHeaderPayload;
 }

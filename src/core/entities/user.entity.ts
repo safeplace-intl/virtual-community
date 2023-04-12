@@ -1,6 +1,6 @@
-import { Field, Int, ObjectType } from "type-graphql";
 import "reflect-metadata";
-import { AuthPayload } from "../dto/auth.dto.js";
+
+import { Field, Int, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class User {
@@ -16,12 +16,6 @@ export class User {
   @Field()
   pronouns!: string;
 
-  @Field(() => AuthPayload, { nullable: true })
-  authPayload?: AuthPayload;
-
   @Field({ nullable: true })
   passwordHash?: string;
-
-  @Field({ nullable: true })
-  password?: string;
 }

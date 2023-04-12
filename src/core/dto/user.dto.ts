@@ -1,5 +1,7 @@
 import "reflect-metadata";
+
 import { ArgsType, Field, InputType } from "type-graphql";
+
 import { User } from "../entities/user.entity.js";
 
 @InputType()

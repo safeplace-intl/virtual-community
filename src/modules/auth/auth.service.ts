@@ -1,42 +1,24 @@
-import * as jwt from "jsonwebtoken";
-import { AuthTokenPayload, AuthPayload } from "src/core/dto/auth.dto";
+import jwt from "jsonwebtoken";
 import { Service } from "typedi";
+
+import { TokenPayload } from "../../core/dto/auth.dto.js";
 
 @Service()
 export class AuthService {
-  async createTokens(userId: number): Promise<AuthPayload> {
-    // const accessToken = await this.getAccessToken(userId);
-    const accessToken = "987654321";
-    const refreshToken = "123456789";
-    return { accessToken, refreshToken };
-  }
+  // constructor() {}
 
-  // async getAccessToken(userId: number): Promise<string> {
-  // if (!refreshToken) {
-  //   throw new Error("No refresh token provided.");
-  // } else {
-  // return jwt.sign(
-  //   {
-  //     userId: userId,
-  //   },
-  //   String(process.env.JWT_SECRET),
-  //   {
-  //     expiresIn: "1h",
-  //   }
-  // );
-  // }
-  // }
-
-  async decodeAuthHeader(authHeader: string): Promise<AuthTokenPayload> {
-    const token = authHeader.replace("Bearer ", "");
-
-    if (!token) {
-      throw new Error("No token provided.");
-    }
-
-    return jwt.verify(
-      token,
-      String(process.env.JWT_SECRET)
-    ) as AuthTokenPayload;
+  async createTokens(userId: number): Promise<TokenPayload> {
+    const accessToken = jwt.sign(
+      { userId: userId },
+      String(process.env.JWT_SECRET),
+      { expiresIn: "1h" }
+    );
+    const refreshToken = jwt.sign(
+      { userId: userId },
+      String(process.env.JWT_SECRET),
+      { expiresIn: "1h" }
+    );
+    const payload: TokenPayload = { accessToken, refreshToken };
+    return payload;
   }
 }

@@ -1,19 +1,17 @@
 import { buildSchema } from "type-graphql";
 import { Container } from "typedi";
-import { UserResolver } from "./modules/user/user.resolver.js";
-import {
-  AuthPayload,
-  AuthTokenPayload,
-  LoginInput,
-} from "./core/dto/auth.dto.js";
-import { CreateUserInput } from "./core/dto/user.dto.js";
+
 import { PaginationArgs } from "./core/dto/args.dto.js";
+import { AuthPayload, LoginInput, TokenPayload } from "./core/dto/auth.dto.js";
+import { CreateUserInput } from "./core/dto/user.dto.js";
+import { AuthResolver } from "./modules/auth/auth.resolver.js";
+import { UserResolver } from "./modules/user/user.resolver.js";
 
 export const schema = await buildSchema({
-  resolvers: [UserResolver],
+  resolvers: [UserResolver, AuthResolver],
   orphanedTypes: [
     LoginInput,
-    AuthTokenPayload,
+    TokenPayload,
     AuthPayload,
     CreateUserInput,
     PaginationArgs,

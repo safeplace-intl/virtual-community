@@ -4,12 +4,8 @@
 # -----------------------------------------------
 
 type AuthPayload {
-  accessToken: String!
-  refreshToken: String!
-}
-
-type AuthTokenPayload {
-  userId: Float!
+  tokens: TokenPayload!
+  user: User!
 }
 
 input CreateUserInput {
@@ -25,19 +21,23 @@ input LoginInput {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  createUser(createUserInput: CreateUserInput!): AuthPayload!
+  login(loginInput: LoginInput!): AuthPayload!
 }
 
 type Query {
   getUser(userId: Float!): User
 }
 
+type TokenPayload {
+  accessToken: String!
+  refreshToken: String!
+}
+
 type User {
-  authPayload: AuthPayload
   email: String!
   fullName: String!
   id: Int!
-  password: String
   passwordHash: String
   pronouns: String!
 }

@@ -1,14 +1,15 @@
-import EnvInit from "./middlewares/env.middleware.js";
+import { ApolloServer } from "@apollo/server";
 import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from "@apollo/server/plugin/landingPage/default";
-
-import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { schema } from "./schema.js";
-// import { Context, context } from "./context.js";
+
+import type { Context } from "./context.js";
+import { context } from "./context.js";
+import EnvInit from "./middlewares/env.middleware.js";
 import { initializeDatabase, prisma } from "./prisma/index.js";
+import { schema } from "./schema.js";
 import { GetApplicationMode } from "./utils/mode.util.js";
 
 // initialize server variables
@@ -17,8 +18,7 @@ const port = Number(process.env.PORT) || 8081;
 const mode = GetApplicationMode();
 // const app: Express = express();
 
-// add in <Context> when tokens etc are ready
-const apolloServer = new ApolloServer({
+const apolloServer = new ApolloServer<Context>({
   schema,
   introspection: true,
   plugins: [
@@ -32,7 +32,7 @@ const apolloServer = new ApolloServer({
 });
 
 const { url } = await startStandaloneServer(apolloServer, {
-  // context,
+  context,
   listen: { port },
 });
 
