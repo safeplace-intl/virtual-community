@@ -1,13 +1,22 @@
 import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from "@apollo/server/plugin/landingPage/default";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import bodyParser from "body-parser";
+import cors from "cors";
+import express from "express";
+import http from "http";
 
+import {
+  ServeClient,
+  ServeClientStaticAssets,
+} from "./middlewares/client.middleware.js";
 // import type { Context } from "./context.js";
-// import { context } from "./context.js";
 import EnvInit from "./middlewares/env.middleware.js";
+import generalMiddleware from "./middlewares/general.middleware.js";
 import { initializeDatabase, prisma } from "./prisma/index.js";
 import { schema } from "./schema.js";
 import { GetApplicationMode } from "./utils/mode.util.js";
@@ -16,6 +25,8 @@ import { GetApplicationMode } from "./utils/mode.util.js";
 EnvInit();
 const port = Number(process.env.PORT) || 8081;
 const mode = GetApplicationMode();
+const app = express();
+const httpServer = http.createServer(app);
 
 // initialize apollo server, the graphql layer will sit on top of our API
 // <Context>
@@ -29,16 +40,29 @@ const apolloServer = new ApolloServer({
           footer: false,
         })
       : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
+
+    ApolloServerPluginDrainHttpServer({ httpServer }),
   ],
 });
 
-const { url } = await startStandaloneServer(apolloServer, {
-  // context,
-  listen: { port },
-});
+await apolloServer.start();
+
+app.use(
+  "/",
+  cors<cors.CorsRequest>(),
+  bodyParser.json(),
+  expressMiddleware(apolloServer, {
+    context: async ({ req }) => ({ token: req.headers.token }),
+  })
+);
+app.use(ServeClientStaticAssets());
+app.use(generalMiddleware);
+app.use("/client", ServeClient);
+
+await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
 
 // eslint-disable-next-line no-console
-console.log(`🚀  Server ready at ${url}`);
+console.log(`🚀  Server ready at http://localhost:${port}`);
 
 initializeDatabase()
   .then(async () => {
@@ -50,9 +74,3 @@ initializeDatabase()
     await prisma.$disconnect();
     process.exit(1);
   });
-
-// ? What to do with these?
-// const server: Express = express();
-// server.use(ServeClientStaticAssets());
-// server.use(GeneralMiddleware);
-// server.use("/", ServeClient);
