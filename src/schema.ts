@@ -2,7 +2,12 @@ import { buildSchema } from "type-graphql";
 import { Container } from "typedi";
 
 import { PaginationArgs } from "./core/dto/args.dto.js";
-import { AuthPayload, LoginInput, TokenPayload } from "./core/dto/auth.dto.js";
+import {
+  AuthPayload,
+  LoginInput,
+  RefreshTokenInput,
+  TokenPayload,
+} from "./core/dto/auth.dto.js";
 import { CreateUserInput } from "./core/dto/user.dto.js";
 import { AuthResolver } from "./modules/auth/auth.resolver.js";
 import { UserResolver } from "./modules/user/user.resolver.js";
@@ -13,6 +18,7 @@ export const schema = await buildSchema({
     LoginInput,
     TokenPayload,
     AuthPayload,
+    RefreshTokenInput,
     CreateUserInput,
     PaginationArgs,
   ],

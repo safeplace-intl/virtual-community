@@ -2,7 +2,12 @@ import * as bcrypt from "bcrypt";
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
-import { AuthPayload, LoginInput } from "../../core/dto/auth.dto.js";
+import {
+  AuthPayload,
+  LoginInput,
+  RefreshTokenInput,
+  TokenPayload,
+} from "../../core/dto/auth.dto.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "./auth.service.js";
 
@@ -39,5 +44,12 @@ export class AuthResolver {
     };
 
     return payload;
+  }
+
+  @Mutation(() => TokenPayload)
+  async refreshToken(
+    @Arg("refreshTokenInput") refreshTokenInput: RefreshTokenInput
+  ) {
+    return this.authService.getNewTokens(refreshTokenInput);
   }
 }

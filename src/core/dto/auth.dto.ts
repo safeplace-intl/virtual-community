@@ -22,17 +22,6 @@ export class LoginInput {
   password!: string;
 }
 
-// @ObjectType()
-// export class JWTPayload {
-//   @Field()
-//   token!: string;
-
-//   @Field()
-//   secretOrPublicKey!: string;
-
-//   @Field()
-//   expiresIn?: number;
-// }
 @ObjectType()
 export class DecodedAuthHeaderPayload {
   @Field()
@@ -46,4 +35,13 @@ export class AuthPayload {
 
   @Field(() => User)
   user!: User;
+}
+
+@InputType()
+export class RefreshTokenInput {
+  @Field()
+  refreshToken!: string;
+
+  @Field()
+  userId!: number;
 }

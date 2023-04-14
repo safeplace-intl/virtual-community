@@ -5,8 +5,8 @@ import {
 } from "@apollo/server/plugin/landingPage/default";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
-import type { Context } from "./context.js";
-import { context } from "./context.js";
+// import type { Context } from "./context.js";
+// import { context } from "./context.js";
 import EnvInit from "./middlewares/env.middleware.js";
 import { initializeDatabase, prisma } from "./prisma/index.js";
 import { schema } from "./schema.js";
@@ -16,9 +16,10 @@ import { GetApplicationMode } from "./utils/mode.util.js";
 EnvInit();
 const port = Number(process.env.PORT) || 8081;
 const mode = GetApplicationMode();
-// const app: Express = express();
 
-const apolloServer = new ApolloServer<Context>({
+// initialize apollo server, the graphql layer will sit on top of our API
+// <Context>
+const apolloServer = new ApolloServer({
   schema,
   introspection: true,
   plugins: [
@@ -32,7 +33,7 @@ const apolloServer = new ApolloServer<Context>({
 });
 
 const { url } = await startStandaloneServer(apolloServer, {
-  context,
+  // context,
   listen: { port },
 });
 
@@ -51,6 +52,7 @@ initializeDatabase()
   });
 
 // ? What to do with these?
+// const server: Express = express();
 // server.use(ServeClientStaticAssets());
 // server.use(GeneralMiddleware);
 // server.use("/", ServeClient);

@@ -23,10 +23,16 @@ input LoginInput {
 type Mutation {
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   login(loginInput: LoginInput!): AuthPayload!
+  refreshToken(refreshTokenInput: RefreshTokenInput!): TokenPayload!
 }
 
 type Query {
   getUser(userId: Float!): User
+}
+
+input RefreshTokenInput {
+  refreshToken: String!
+  userId: Float!
 }
 
 type TokenPayload {
