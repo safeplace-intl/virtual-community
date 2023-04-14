@@ -8,7 +8,7 @@ import { prisma } from "./prisma/index.js";
 
 export interface Context {
   prisma: PrismaClient;
-  user: User;
+  user?: User;
 }
 
 export async function context({

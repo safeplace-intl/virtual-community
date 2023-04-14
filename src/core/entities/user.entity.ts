@@ -17,5 +17,5 @@ export class User {
   pronouns!: string;
 
   @Field({ nullable: true })
-  passwordHash?: string;
+  passwordHash!: string;
 }

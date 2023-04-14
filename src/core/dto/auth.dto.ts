@@ -5,7 +5,7 @@ import { Field, InputType, ObjectType } from "type-graphql";
 import { User } from "../entities/user.entity.js";
 
 @ObjectType()
-export class TokenPayload {
+export class TokensPayload {
   @Field()
   accessToken!: string;
 
@@ -30,8 +30,8 @@ export class DecodedAuthHeaderPayload {
 
 @ObjectType()
 export class AuthPayload {
-  @Field(() => TokenPayload)
-  tokens!: TokenPayload;
+  @Field(() => TokensPayload)
+  tokens!: TokensPayload;
 
   @Field(() => User)
   user!: User;

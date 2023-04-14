@@ -30,7 +30,7 @@ export default class UserService {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(userInput.password, salt);
 
-      // returns a new user object to the resolver
+      // returns the newly created user object to the resolver
       return await prisma.user.create({
         data: {
           email: userInput.email,

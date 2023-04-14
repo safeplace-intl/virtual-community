@@ -6,7 +6,7 @@ import {
   AuthPayload,
   LoginInput,
   RefreshTokenInput,
-  TokenPayload,
+  TokensPayload,
 } from "./core/dto/auth.dto.js";
 import { CreateUserInput } from "./core/dto/user.dto.js";
 import { AuthResolver } from "./modules/auth/auth.resolver.js";
@@ -16,7 +16,7 @@ export const schema = await buildSchema({
   resolvers: [UserResolver, AuthResolver],
   orphanedTypes: [
     LoginInput,
-    TokenPayload,
+    TokensPayload,
     AuthPayload,
     RefreshTokenInput,
     CreateUserInput,

@@ -6,7 +6,7 @@ import {
   AuthPayload,
   LoginInput,
   RefreshTokenInput,
-  TokenPayload,
+  TokensPayload,
 } from "../../core/dto/auth.dto.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "./auth.service.js";
@@ -35,7 +35,7 @@ export class AuthResolver {
       throw new Error("Invalid password");
     }
 
-    // return user and tokens
+    // calls auth service to create tokens
     const tokens = await this.authService.createTokens(user.id);
 
     const payload: AuthPayload = {
@@ -46,7 +46,7 @@ export class AuthResolver {
     return payload;
   }
 
-  @Mutation(() => TokenPayload)
+  @Mutation(() => TokensPayload)
   async refreshToken(
     @Arg("refreshTokenInput") refreshTokenInput: RefreshTokenInput
   ) {
