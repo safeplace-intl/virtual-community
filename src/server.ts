@@ -10,11 +10,11 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 
+import type { Context } from "./context.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
 } from "./middlewares/client.middleware.js";
-// import type { Context } from "./context.js";
 import EnvInit from "./middlewares/env.middleware.js";
 import generalMiddleware from "./middlewares/general.middleware.js";
 import { initializeDatabase, prisma } from "./prisma/index.js";
@@ -29,7 +29,7 @@ const app = express();
 const httpServer = http.createServer(app);
 
 // initialize apollo server, the graphql layer will sit on top of our API
-// <Context>
+// TODO: <Context>
 const apolloServer = new ApolloServer({
   schema,
   introspection: true,
@@ -48,12 +48,16 @@ const apolloServer = new ApolloServer({
 await apolloServer.start();
 
 // serve client assets
+// TODO: context
 app.use(
   "/",
   cors<cors.CorsRequest>(),
   bodyParser.json(),
   expressMiddleware(apolloServer, {
-    context: async ({ req }) => ({ token: req.headers.token }),
+    context: async ({ req }) => {
+      const token = req.headers.token || "";
+      return { token };
+    },
   })
 );
 

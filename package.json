@@ -64,8 +64,8 @@
     "tsc-alias": "^1.8.4",
     "tsconfig-paths": "^4.1.2",
     "type-graphql": "^2.0.0-beta.1",
-    "typegraphql-prisma": "^0.24.5",
     "typedi": "^0.10.0",
+    "typegraphql-prisma": "^0.24.5",
     "typescript": "^5.0.2"
   },
   "prisma": {
