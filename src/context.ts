@@ -6,6 +6,8 @@ import * as jwt from "jsonwebtoken";
 import { DecodedAuthHeaderPayload } from "./core/dto/auth.dto.js";
 import { prisma } from "./prisma/index.js";
 
+// ! This file isn't doing anything right now.
+
 export interface Context {
   prisma: PrismaClient;
   user?: User;

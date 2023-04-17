@@ -47,6 +47,7 @@ const apolloServer = new ApolloServer({
 
 await apolloServer.start();
 
+// serve client assets
 app.use(
   "/",
   cors<cors.CorsRequest>(),
@@ -55,15 +56,18 @@ app.use(
     context: async ({ req }) => ({ token: req.headers.token }),
   })
 );
+
 app.use(ServeClientStaticAssets());
 app.use(generalMiddleware);
 app.use("/client", ServeClient);
 
+// restart the modified server
 await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
 
 // eslint-disable-next-line no-console
 console.log(`🚀  Server ready at http://localhost:${port}`);
 
+// initialize database connection via prisma
 initializeDatabase()
   .then(async () => {
     await prisma.$disconnect();

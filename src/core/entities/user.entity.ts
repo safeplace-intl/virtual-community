@@ -16,6 +16,9 @@ export class User {
   @Field()
   pronouns!: string;
 
-  @Field({ nullable: true })
+  @Field()
   passwordHash!: string;
 }
+
+// we need an full list
+export type Pronouns = "he/him" | "she/her" | "they/them" | "ze/zir";

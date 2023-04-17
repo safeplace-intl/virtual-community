@@ -44,6 +44,6 @@ type User {
   email: String!
   fullName: String!
   id: Int!
-  passwordHash: String
+  passwordHash: String!
   pronouns: String!
 }

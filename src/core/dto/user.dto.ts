@@ -1,21 +1,24 @@
 import "reflect-metadata";
 
+import { IsEmail, Length } from "class-validator";
 import { ArgsType, Field, InputType } from "type-graphql";
 
-import { User } from "../entities/user.entity.js";
+import { type Pronouns, User } from "../entities/user.entity.js";
 
 @InputType()
 export class CreateUserInput implements Partial<User> {
   @Field()
+  @IsEmail()
   email!: string;
 
   @Field()
   fullName!: string;
 
   @Field()
-  pronouns!: string;
+  pronouns!: Pronouns;
 
   @Field()
+  @Length(10, 20)
   password!: string;
 }
 

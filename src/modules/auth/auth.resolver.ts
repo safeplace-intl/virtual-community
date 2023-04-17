@@ -1,4 +1,5 @@
 import * as bcrypt from "bcrypt";
+import { GraphQLError } from "graphql";
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
@@ -25,14 +26,14 @@ export class AuthResolver {
     });
 
     if (!user) {
-      throw new Error("No such user found");
+      throw new GraphQLError("No such user found");
     }
 
     // check password
     const valid = await bcrypt.compare(password, user.passwordHash);
 
     if (!valid) {
-      throw new Error("Invalid password");
+      throw new GraphQLError("Invalid password");
     }
 
     // calls auth service to create tokens

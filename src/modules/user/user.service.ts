@@ -10,10 +10,16 @@ import { AuthService } from "../auth/auth.service.js";
 export default class UserService {
   constructor(private readonly authService: AuthService) {}
 
-  async getUserById(userId: number): Promise<User | null> {
-    return await prisma.user.findUnique({
+  async getUserById(userId: number): Promise<User> {
+    const user = await prisma.user.findUnique({
       where: { id: userId },
     });
+
+    if (!user) {
+      throw new Error("User not found with the provided userId.");
+    }
+
+    return user;
   }
 
   async createUser(userInput: CreateUserInput): Promise<User> {
@@ -25,7 +31,7 @@ export default class UserService {
     });
 
     if (existingUser) {
-      throw new Error("User already exists.");
+      throw new Error("A user with this email already exists.");
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(userInput.password, salt);
