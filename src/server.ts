@@ -10,7 +10,7 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 
-import type { Context } from "./context.js";
+// import type { Context } from "./context.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
