@@ -1,18 +1,23 @@
 import express, { Request, Response } from "express";
-import { GetApplicationMode } from "@utils/mode.util";
-import { GetBuildClientDir, GetClientRootDir } from "@utils/filedir.util";
 import path from "path";
+
+import { GetBuildClientDir, GetClientRootDir } from "../utils/filedir.util.js";
+import { GetApplicationMode } from "../utils/mode.util.js";
 
 // serve static assets
 export function ServeClientStaticAssets() {
   const mode = GetApplicationMode();
   const staticPaths: string[] = [];
 
+  const currentFileUrl = new URL(import.meta.url);
+  const rootDir = path.resolve(currentFileUrl.pathname, "..");
+  const clientDir = path.resolve(rootDir, "client");
+
   if (mode === "production") {
     staticPaths.push(GetBuildClientDir());
   } else {
-    staticPaths.push(path.resolve(__dirname, "..", "client", "public"));
-    staticPaths.push(path.resolve(__dirname, "..", "client"));
+    staticPaths.push(path.resolve(clientDir, "public"));
+    staticPaths.push(clientDir);
   }
 
   return staticPaths.map((path) => express.static(path));

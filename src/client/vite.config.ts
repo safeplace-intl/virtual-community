@@ -2,11 +2,13 @@
   @type {import('vite'.UserConfig)}
 */
 
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from "vite";
 
 // const mode = process.env.NODE_ENV;
 // const inputPath = (mode === "development") ? "./src/main.tsx" : false;
+
+// eslint-disable-next-line no-console
 console.log(process.env.NODE_ENV);
 // https://vitejs.dev/config/
 

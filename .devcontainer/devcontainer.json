@@ -30,7 +30,9 @@
         "Orta.vscode-jest",
         "GitHub.vscode-pull-request-github",
         "donjayamanne.githistory",
-        "aaron-bond.better-comments"
+        "aaron-bond.better-comments",
+        "ms-azuretools.vscode-docker",
+        "prisma.prisma"
       ]
     }
   },
