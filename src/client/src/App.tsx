@@ -1,10 +1,33 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+
+import { gql, useQuery } from "@apollo/client";
+import { useState } from "react";
+
+import viteLogo from "/vite.svg";
+
+// import { graphql } from "../gql-types";
+import reactLogo from "./assets/react.svg";
+
+const getUserQuery = gql/* GraphQL */ `
+  query GetUser($userId: Float!) {
+    getUser(userId: $userId) {
+      id
+      email
+      fullName
+      pronouns
+    }
+  }
+`;
 
 function App() {
   const [count, setCount] = useState(0);
+
+  const { loading, error, data } = useQuery(getUserQuery, {
+    variables: { userId: 1 },
+    onCompleted: (data) => {
+      console.log(data);
+    },
+  });
 
   return (
     <div className="App">

@@ -9,3 +9,5 @@
 .DS_Store
 coverage
 *.log
+
+src/client/gql-types

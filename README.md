@@ -48,6 +48,14 @@ Open an integrated terminal `Terminal -> New Terminal` and you can view the conf
 
 <img src="https://res.cloudinary.com/eleni/image/upload/v1680124651/dev-container-4_blhzgz.png">
 
+In a separate integrated bash terminal, you should see `root ➜ /workspaces/virtual-community` in the terminal. This means that you are now in the container, and you can run the following command to run the database migrations:
+
+```bash
+npm run migrate:prisma
+```
+
+This will run the database migrations which creates the database tables, and it will seed the database using the `./src/prisma/seed.ts` file.
+
 ### Why dev containers?
 
 Using a dev container, we make sure that everyone on the team is using the same working environment, and reducing errors caused by different local environments and configurations.
@@ -60,7 +68,7 @@ The container includes some pre-installed VSCode extensions, check those out, an
 2. Commit your changes `git commit -m "commit message describing your changes"`
 3. Push your changes to your feature branch `git push origin feature/your-feature-name`
 4. Create a Pull Request in GitHub against the `staging` branch
-6. Once all changes in `staging` are verified, merge `staging` to `main` (`main` should only ever be merged to from `staging`)
+5. Once all changes in `staging` are verified, merge `staging` to `main` (`main` should only ever be merged to from `staging`)
 
 ### Good commit messages
 
@@ -74,7 +82,7 @@ by commands like git merge and git revert.
 Specify the type of commit!
 ```
 
-See the [Apprentice Handbook](https://www.notion.so/Apprentice-Handbook-286800568746460885b9614b2ded5425) for more information on writing good commit messages.
+See the [github wiki](https://github.com/safeplace-intl/virtual-community/wiki/Writing-good-commit-messages) for more information on writing good commit messages.
 
 ## Links
 

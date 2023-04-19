@@ -1,7 +1,8 @@
 import dotenv, { DotenvConfigOptions } from "dotenv";
 import path from "path";
-import { GetApplicationMode } from "@utils/mode.util";
-import { GetRootDir } from "@utils/filedir.util";
+
+import { GetRootDir } from "../utils/filedir.util.js";
+import { GetApplicationMode } from "../utils/mode.util.js";
 
 const mode = GetApplicationMode();
 
