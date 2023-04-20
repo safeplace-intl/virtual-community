@@ -27,6 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
+      - run: npm run migrate:prisma
       - run: cd src/client && npm ci
       - run: cd .. & cd ..
       - run: npm run build --if-present
