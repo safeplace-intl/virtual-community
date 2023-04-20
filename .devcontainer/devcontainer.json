@@ -32,7 +32,8 @@
         "donjayamanne.githistory",
         "aaron-bond.better-comments",
         "ms-azuretools.vscode-docker",
-        "prisma.prisma"
+        "prisma.prisma",
+        "yoavbls.pretty-ts-errors"
       ]
     }
   },
