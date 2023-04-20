@@ -65,10 +65,12 @@ The container includes some pre-installed VSCode extensions, check those out, an
 ## Contributions Process 🤸‍♀️
 
 1. Create your feature branch `git checkout -b feature/your-feature-name`
-2. Commit your changes `git commit -m "commit message describing your changes"`
-3. Push your changes to your feature branch `git push origin feature/your-feature-name`
-4. Create a Pull Request in GitHub against the `staging` branch
-5. Once all changes in `staging` are verified, merge `staging` to `main` (`main` should only ever be merged to from `staging`)
+1. Commit your changes `git commit -m "commit message describing your changes"`
+1. Push your changes to your feature branch `git push origin feature/your-feature-name`
+1. Before making a pull request, make sure your fork and branch are synced with this repo's branch that you will be making a PR against
+1. Create a Pull Request in GitHub against the `dev` branch
+1. Once all changes in `dev` are verified, merge `dev` to `staging`
+1. When a feature is complete, merge `staging` into `main` (`main` should only ever be merged to from `staging`)
 
 ### Good commit messages
 
