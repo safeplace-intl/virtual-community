@@ -1,7 +1,15 @@
-import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
+import path from "path";
+import { defineConfig } from "vite";
 
 let viteConfig = {};
+const importAliases = {
+  "@": path.resolve(__dirname, "./src"),
+  "@components": path.resolve(__dirname, "./src/components"),
+  "@assets": path.resolve(__dirname, "./src/assets"),
+  "@features": path.resolve(__dirname, "./src/features"),
+  "@services": path.resolve(__dirname, "./src/services"),
+};
 
 if (process.env.NODE_ENV === "production") {
   viteConfig = {
@@ -12,6 +20,9 @@ if (process.env.NODE_ENV === "production") {
       rollupOptions: {
         input: "index.html",
       },
+    },
+    resolve: {
+      alias: importAliases,
     },
     server: {
       origin: "http://127.0.0.1:8081",
@@ -26,6 +37,9 @@ if (process.env.NODE_ENV === "production") {
       rollupOptions: {
         input: "./src/main.tsx",
       },
+    },
+    resolve: {
+      alias: importAliases,
     },
     server: {
       port: 3001,
