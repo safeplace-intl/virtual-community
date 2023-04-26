@@ -20,6 +20,9 @@ export default {
         "error-100": "#9F1818",
         "error-200": "#FFF3F3",
       },
+      fontFamily: {
+        sans: ["Poppins", "sans-serif"],
+      },
     },
   },
   plugins: [],
