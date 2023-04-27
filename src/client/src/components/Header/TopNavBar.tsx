@@ -1,10 +1,21 @@
 import logo from "@assets/spi-logo.png";
 import { useState } from "preact/hooks";
 
-export default function Header({ onTopMenuItemClick }) {
+interface TopNavBarProps {
+  onTopMenuItemClick: (menuItem: string) => void;
+}
+
+export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const menuItems = [
+    { name: "Feed", onClick: "Feed" },
+    { name: "Reports", onClick: "Reports" },
+    { name: "Profile", onClick: "Profile" },
+    { name: "Settings", onClick: "Settings" },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 flex justify-between py-0 px-5 md:px-10 h-16 w-full bg-modal-100 border border-black-100 shadow box-shadow-[0_4px_4px_0px]-black-100">
@@ -45,34 +56,16 @@ export default function Header({ onTopMenuItemClick }) {
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center text-black-100 py-2">
-        <a
-          onClick={() => onTopMenuItemClick("Feed")}
-          href="#"
-          className="font-bold py-2 px-4 hover:underline hover:text-spi-violet-100"
-        >
-          Feed
-        </a>
-        <a
-          onClick={() => onTopMenuItemClick("Reports")}
-          href="#"
-          className="font-bold py-2 px-4 hover:underline hover:text-spi-violet-100"
-        >
-          Reports
-        </a>
-        <a
-          onClick={() => onTopMenuItemClick("Profile")}
-          href="#"
-          className="font-bold py-2 px-4 hover:underline hover:text-spi-violet-100"
-        >
-          Profile
-        </a>
-        <a
-          onClick={() => onTopMenuItemClick("Settings")}
-          href="#"
-          className="font-bold py-2 px-4 hover:underline hover:text-spi-violet-100"
-        >
-          Settings
-        </a>
+        {menuItems.map((item) => (
+          <a
+            key={item.name}
+            onClick={() => onTopMenuItemClick(item.onClick)}
+            href="#"
+            className="font-bold py-2 px-4 hover:underline hover:text-spi-violet-100"
+          >
+            {item.name}
+          </a>
+        ))}
         <button className="bg-modal-100 text-spi-violet-100 font-bold py-2 px-4 border rounded-lg border-spi-violet-100 mr-2">
           Log In
         </button>
@@ -95,34 +88,16 @@ export default function Header({ onTopMenuItemClick }) {
         </button>
         {isOpen && (
           <div className="absolute right-0 bg-white shadow rounded mt-10 w-48">
-            <a
-              onClick={() => onTopMenuItemClick("Feed")}
-              href="#"
-              className="block px-4 py-2 font-bold hover:underline hover:text-spi-violet-100"
-            >
-              Feed
-            </a>
-            <a
-              onClick={() => onTopMenuItemClick("Reports")}
-              href="#"
-              className="block px-4 py-2 font-bold hover:underline hover:text-spi-violet-100"
-            >
-              Reports
-            </a>
-            <a              
-              onClick={() => onTopMenuItemClick("Profile")}
-              href="#"
-              className="block px-4 py-2 font-bold hover:underline hover:text-spi-violet-100"
-            >
-              Profile
-            </a>
-            <a
-              onClick={() => onTopMenuItemClick("Settings")}
-              href="#"
-              className="block px-4 py-2 font-bold hover:underline hover:text-spi-violet-100"
-            >
-              Settings
-            </a>
+            {menuItems.map((item) => (
+              <a
+                key={item.name}
+                onClick={() => onTopMenuItemClick(item.onClick)}
+                href="#"
+                className="block px-4 py-2 font-bold hover:underline hover:text-spi-violet-100"
+              >
+                {item.name}
+              </a>
+            ))}
             <button className="w-full text-left bg-modal-100 text-spi-violet-100 font-bold py-2 px-4 border rounded-lg border-spi-violet-100">
               Log In
             </button>

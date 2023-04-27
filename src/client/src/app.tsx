@@ -6,7 +6,7 @@ import {} from "preact/hooks";
 export function App() {
   const [activeTopMenuItem, setActiveTopMenuItem] = useState("Blank");
 
-  const handleTopMenuItemClick = (menuItem) => {
+  const handleTopMenuItemClick = (menuItem: string) => {
     setActiveTopMenuItem(menuItem);
   };
 
@@ -20,7 +20,6 @@ export function App() {
       <TopNavBar onTopMenuItemClick={handleTopMenuItemClick} />
       <div className="absolute top-64px left-0">
         <LeftNavBar activeMenuItem={activeTopMenuItem} />
-        {/* Main content goes here */}
       </div>
     </div>
   );
