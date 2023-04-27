@@ -7,7 +7,7 @@ export default {
         "spi-violet-50": "#5F0047",
         "spi-violet-75": "#800762",
         "spi-violet-100": "#9B0D78",
-        "spi-violet-200": "E5C1DC",
+        "spi-violet-200": "#E5C1DC",
         "spi-violet-300": "#FDECF9",
         "black-100": "#13020F",
         "black-200": "#666666",
