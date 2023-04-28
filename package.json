@@ -17,7 +17,8 @@
     "prepare": "husky install",
     "generate:prisma": "prisma generate --schema=./src/prisma/schema.prisma",
     "migrate:prisma": "prisma migrate dev --schema=./src/prisma/schema.prisma",
-    "reset:prisma": "prisma migrate reset --schema=./src/prisma/schema.prisma"
+    "reset:prisma": "prisma migrate reset --schema=./src/prisma/schema.prisma",
+    "studio:prisma": "prisma studio --schema=./src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "Safeplace International",
