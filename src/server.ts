@@ -1,10 +1,10 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import {
-  ApolloServerPluginLandingPageLocalDefault,
-  ApolloServerPluginLandingPageProductionDefault,
-} from "@apollo/server/plugin/landingPage/default";
+// import {
+//   ApolloServerPluginLandingPageLocalDefault,
+//   ApolloServerPluginLandingPageProductionDefault,
+// } from "@apollo/server/plugin/landingPage/default";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
@@ -19,12 +19,12 @@ import EnvInit from "./middlewares/env.middleware.js";
 import generalMiddleware from "./middlewares/general.middleware.js";
 import { initializeDatabase, prisma } from "./prisma/index.js";
 import { schema } from "./schema.js";
-import { GetApplicationMode } from "./utils/mode.util.js";
+// import { GetApplicationMode } from "./utils/mode.util.js";
 
 // initialize server variables
 EnvInit();
 const port = Number(process.env.PORT) || 8081;
-const mode = GetApplicationMode();
+// const mode = GetApplicationMode();
 const app = express();
 const httpServer = http.createServer(app);
 
@@ -34,12 +34,12 @@ const apolloServer = new ApolloServer({
   schema,
   introspection: true,
   plugins: [
-    mode === "production"
-      ? ApolloServerPluginLandingPageProductionDefault({
-          graphRef: "my-graph-id@my-graph-variant", // needs update
-          footer: false,
-        })
-      : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
+    // mode === "production"
+    //   ? ApolloServerPluginLandingPageProductionDefault({
+    //       graphRef: "my-graph-id@my-graph-variant", // needs update
+    //       footer: false,
+    //     })
+    //   : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
 
     ApolloServerPluginDrainHttpServer({ httpServer }),
   ],

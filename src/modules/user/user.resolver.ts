@@ -21,21 +21,21 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => AuthPayload)
-  async createUser(
-    @Arg("createUserInput") params: CreateUserInput
-  ): Promise<AuthPayload> {
-    // ask the user service to create a new user with the supplied params
-    const user = await this.userService.createUser(params);
+  // @Mutation(() => AuthPayload)
+  // async createUser(
+  //   @Arg("createUserInput") params: CreateUserInput
+  // ): Promise<AuthPayload> {
+  //   // ask the user service to create a new user with the supplied params
+  //   const user = await this.userService.createUser(params);
 
-    // ask the auth service to make tokens for the new user
-    const tokens = await this.authService.createTokens(user.id);
+  //   // ask the auth service to make tokens for the new user
+  //   const tokens = await this.authService.createTokens(user.id);
 
-    const payload: AuthPayload = {
-      user,
-      tokens,
-    };
+  //   const payload: AuthPayload = {
+  //     user,
+  //     tokens,
+  //   };
 
-    return payload;
-  }
+  //   return payload;
+  // }
 }
