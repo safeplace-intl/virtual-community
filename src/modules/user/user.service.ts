@@ -16,7 +16,7 @@ export default class UserService {
     });
 
     if (!user) {
-      throw new Error("User not found with the provided userId.");
+      throw new Error("User not found");
     }
 
     return user;
@@ -31,7 +31,7 @@ export default class UserService {
   //   });
 
   //   if (existingUser) {
-  //     throw new Error("A user with this email already exists.");
+  //     throw new Error("Email already in use.");
   //   } else {
   //     const salt = await bcrypt.genSalt(10);
   //     const hashedPassword = await bcrypt.hash(userInput.password, salt);
