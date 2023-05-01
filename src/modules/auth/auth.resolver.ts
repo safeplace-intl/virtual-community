@@ -26,15 +26,15 @@ export class AuthResolver {
   //   });
 
   //   if (!user) {
-  //     throw new GraphQLError("No such user found");
+  //     throw new GraphQLError("Invalid login credentials");
   //   }
 
   //   // check password
-  //   // const valid = await bcrypt.compare(password, user.passwordHash);
+  // const valid = await bcrypt.compare(password, user.passwordHash);
 
-  //   // if (!valid) {
-  //   //   throw new GraphQLError("Invalid password");
-  //   // }
+  // if (!valid) {
+  //   throw new GraphQLError("Invalid login credentials");
+  // }
 
   //   // calls auth service to create tokens
   //   const tokens = await this.authService.createTokens(user.id);
