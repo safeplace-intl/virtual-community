@@ -13,7 +13,7 @@ export class ProfileResolver {
 
   @Query(() => Profile, { nullable: true })
   async getProfile(@Args() params: GetUserArgs) {
-    const profile = await this.profileService.getAccountByUserId(params.userId);
+    const profile = await this.profileService.getProfileByUserId(params.userId);
     return profile;
   }
 

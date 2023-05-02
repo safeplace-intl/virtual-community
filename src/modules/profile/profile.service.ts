@@ -7,7 +7,7 @@ import { prisma } from "../../prisma/index.js";
 
 @Service()
 export default class ProfileService {
-  async getAccountByUserId(userId: number): Promise<Profile> {
+  async getProfileByUserId(userId: number): Promise<Profile> {
     const profile = await prisma.profile.findUnique({
       where: { userId: userId },
     });

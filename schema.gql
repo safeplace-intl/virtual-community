@@ -8,6 +8,19 @@ type AuthPayload {
   user: User!
 }
 
+input CreateProfileInput {
+  bio: String!
+  currentLocation: String!
+  fullName: String!
+  homeCountry: String
+  nickname: String
+  profilePic: String
+  pronouns: String!
+  tdaGradYear: Float!
+  tdaGradYearBannerVisible: Boolean!
+  website: String
+}
+
 input CreateUserInput {
   email: String!
   fullName: String!
@@ -21,6 +34,7 @@ input LoginInput {
 }
 
 type Mutation {
+  createProfile(createProfileInput: CreateProfileInput!, userId: Float!): Profile!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deleteAccount(id: Float!): Boolean!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
@@ -32,6 +46,7 @@ type Profile {
 }
 
 type Query {
+  getProfile(userId: Float!): Profile
   getUser(userId: Float!): User
 }
 
