@@ -22,8 +22,13 @@ input LoginInput {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): AuthPayload!
-  login(loginInput: LoginInput!): AuthPayload!
+  deleteAccount(id: Float!): Boolean!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
+  resetPassword(input: ResetPasswordInput!): User!
+}
+
+type Profile {
+  id: Float!
 }
 
 type Query {
@@ -35,15 +40,20 @@ input RefreshTokenInput {
   userId: Float!
 }
 
+input ResetPasswordInput {
+  email: String!
+  newPassword: String!
+}
+
 type TokensPayload {
   accessToken: String!
   refreshToken: String!
 }
 
 type User {
+  Profile: Profile!
   email: String!
-  fullName: String!
   id: Int!
+  isActive: Boolean!
   passwordHash: String!
-  pronouns: String!
 }

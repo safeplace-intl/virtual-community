@@ -14,7 +14,7 @@ import { UserResolver } from "./modules/user/user.resolver.js";
 
 // the types and resolvers specified here are what will be auto-generated in the graphql schema file
 export const schema = await buildSchema({
-  resolvers: [UserResolver, AuthResolver],
+  resolvers: [AuthResolver, UserResolver],
   orphanedTypes: [
     LoginInput,
     TokensPayload,
