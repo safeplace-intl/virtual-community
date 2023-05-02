@@ -18,7 +18,7 @@ export class User {
   @Field()
   isActive!: boolean;
 
-  @Field()
+  @Field(() => Profile)
   Profile?: Profile;
 }
 

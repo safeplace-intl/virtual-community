@@ -14,7 +14,6 @@ export class CreateUserInput {
   password!: string;
 
   @Field()
-  @Length(1, 255)
   fullName!: string;
 
   @Field()
@@ -25,4 +24,13 @@ export class CreateUserInput {
 export class GetUserArgs {
   @Field()
   userId!: number;
+}
+
+@InputType()
+export class ResetPasswordInput {
+  @Field()
+  email!: string;
+
+  @Field()
+  newPassword!: string;
 }
