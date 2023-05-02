@@ -9,13 +9,11 @@ import ProfileService from "./profile.service.js";
 @Service()
 @Resolver(() => Profile)
 export class ProfileResolver {
-  constructor(
-    private readonly profileService: ProfileService
-  ) {}
-    
+  constructor(private readonly profileService: ProfileService) {}
+
   @Query(() => Profile, { nullable: true })
   async getProfile(@Args() params: GetUserArgs) {
-    const profile = await this.profileService.getAccountByUserId(params.userId)
+    const profile = await this.profileService.getAccountByUserId(params.userId);
     return profile;
   }
 
@@ -24,9 +22,11 @@ export class ProfileResolver {
     @Arg("createProfileInput") profileInput: CreateProfileInput,
     @Args() userArgs: GetUserArgs
   ): Promise<Profile> {
-    const profile = await this.profileService.createProfile(userArgs.userId, profileInput)
+    const profile = await this.profileService.createProfile(
+      userArgs.userId,
+      profileInput
+    );
 
-    return profile
+    return profile;
   }
-
 }
