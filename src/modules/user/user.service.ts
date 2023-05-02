@@ -22,29 +22,29 @@ export default class UserService {
     return user;
   }
 
-  // async createUser(userInput: CreateUserInput): Promise<User> {
-  //   const email = userInput.email;
+  async createUser(userInput: CreateUserInput): Promise<User> {
+    const email = userInput.email;
 
-  //   // checks to make sure email is not already in use
-  //   const existingUser = await prisma.user.findUnique({
-  //     where: {},
-  //   });
+    // checks to make sure email is not already in use
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
 
-  //   if (existingUser) {
-  //     throw new Error("Email already in use.");
-  //   } else {
-  //     const salt = await bcrypt.genSalt(10);
-  //     const hashedPassword = await bcrypt.hash(userInput.password, salt);
+    if (existingUser) {
+      throw new Error("Email already in use.");
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userInput.password, salt);
 
-  //     // returns the newly created user object to the resolver
-  //     return await prisma.user.create({
-  //       data: {
-  //         // email: userInput.email,
-  //         // fullName: userInput.fullName,
-  //         // pronouns: userInput.pronouns,
-  //         // passwordHash: hashedPassword,
-  //       },
-  //     });
-  //   }
-  // }
+      // returns the newly created user object to the resolver
+      const user = await prisma.user.create({
+        data: {
+          email: userInput.email,
+          passwordHash: hashedPassword,
+          isActive: true,
+        },
+      });
+      return user;
+    }
+  }
 }
