@@ -10,10 +10,10 @@ export class Profile {
   tdaGradYear!: number;
   currentLocation!: string;
   bio!: string;
-  profilePic?: string;
-  homeCountry?: string;
-  nickname?: string;
-  namePronunciation?: string;
-  website?: string;
+  profilePic: string | null | undefined;
+  homeCountry: string | null | undefined;
+  nickname: string | null | undefined;
+  namePronunciation: string | null | undefined;
+  website: string | null | undefined;
   tdaGradYearBannerVisible?: boolean;
 }
