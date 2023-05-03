@@ -8,6 +8,12 @@ type AuthPayload {
   user: User!
 }
 
+input ChangePasswordInput {
+  email: String!
+  newPassword: String!
+  oldPassword: String!
+}
+
 input CreateUserInput {
   email: String!
   fullName: String!
@@ -21,8 +27,11 @@ input LoginInput {
 }
 
 type Mutation {
+  changePassword(data: ChangePasswordInput!): User!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
+  deactivateAccount(email: String!): String!
   deleteAccount(id: Float!): Boolean!
+  login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(input: ResetPasswordInput!): User!
 }

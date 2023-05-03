@@ -5,6 +5,7 @@ import { Service } from "typedi";
 
 import { AuthPayload } from "../../core/dto/auth.dto.js";
 import {
+  ChangePasswordInput,
   CreateUserInput,
   GetUserArgs,
   ResetPasswordInput,
@@ -48,38 +49,27 @@ export class UserResolver {
 
   @Mutation(() => User)
   async resetPassword(@Arg("input") input: ResetPasswordInput): Promise<User> {
-    const { email, newPassword } = input;
-
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // Generate new password hash
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(newPassword, salt);
-
-    // Update user's password hash
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { passwordHash },
-    });
+    const updatedUser = await this.userService.resetPassword(input);
 
     return updatedUser;
   }
 
+  @Mutation(() => String)
+  async deactivateAccount(@Arg("email") email: string): Promise<string> {
+    const message = await this.userService.deactivateAccount(email);
+
+    return message;
+  }
+
   @Mutation(() => Boolean)
   async deleteAccount(@Arg("id") id: number) {
-    try {
-      await prisma.user.delete({
-        where: {
-          id,
-        },
-      });
-      return true;
-    } catch {
-      return false;
-    }
+    const status = await this.userService.deleteAccount(id);
+    return status;
+  }
+
+  @Mutation(() => User)
+  async changePassword(@Arg("data") input: ChangePasswordInput): Promise<User> {
+    const updatedUser = await this.userService.changePassword(input);
+    return updatedUser;
   }
 }

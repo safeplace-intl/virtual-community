@@ -17,35 +17,35 @@ import { AuthService } from "./auth.service.js";
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  // @Mutation(() => AuthPayload)
-  // async login(@Arg("loginInput") loginInput: LoginInput) {
-  //   // validate user exists
-  //   const { email, password } = loginInput;
-  //   const user = await prisma.user.findUnique({
-  //     where: {}, // needs an identifier
-  //   });
+  @Mutation(() => AuthPayload)
+  async login(@Arg("loginInput") loginInput: LoginInput) {
+    // validate user exists
+    const { email, password } = loginInput;
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-  //   if (!user) {
-  //     throw new GraphQLError("Invalid login credentials");
-  //   }
+    if (!user) {
+      throw new GraphQLError("Invalid login credentials");
+    }
 
-  //   // check password
-  // const valid = await bcrypt.compare(password, user.passwordHash);
+    // check password
+    const valid = await bcrypt.compare(password, user.passwordHash);
 
-  // if (!valid) {
-  //   throw new GraphQLError("Invalid login credentials");
-  // }
+    if (!valid) {
+      throw new GraphQLError("Invalid login credentials");
+    }
 
-  //   // calls auth service to create tokens
-  //   const tokens = await this.authService.createTokens(user.id);
+    // calls auth service to create tokens
+    const tokens = await this.authService.createTokens(user.id);
 
-  //   const payload: AuthPayload = {
-  //     user,
-  //     tokens,
-  //   };
+    const payload: AuthPayload = {
+      user,
+      tokens,
+    };
 
-  //   return payload;
-  // }
+    return payload;
+  }
 
   @Mutation(() => TokensPayload)
   async refreshToken(
