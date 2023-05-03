@@ -25,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "@apollo/server": "^4.6.0",
+    "@types/react-router": "^5.1.20",
     "body-parser": "^1.20.2",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
