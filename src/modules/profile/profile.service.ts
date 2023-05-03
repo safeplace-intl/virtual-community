@@ -1,5 +1,4 @@
 import { Profile } from "@prisma/client";
-import { profile } from "console";
 import { Service } from "typedi";
 
 import { CreateProfileInput } from "../../core/dto/profile.dto.js";

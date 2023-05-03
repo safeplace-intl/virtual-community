@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { Length } from "class-validator";
-import { ArgsType, Field, InputType } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class CreateProfileInput {
