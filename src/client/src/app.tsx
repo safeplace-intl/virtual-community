@@ -3,7 +3,7 @@ import TopNavBar from "@components/Header/TopNavBar";
 import { PageLayout } from "@components/PageLayout/PageLayout";
 import { useState } from "preact/hooks";
 import {} from "preact/hooks";
-import { Route, Router } from "preact-router";
+import { Router } from "wouter-preact";
 
 export function App() {
   const [activeTopMenuItem, setActiveTopMenuItem] = useState("Blank");
@@ -18,9 +18,9 @@ export function App() {
       <div className="absolute top-64px left-0">
         <LeftNavBar activeMenuItem={activeTopMenuItem} />
       </div>
-      {/* <Router>
+      <Router>
         <Route path="/page-layout" component={PageLayout} />
-      </Router> */}
+      </Router>
     </div>
   );
 }
