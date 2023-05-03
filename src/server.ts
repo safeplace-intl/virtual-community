@@ -1,10 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import {
-  ApolloServerPluginLandingPageLocalDefault,
-  ApolloServerPluginLandingPageProductionDefault,
-} from "@apollo/server/plugin/landingPage/default";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
@@ -24,31 +20,28 @@ import { GetApplicationMode } from "./utils/mode.util.js";
 // initialize server variables
 EnvInit();
 const port = Number(process.env.PORT) || 8081;
-const mode = GetApplicationMode();
 const app = express();
+const mode = GetApplicationMode();
 const httpServer = http.createServer(app);
 
 // initialize apollo server, the graphql layer will sit on top of our API
-// TODO: <Context>
 const apolloServer = new ApolloServer({
   schema,
-  introspection: true,
-  plugins: [
-    mode === "production"
-      ? ApolloServerPluginLandingPageProductionDefault({
-          graphRef: "my-graph-id@my-graph-variant", // needs update
-          footer: false,
-        })
-      : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
-
-    ApolloServerPluginDrainHttpServer({ httpServer }),
-  ],
+  introspection: mode === "production" ? false : true,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  formatError: (err) => {
+    // Don't give the specific errors to the client
+    if (err.message.startsWith("Database Error: ")) {
+      return new Error("Internal server error");
+    }
+    // Otherwise return the original error
+    return err;
+  },
 });
 
 await apolloServer.start();
 
 // serve client assets
-// TODO: context
 app.use(
   "/",
   cors<cors.CorsRequest>(),
