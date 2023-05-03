@@ -15,18 +15,28 @@ import EnvInit from "./middlewares/env.middleware.js";
 import generalMiddleware from "./middlewares/general.middleware.js";
 import { initializeDatabase, prisma } from "./prisma/index.js";
 import { schema } from "./schema.js";
+import { GetApplicationMode } from "./utils/mode.util.js";
 
 // initialize server variables
 EnvInit();
 const port = Number(process.env.PORT) || 8081;
 const app = express();
+const mode = GetApplicationMode();
 const httpServer = http.createServer(app);
 
 // initialize apollo server, the graphql layer will sit on top of our API
 const apolloServer = new ApolloServer({
   schema,
-  introspection: true,
+  introspection: mode === "production" ? false : true,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  formatError: (err) => {
+    // Don't give the specific errors to the client
+    if (err.message.startsWith("Database Error: ")) {
+      return new Error("Internal server error");
+    }
+    // Otherwise return the original error
+    return err;
+  },
 });
 
 await apolloServer.start();
