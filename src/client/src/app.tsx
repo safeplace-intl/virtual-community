@@ -22,8 +22,6 @@ export function App() {
         <Route path="/page-layout" component={PageLayout} />
       </Router> */}
       <PageLayout />
-      <div class="w-full lg:w-2/12">Column 1</div>
-      <div class="w-full lg:w-5/12">Column 2</div>
     </div>
   );
 }
