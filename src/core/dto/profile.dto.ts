@@ -22,16 +22,16 @@ export class CreateProfileInput {
   @Length(1, 500)
   bio!: string;
 
-  @Field(()=> String, { nullable: true })
+  @Field(() => String, { nullable: true })
   profilePic: string | null | undefined;
 
-  @Field(()=> String, { nullable: true })
+  @Field(() => String, { nullable: true })
   homeCountry: string | null | undefined;
 
-  @Field(()=> String, { nullable: true })
+  @Field(() => String, { nullable: true })
   nickname: string | null | undefined;
 
-  @Field(()=> String, { nullable: true })
+  @Field(() => String, { nullable: true })
   website: string | null | undefined;
 
   @Field()

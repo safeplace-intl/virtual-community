@@ -42,7 +42,19 @@ type Mutation {
 }
 
 type Profile {
+  bio: String!
+  currentLocation: String!
+  fullName: String!
+  homeCountry: String
   id: Float!
+  namePronunciation: String
+  nickname: String
+  profilePic: String
+  pronouns: String!
+  tdaGradYear: Float!
+  tdaGradYearBannerVisible: Boolean!
+  userId: Float!
+  website: String
 }
 
 type Query {

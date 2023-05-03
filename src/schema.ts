@@ -8,11 +8,11 @@ import {
   RefreshTokenInput,
   TokensPayload,
 } from "./core/dto/auth.dto.js";
+import { CreateProfileInput } from "./core/dto/profile.dto.js";
 import { CreateUserInput } from "./core/dto/user.dto.js";
 import { AuthResolver } from "./modules/auth/auth.resolver.js";
 import { ProfileResolver } from "./modules/profile/profile.resolver.js";
 import { UserResolver } from "./modules/user/user.resolver.js";
-import { CreateProfileInput } from "./core/dto/profile.dto.js";
 
 // the types and resolvers specified here are what will be auto-generated in the graphql schema file
 export const schema = await buildSchema({
