@@ -4,11 +4,10 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+import { GraphQLError } from "graphql";
 import http from "http";
-import jwt from "jsonwebtoken";
 
 import { type Context, decodeAuthHeader } from "./context.js";
-import { DecodedAuthHeaderPayload } from "./core/dto/auth.dto.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
@@ -56,8 +55,12 @@ app.use(
         where: { id: userId },
       });
 
-      // add the user to the context
-      // this will eventually be used to check permissions and reject requests if the user is not authorized
+      // when this is turned on, headers must be available or else the request will fail
+      // TODO: make login and create user public and able to bypass this
+      // if (!user) {
+      //   throw new GraphQLError("User is not authenticated");
+      // }
+
       return {
         user: user || undefined,
       };
