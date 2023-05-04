@@ -4,7 +4,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
-import { GraphQLError } from "graphql";
+// import { GraphQLError } from "graphql";
 import http from "http";
 
 import { type Context, decodeAuthHeader } from "./context.js";
