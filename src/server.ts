@@ -4,9 +4,10 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+// import { GraphQLError } from "graphql";
 import http from "http";
 
-import { type Context } from "./context.js";
+import { type Context, decodeAuthHeader } from "./context.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
@@ -48,8 +49,20 @@ app.use(
   bodyParser.json(),
   expressMiddleware(apolloServer, {
     context: async ({ req }) => {
+      const userId = await decodeAuthHeader(req.headers.authorization || "");
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      // when this is turned on, headers must be available or else the request will fail
+      // TODO: make login and create user public and able to bypass this
+      // if (!user) {
+      //   throw new GraphQLError("User is not authenticated");
+      // }
+
       return {
-        token: req.headers.authorization || "",
+        user: user || undefined,
       };
     },
   })

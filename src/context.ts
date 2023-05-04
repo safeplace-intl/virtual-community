@@ -1,21 +1,25 @@
 import { BaseContext } from "@apollo/server";
-import * as jwt from "jsonwebtoken";
+import { User } from "@prisma/client";
+import { GraphQLError } from "graphql";
+import jwt from "jsonwebtoken";
 
 import { DecodedAuthHeaderPayload } from "./core/dto/auth.dto.js";
 
 export interface Context extends BaseContext {
-  token?: string;
+  user?: User;
 }
 
 export async function decodeAuthHeader(authHeader: string) {
   const token = authHeader.replace("Bearer ", "");
 
   if (!token) {
-    throw new Error("No token provided.");
+    throw new GraphQLError("No token provided.");
   }
 
-  return jwt.verify(
+  const { userId } = jwt.verify(
     token,
     String(process.env.JWT_SECRET)
   ) as DecodedAuthHeaderPayload;
+
+  return userId;
 }
