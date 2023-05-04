@@ -1,7 +1,10 @@
 import { Profile } from "@prisma/client";
 import { Service } from "typedi";
 
-import { CreateProfileInput, UpdateProfileInput } from "../../core/dto/profile.dto.js";
+import {
+  CreateProfileInput,
+  UpdateProfileInput,
+} from "../../core/dto/profile.dto.js";
 import { prisma } from "../../prisma/index.js";
 
 @Service()
@@ -36,7 +39,7 @@ export default class ProfileService {
           pronouns: profileInput.pronouns,
           tdaGradYear: profileInput.tdaGradYear,
           currentLocation: profileInput.currentLocation,
-          bio: profileInput.bio
+          bio: profileInput.bio,
         },
       });
     }
@@ -49,10 +52,8 @@ export default class ProfileService {
     const profile = await prisma.profile.update({
       where: { userId },
       data: profileUpdateInput,
-
     });
 
-    return profile
-
+    return profile;
   }
 }
