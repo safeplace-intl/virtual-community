@@ -1,41 +1,11 @@
-import { PrismaClient, User } from "@prisma/client";
-// import { GraphQLError } from "graphql";
+import { BaseContext } from "@apollo/server";
 import * as jwt from "jsonwebtoken";
 
 import { DecodedAuthHeaderPayload } from "./core/dto/auth.dto.js";
-// import { prisma } from "./prisma/index.js";
 
-export interface Context {
-  prisma: PrismaClient;
-  user?: User;
-  token: string;
+export interface Context extends BaseContext {
+  token?: string;
 }
-
-// TODO: figure out how this context can work with express base context
-// export async function context({ request }: Express.Request): Promise<Context> {
-//   const authPayload = await decodeAuthHeader(req.headers.authorization || "");
-
-//   let user;
-//   if (authPayload) {
-//     user = await prisma.user.findUnique({
-//       where: {
-//         id: authPayload.userId,
-//       },
-//     });
-//   }
-
-//   if (!user)
-//     throw new GraphQLError("you must be logged in to query this schema", {
-//       extensions: {
-//         code: "UNAUTHENTICATED",
-//       },
-//     });
-
-//   return {
-//     prisma,
-//     user,
-//   };
-// }
 
 export async function decodeAuthHeader(authHeader: string) {
   const token = authHeader.replace("Bearer ", "");

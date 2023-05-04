@@ -6,7 +6,7 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 
-// import type { Context } from "./context.js";
+import { type Context } from "./context.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
@@ -25,7 +25,7 @@ const mode = GetApplicationMode();
 const httpServer = http.createServer(app);
 
 // initialize apollo server, the graphql layer will sit on top of our API
-const apolloServer = new ApolloServer({
+const apolloServer = new ApolloServer<Context>({
   schema,
   introspection: mode === "production" ? false : true,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -48,8 +48,9 @@ app.use(
   bodyParser.json(),
   expressMiddleware(apolloServer, {
     context: async ({ req }) => {
-      const token = req.headers.token || "";
-      return { token };
+      return {
+        token: req.headers.authorization || "",
+      };
     },
   })
 );
