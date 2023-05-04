@@ -5,8 +5,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import http from "http";
+import jwt from "jsonwebtoken";
 
-import { type Context } from "./context.js";
+import { type Context, decodeAuthHeader } from "./context.js";
+import { DecodedAuthHeaderPayload } from "./core/dto/auth.dto.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
@@ -48,8 +50,16 @@ app.use(
   bodyParser.json(),
   expressMiddleware(apolloServer, {
     context: async ({ req }) => {
+      const userId = await decodeAuthHeader(req.headers.authorization || "");
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      // add the user to the context
+      // this will eventually be used to check permissions and reject requests if the user is not authorized
       return {
-        token: req.headers.authorization || "",
+        user: user || undefined,
       };
     },
   })
