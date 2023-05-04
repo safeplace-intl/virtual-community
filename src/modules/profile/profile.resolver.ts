@@ -43,6 +43,7 @@ export class ProfileResolver {
       profileInput
     );
 
+
     return profile;
   }
 }
