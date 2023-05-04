@@ -17,7 +17,8 @@ export class Profile {
   @Field()
   bio!: string;
   @Field(() => String, { nullable: true })
-  profilePic: string | null | undefined;
+  // profilePic?: string means profilePic: string | undefined
+  profilePic?: string | null;
   @Field(() => String, { nullable: true })
   homeCountry: string | null | undefined;
   @Field(() => String, { nullable: true })

@@ -12,13 +12,8 @@ input CreateProfileInput {
   bio: String!
   currentLocation: String!
   fullName: String!
-  homeCountry: String
-  nickname: String
-  profilePic: String
   pronouns: String!
   tdaGradYear: Float!
-  tdaGradYearBannerVisible: Boolean!
-  website: String
 }
 
 input CreateUserInput {
@@ -39,6 +34,7 @@ type Mutation {
   deleteAccount(id: Float!): Boolean!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(input: ResetPasswordInput!): User!
+  updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
 }
 
 type Profile {
@@ -75,6 +71,19 @@ input ResetPasswordInput {
 type TokensPayload {
   accessToken: String!
   refreshToken: String!
+}
+
+input UpdateProfileInput {
+  bio: String
+  currentLocation: String
+  fullName: String
+  homeCountry: String
+  nickname: String
+  profilePic: String
+  pronouns: String
+  tdaGradYear: Float
+  tdaGradYearBannerVisible: Boolean
+  website: String
 }
 
 type User {

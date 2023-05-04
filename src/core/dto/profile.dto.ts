@@ -22,6 +22,7 @@ export class CreateProfileInput {
   @Length(1, 500)
   bio!: string;
 
+  /*
   @Field(() => String, { nullable: true })
   profilePic: string | null | undefined;
 
@@ -36,4 +37,40 @@ export class CreateProfileInput {
 
   @Field()
   tdaGradYearBannerVisible!: boolean;
+  */
+}
+
+@InputType()
+export class UpdateProfileInput {
+  @Field(() => String, { nullable: true })
+  @Length(1, 255)
+  fullName?: string;
+
+  @Field(() => String, { nullable: true })
+  pronouns?: string;
+
+  @Field(() => Number, { nullable: true })
+  tdaGradYear?: number;
+
+  @Field(() => String, { nullable: true })
+  currentLocation?: string;
+
+  @Field(() => String, { nullable: true })
+  @Length(1, 500)
+  bio?: string;
+
+  @Field(() => String, { nullable: true })
+  profilePic: string | null | undefined;
+
+  @Field(() => String, { nullable: true })
+  homeCountry: string | null | undefined;
+
+  @Field(() => String, { nullable: true })
+  nickname: string | null | undefined;
+
+  @Field(() => String, { nullable: true })
+  website: string | null | undefined;
+
+  @Field(() => Boolean, { nullable: true })
+  tdaGradYearBannerVisible?: boolean;
 }

@@ -1,7 +1,7 @@
 import { Profile } from "@prisma/client";
 import { Service } from "typedi";
 
-import { CreateProfileInput } from "../../core/dto/profile.dto.js";
+import { CreateProfileInput, UpdateProfileInput } from "../../core/dto/profile.dto.js";
 import { prisma } from "../../prisma/index.js";
 
 @Service()
@@ -36,14 +36,23 @@ export default class ProfileService {
           pronouns: profileInput.pronouns,
           tdaGradYear: profileInput.tdaGradYear,
           currentLocation: profileInput.currentLocation,
-          bio: profileInput.bio,
-          profilePic: profileInput.profilePic,
-          homeCountry: profileInput.homeCountry,
-          nickname: profileInput.nickname,
-          website: profileInput.website,
-          tdaGradYearBannerVisible: profileInput.tdaGradYearBannerVisible,
+          bio: profileInput.bio
         },
       });
     }
+  }
+
+  async updateProfile(
+    userId: number,
+    profileUpdateInput: UpdateProfileInput
+  ): Promise<Profile> {
+    const profile = await prisma.profile.update({
+      where: { userId },
+      data: profileUpdateInput,
+
+    });
+
+    return profile
+
   }
 }
