@@ -1,4 +1,4 @@
-\# SPI 🌈 Virtual Community
+# SPI 🌈 Virtual Community
 
 A global virtual community for LGBTQIA+ refugees and asylum seekers to safely connect
 

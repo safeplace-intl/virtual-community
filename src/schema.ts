@@ -14,7 +14,7 @@ import { UserResolver } from "./modules/user/user.resolver.js";
 
 // the types and resolvers specified here are what will be auto-generated in the graphql schema file
 export const schema = await buildSchema({
-  resolvers: [UserResolver, AuthResolver],
+  resolvers: [AuthResolver, UserResolver],
   orphanedTypes: [
     LoginInput,
     TokensPayload,
@@ -26,7 +26,7 @@ export const schema = await buildSchema({
   emitSchemaFile: true,
   dateScalarMode: "isoDate",
   container: Container, // this is needed to inject services into resolvers
-  validate: false, // turns off the built in validation
+  validate: true,
 });
 
 // dont forget to also update prisma schema file and run prisma migrate to keep all schemas current

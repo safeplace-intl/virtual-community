@@ -17,7 +17,8 @@
     "prepare": "husky install",
     "generate:prisma": "prisma generate --schema=./src/prisma/schema.prisma",
     "migrate:prisma": "prisma migrate dev --schema=./src/prisma/schema.prisma",
-    "reset:prisma": "prisma migrate reset --schema=./src/prisma/schema.prisma"
+    "reset:prisma": "prisma migrate reset --schema=./src/prisma/schema.prisma",
+    "studio:prisma": "prisma studio --schema=./src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "Safeplace International",
@@ -39,7 +40,8 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@prisma/client": "^4.12.0",
+    "@graphql-eslint/eslint-plugin": "^3.18.0",
+    "@prisma/client": "^4.13.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
@@ -47,7 +49,6 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.3",
-    "@types/passport-jwt": "^3.0.8",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "bcrypt": "^5.1.0",
@@ -59,13 +60,13 @@
     "husky": "^8.0.0",
     "nodemon": "^2.0.21",
     "prettier": "^2.8.7",
-    "prisma": "^4.12.0",
+    "prisma": "^4.13.0",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.4",
     "tsconfig-paths": "^4.1.2",
     "type-graphql": "^2.0.0-beta.1",
     "typedi": "^0.10.0",
-    "typegraphql-prisma": "^0.24.5",
+    "typegraphql-prisma": "^0.25.0",
     "typescript": "^5.0.2"
   },
   "prisma": {

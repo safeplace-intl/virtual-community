@@ -6,9 +6,8 @@ async function main() {
     update: {},
     create: {
       email: "alex@email.com",
-      fullName: "Alex",
-      pronouns: "she/her",
       passwordHash: "123",
+      isActive: true,
     },
   });
   const blake = await prisma.user.upsert({
@@ -16,9 +15,8 @@ async function main() {
     update: {},
     create: {
       email: "blake@email.com",
-      fullName: "Bob",
-      pronouns: "he/him",
       passwordHash: "123",
+      isActive: true,
     },
   });
   const sam = await prisma.user.upsert({
@@ -26,9 +24,8 @@ async function main() {
     update: {},
     create: {
       email: "sam@email.com",
-      fullName: "Sam",
-      pronouns: "they/them",
       passwordHash: "123",
+      isActive: true,
     },
   });
   // eslint-disable-next-line no-console

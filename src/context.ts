@@ -21,6 +21,7 @@ export function decodeAuthHeader(authHeader: string) {
     String(process.env.JWT_SECRET)
   ) as DecodedAuthHeaderPayload;
 
+
   if (!userId) {
     throw new GraphQLError("Invalid token.");
   }
