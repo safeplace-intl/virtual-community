@@ -1,16 +1,13 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import {
-  ApolloServerPluginLandingPageLocalDefault,
-  ApolloServerPluginLandingPageProductionDefault,
-} from "@apollo/server/plugin/landingPage/default";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+import { GraphQLError } from "graphql";
 import http from "http";
 
-// import type { Context } from "./context.js";
+import { type Context, decodeAuthHeader } from "./context.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
@@ -24,39 +21,56 @@ import { GetApplicationMode } from "./utils/mode.util.js";
 // initialize server variables
 EnvInit();
 const port = Number(process.env.PORT) || 8081;
-const mode = GetApplicationMode();
 const app = express();
+const mode = GetApplicationMode();
 const httpServer = http.createServer(app);
 
 // initialize apollo server, the graphql layer will sit on top of our API
-// TODO: <Context>
-const apolloServer = new ApolloServer({
+const apolloServer = new ApolloServer<Context>({
   schema,
-  introspection: true,
-  plugins: [
-    mode === "production"
-      ? ApolloServerPluginLandingPageProductionDefault({
-          graphRef: "my-graph-id@my-graph-variant", // needs update
-          footer: false,
-        })
-      : ApolloServerPluginLandingPageLocalDefault({ footer: false }),
-
-    ApolloServerPluginDrainHttpServer({ httpServer }),
-  ],
+  introspection: mode === "production" ? false : true,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  formatError: (err) => {
+    // Don't give the specific errors to the client
+    if (err.message.startsWith("Database Error: ")) {
+      return new Error("Internal server error");
+    }
+    // Otherwise return the original error
+    return err;
+  },
 });
 
 await apolloServer.start();
 
 // serve client assets
-// TODO: context
 app.use(
   "/",
   cors<cors.CorsRequest>(),
   bodyParser.json(),
   expressMiddleware(apolloServer, {
     context: async ({ req }) => {
-      const token = req.headers.token || "";
-      return { token };
+      if (!req.headers.authorization) {
+        return {};
+      } // do i want to throw an error here?
+
+      try {
+        const userId = decodeAuthHeader(req.headers.authorization);
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
+        // when this is turned on, headers must be available or else the request will fail
+        // TODO: make login and create user public and able to bypass this
+        // if (!user) {
+        //   throw new GraphQLError("User is not authenticated");
+        // }
+
+        return {
+          user: user || undefined,
+        };
+      } catch (error) {
+        throw new GraphQLError("Error authenticating user");
+      }
     },
   })
 );
