@@ -1,44 +1,25 @@
-import logo from "@assets/spi-logo.png";
-import { h } from "preact";
+import { navItems } from "@menuitems";
 import { useState } from "preact/hooks";
 
-interface TopNavBarProps {
-  onTopMenuItemClick: (menuItem: string) => void;
-}
+import logo from "../../assets/spi-logo.png";
 
-interface MenuItem {
-  name: string;
-  onClick: string;
-  icon?: h.JSX.Element;
+interface TopNavBarProps {
+  onTopMenuItemClick: (navItem: string) => void;
 }
 
 export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSubmenu, setActiveSubmenu] = useState("");
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+    setActiveSubmenu("");
+  };
 
-  const menuItems: MenuItem[] = [
-    {
-      name: "Feed",
-      onClick: "Feed",
-      // icon: <MdInbox size={24} aria-hidden="true" focusable="false" />,
-    },
-    {
-      name: "Reports",
-      onClick: "Reports",
-      // icon: <MdPieChart size={24} aria-hidden="true" focusable="false" />,
-    },
-    {
-      name: "Profile",
-      onClick: "Profile",
-      // icon: <MdPerson size={24} aria-hidden="true" focusable="false" />,
-    },
-    {
-      name: "Settings",
-      onClick: "Settings",
-      // icon: <MdSettings size={24} aria-hidden="true" focusable="false" />,
-    },
-  ];
+  const handleSubmenuClick = (navItem: string) => {
+    setActiveSubmenu(activeSubmenu === navItem ? "" : navItem);
+    setIsOpen(false); //Close the menu when a top nav bar menu item is clicked on again
+  };
 
   return (
     <nav className="sticky top-0 z-50 flex justify-between py-0 px-100 md:px-10 h-64px w-1440px bg-modal-100 border border-black-100 shadow box-shadow-[0_4px_4px_0px]-black-100">
@@ -79,14 +60,14 @@ export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center text-black-100 py-2 gap-4">
-        {menuItems.map((item) => (
+        {navItems.map((item) => (
           <a
-            key={item.name}
+            key={item.title}
             onClick={() => onTopMenuItemClick(item.onClick)}
             href="#"
             className="text-base font-normal leading-6 tracking-normal py-2 px-4 hover:underline hover:text-spi-violet-100"
           >
-            {item.name}
+            {item.title}
           </a>
         ))}
         <button className="text-base font-bold leading-6 tracking-normal bg-modal-100 text-spi-violet-100 py-2 px-4 border rounded-lg border-spi-violet-100 mr-2">
@@ -96,7 +77,7 @@ export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
 
       {/* Hamburger Menu */}
       <div className="md:hidden flex relative">
-        <button onClick={toggleMenu} className="focus:outline-none">
+        <button onClick={toggleMenu} className="focus:outline-none px-4">
           <svg
             className="h-6 w-6"
             viewBox="0 0 24 24"
@@ -110,20 +91,55 @@ export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
           </svg>
         </button>
         {isOpen && (
-          <div className="absolute right-0 bg-white shadow rounded mt-10 w-48">
-            {menuItems.map((item) => (
-              <a
-                key={item.name}
-                onClick={() => onTopMenuItemClick(item.onClick)}
-                href="#"
-                className="block px-4 py-2 font-bold hover:underline hover:text-spi-violet-100"
-              >
-                {item.name}
-              </a>
-            ))}
-            <button className="font-bold w-full text-left bg-modal-100 text-spi-violet-100 py-2 px-4 border rounded-lg border-spi-violet-100">
-              Log In
-            </button>
+          <div className="fixed top-0 right-0 h-screen w-1/2 bg-white shadow-lg rounded-l-lg">
+            <div className="flex justify-between items-center p-4">
+              <button onClick={toggleMenu} className="focus:outline-none">
+                <svg
+                  className="h-6 w-6 text-black-100"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+            <div className="px-4">
+              {navItems.map((item) => (
+                <div key={item.title}>
+                  <a
+                    onClick={() => {
+                      handleSubmenuClick(item.title);
+                    }}
+                    href="#"
+                    className="block py-2 font-heading3 text-heading3 hover:underline hover:text-spi-violet-100 text-left"
+                  >
+                    {item.title}
+                  </a>
+                  {item.subpages && activeSubmenu === item.title && (
+                    <ul>
+                      {item.subpages.map((subItem) => (
+                        <li key={subItem}>
+                          <a
+                            onClick={() => onTopMenuItemClick(subItem)}
+                            href="#"
+                            className="block py-2 pl-4 font-subHeading text-subHeading hover:underline hover:text-spi-violet-100 text-left"
+                          >
+                            {subItem}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+              <button className="w-1/2 py-2 px-4 font-heading text-center bg-modal-100 text-spi-violet-100 border rounded-lg border-spi-violet-100 mt-4">
+                Log In
+              </button>
+            </div>
           </div>
         )}
       </div>

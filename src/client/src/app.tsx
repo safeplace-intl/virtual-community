@@ -1,9 +1,6 @@
-import LeftNavBar from "@components/Header/LeftNavBar";
-import TopNavBar from "@components/Header/TopNavBar";
-import PageLayout from "@components/PageLayout/PageLayout";
+import Header from "@components/Header/Header";
 import { useState } from "preact/hooks";
 import {} from "preact/hooks";
-import { Router } from "wouter-preact";
 
 export function App() {
   const [activeTopMenuItem, setActiveTopMenuItem] = useState("Blank");
@@ -13,15 +10,13 @@ export function App() {
   };
 
   return (
-    <div className="relative">
-      <TopNavBar onTopMenuItemClick={handleTopMenuItemClick} />
-      <div className="absolute top-64px left-0">
-        <LeftNavBar activeMenuItem={activeTopMenuItem} />
+    <>
+      <div className="relative">
+        <Header
+          activeMenuItem={activeTopMenuItem}
+          onTopMenuItemClick={handleTopMenuItemClick}
+        />
       </div>
-      {/* <Router>
-        <Route path="/page-layout" component={PageLayout} />
-      </Router> */}
-      <PageLayout />
-    </div>
+    </>
   );
 }

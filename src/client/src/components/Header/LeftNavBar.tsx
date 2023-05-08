@@ -1,23 +1,27 @@
+import { navItems } from "@menuitems";
+import { useEffect, useState } from "preact/hooks";
+
 interface LeftNavBarProps {
   activeMenuItem: string;
 }
 
-export default function LeftNavBar({ activeMenuItem }: LeftNavBarProps) {
-  const navItems = [
-    { title: "Blank", subpages: [] },
-    {
-      title: "Feed",
-      subpages: ["Stories", "Mentors", "Friends", "Groups", "Label 5"],
-    },
-    { title: "Reports", subpages: [] },
-    { title: "Profile", subpages: [] },
-    { title: "Settings", subpages: [] },
-  ];
+const LeftNavBar: React.FC<LeftNavBarProps> = ({ activeMenuItem }) => {
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const activeItem = navItems.find((item) => item.title === activeMenuItem);
 
-  if (!activeItem) {
-    // Handle the case where activeItem is undefined
+  if (!activeItem || isSmallScreen) {
+    // Hide the left nav bar on small screens
     return null;
   }
 
@@ -43,4 +47,6 @@ export default function LeftNavBar({ activeMenuItem }: LeftNavBarProps) {
       </ul>
     </div>
   );
-}
+};
+
+export default LeftNavBar;
