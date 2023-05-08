@@ -42,7 +42,7 @@ export class CreateProfileInput {
 
 @InputType()
 export class UpdateProfileInput {
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   @Length(1, 255)
   fullName?: string;
 
