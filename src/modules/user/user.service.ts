@@ -6,8 +6,14 @@ import { CreateUserInput } from "../../core/dto/user.dto.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "../auth/auth.service.js";
 
+interface IUserService {
+  getUserById(userId: number): Promise<User>;
+  createUser(userInput: CreateUserInput): Promise<User>;
+  deactivateAccount(email: string): Promise<string>;
+  deleteAccount(id: number): Promise<boolean>;
+}
 @Service()
-export default class UserService {
+export default class UserService implements IUserService {
   constructor(private readonly authService: AuthService) {}
 
   async getUserById(userId: number): Promise<User> {

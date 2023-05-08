@@ -10,8 +10,19 @@ import {
   ResetPasswordInput,
 } from "../../core/dto/user.dto.js";
 import { prisma } from "../../prisma/index.js";
+
+interface IAuthService {
+  createTokens(userId: number): Promise<TokensPayload>;
+  getNewTokens({
+    refreshToken,
+    userId,
+  }: RefreshTokenInput): Promise<TokensPayload>;
+  createPassword(userInput: CreateUserInput): Promise<string>;
+  resetPassword(resetPasswordInput: ResetPasswordInput): Promise<User>;
+  changePassword(changePasswordInput: ChangePasswordInput): Promise<User>;
+}
 @Service()
-export class AuthService {
+export class AuthService implements IAuthService {
   // constructor() {}
 
   async createTokens(userId: number): Promise<TokensPayload> {
@@ -32,7 +43,10 @@ export class AuthService {
     return payload;
   }
 
-  async getNewTokens({ refreshToken, userId }: RefreshTokenInput) {
+  async getNewTokens({
+    refreshToken,
+    userId,
+  }: RefreshTokenInput): Promise<TokensPayload> {
     const valid = jwt.verify(refreshToken, String(process.env.JWT_SECRET));
 
     let newTokens: TokensPayload;
