@@ -4,7 +4,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
-// import { GraphQLError } from "graphql";
+import { GraphQLError } from "graphql";
 import http from "http";
 
 import { type Context, decodeAuthHeader } from "./context.js";
@@ -49,21 +49,28 @@ app.use(
   bodyParser.json(),
   expressMiddleware(apolloServer, {
     context: async ({ req }) => {
-      const userId = await decodeAuthHeader(req.headers.authorization || "");
+      if (!req.headers.authorization) {
+        return {};
+      } // do i want to throw an error here?
 
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-      });
+      try {
+        const userId = decodeAuthHeader(req.headers.authorization);
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        });
 
-      // when this is turned on, headers must be available or else the request will fail
-      // TODO: make login and create user public and able to bypass this
-      // if (!user) {
-      //   throw new GraphQLError("User is not authenticated");
-      // }
+        // when this is turned on, headers must be available or else the request will fail
+        // TODO: make login and create user public and able to bypass this
+        // if (!user) {
+        //   throw new GraphQLError("User is not authenticated");
+        // }
 
-      return {
-        user: user || undefined,
-      };
+        return {
+          user: user || undefined,
+        };
+      } catch (error) {
+        throw new GraphQLError("Error authenticating user");
+      }
     },
   })
 );

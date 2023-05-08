@@ -9,8 +9,8 @@ export interface Context extends BaseContext {
   user?: User;
 }
 
-export async function decodeAuthHeader(authHeader: string) {
-  /*const token = authHeader.replace("Bearer ", "");
+export function decodeAuthHeader(authHeader: string) {
+  const token = authHeader.replace("Bearer ", "");
 
   if (!token) {
     throw new GraphQLError("No token provided.");
@@ -21,6 +21,9 @@ export async function decodeAuthHeader(authHeader: string) {
     String(process.env.JWT_SECRET)
   ) as DecodedAuthHeaderPayload;
 
-  return userId;*/
-  return 1;
+  if (!userId) {
+    throw new GraphQLError("Invalid token.");
+  }
+
+  return userId;
 }
