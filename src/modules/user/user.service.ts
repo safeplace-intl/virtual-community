@@ -2,11 +2,7 @@ import { User } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { Service } from "typedi";
 
-import {
-  CreateUserInput,
-  ResetPasswordInput,
-  ChangePasswordInput,
-} from "../../core/dto/user.dto.js";
+import { CreateUserInput } from "../../core/dto/user.dto.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "../auth/auth.service.js";
 
@@ -28,7 +24,6 @@ export default class UserService {
 
   async createUser(userInput: CreateUserInput): Promise<User> {
     const email = userInput.email;
-
     // checks to make sure email is not already in use
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -37,41 +32,17 @@ export default class UserService {
     if (existingUser) {
       throw new Error("Email already in use.");
     } else {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(userInput.password, salt);
-
+      const password = await this.authService.createPassword(userInput);
       // returns the newly created user object to the resolver
       const user = await prisma.user.create({
         data: {
           email: userInput.email,
-          passwordHash: hashedPassword,
+          passwordHash: password,
           isActive: true,
         },
       });
       return user;
     }
-  }
-
-  async resetPassword(input: ResetPasswordInput): Promise<User> {
-    const { email, newPassword } = input;
-
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // Generate new password hash
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(newPassword, salt);
-
-    // Update user's password hash
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { passwordHash },
-    });
-
-    return updatedUser;
   }
 
   async deactivateAccount(email: string): Promise<string> {
@@ -109,33 +80,5 @@ export default class UserService {
     } catch {
       return false;
     }
-  }
-
-  async changePassword(input: ChangePasswordInput): Promise<User> {
-    const { email, newPassword, oldPassword } = input;
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-    const salt = await bcrypt.genSalt(10);
-
-    const isPasswordMatching = await bcrypt.compare(
-      oldPassword,
-      user.passwordHash
-    );
-
-    if (!isPasswordMatching) {
-      throw new Error("Incorrect old password");
-    }
-
-    const newPasswordHash = await bcrypt.hash(newPassword, salt);
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { passwordHash: newPasswordHash },
-    });
-    return updatedUser;
   }
 }

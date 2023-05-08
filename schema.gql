@@ -27,13 +27,13 @@ input LoginInput {
 }
 
 type Mutation {
-  changePassword(data: ChangePasswordInput!): User!
+  changePassword(changePasswordInput: ChangePasswordInput!): User!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deactivateAccount(email: String!): String!
   deleteAccount(id: Float!): Boolean!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
-  resetPassword(input: ResetPasswordInput!): User!
+  resetPassword(resetPasswordInput: ResetPasswordInput!): User!
 }
 
 type Profile {

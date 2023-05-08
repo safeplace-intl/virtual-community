@@ -48,8 +48,10 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async resetPassword(@Arg("input") input: ResetPasswordInput): Promise<User> {
-    const updatedUser = await this.userService.resetPassword(input);
+  async resetPassword(
+    @Arg("resetPasswordInput") input: ResetPasswordInput
+  ): Promise<User> {
+    const updatedUser = await this.authService.resetPassword(input);
 
     return updatedUser;
   }
@@ -68,8 +70,10 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async changePassword(@Arg("data") input: ChangePasswordInput): Promise<User> {
-    const updatedUser = await this.userService.changePassword(input);
+  async changePassword(
+    @Arg("changePasswordInput") input: ChangePasswordInput
+  ): Promise<User> {
+    const updatedUser = await this.authService.changePassword(input);
     return updatedUser;
   }
 }

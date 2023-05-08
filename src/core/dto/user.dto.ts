@@ -36,12 +36,12 @@ export class ResetPasswordInput {
 }
 @InputType()
 export class ChangePasswordInput {
-  @Field(() => String)
+  @Field()
   email!: string;
 
-  @Field(() => String)
+  @Field()
   oldPassword!: string;
 
-  @Field(() => String)
+  @Field()
   newPassword!: string;
 }
