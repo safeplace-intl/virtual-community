@@ -23,21 +23,21 @@ export class Profile {
   @Field()
   bio!: string;
 
-  @Field(() => String, { nullable: true })
-  profilePic?: string | null;
+  @Field({ nullable: true })
+  profilePic?: string;
 
-  @Field(() => String, { nullable: true })
-  homeCountry?: string | null;
+  @Field({ nullable: true })
+  homeCountry?: string;
 
-  @Field(() => String, { nullable: true })
-  nickname?: string | null;
+  @Field({ nullable: true })
+  nickname?: string;
 
-  @Field(() => String, { nullable: true })
-  namePronunciation?: string | null;
+  @Field({ nullable: true })
+  namePronunciation?: string;
 
-  @Field(() => String, { nullable: true })
-  website?: string | null;
+  @Field({ nullable: true })
+  website?: string;
 
-  @Field()
+  @Field({ nullable: true })
   tdaGradYearBannerVisible?: boolean;
 }
