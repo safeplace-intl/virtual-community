@@ -21,23 +21,6 @@ export class CreateProfileInput {
   @Field()
   @Length(1, 500)
   bio!: string;
-
-  /*
-  @Field(() => String, { nullable: true })
-  profilePic: string | null | undefined;
-
-  @Field(() => String, { nullable: true })
-  homeCountry: string | null | undefined;
-
-  @Field(() => String, { nullable: true })
-  nickname: string | null | undefined;
-
-  @Field(() => String, { nullable: true })
-  website: string | null | undefined;
-
-  @Field()
-  tdaGradYearBannerVisible!: boolean;
-  */
 }
 
 @InputType()
@@ -46,31 +29,31 @@ export class UpdateProfileInput {
   @Length(1, 255)
   fullName?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   pronouns?: string;
 
-  @Field(() => Number, { nullable: true })
+  @Field({ nullable: true })
   tdaGradYear?: number;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   currentLocation?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   @Length(1, 500)
   bio?: string;
 
-  @Field(() => String, { nullable: true })
-  profilePic: string | null | undefined;
+  @Field({ nullable: true })
+  profilePic?: string;
 
-  @Field(() => String, { nullable: true })
-  homeCountry: string | null | undefined;
+  @Field({ nullable: true })
+  homeCountry?: string;
 
-  @Field(() => String, { nullable: true })
-  nickname: string | null | undefined;
+  @Field({ nullable: true })
+  nickname?: string;
 
-  @Field(() => String, { nullable: true })
-  website: string | null | undefined;
+  @Field({ nullable: true })
+  website?: string;
 
-  @Field(() => Boolean, { nullable: true })
+  @Field({ nullable: true })
   tdaGradYearBannerVisible?: boolean;
 }
