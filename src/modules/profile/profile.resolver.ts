@@ -23,7 +23,7 @@ export class ProfileResolver {
   async createProfile(
     @Arg("createProfileInput") profileInput: CreateProfileInput,
     @Arg("userId") userId: number
-  ): Promise<Profile> {
+  ) {
     const profile = await this.profileService.createProfile(
       userId,
       profileInput
@@ -36,7 +36,7 @@ export class ProfileResolver {
   async updateProfile(
     @Arg("updateProfileInput") profileInput: UpdateProfileInput,
     @Arg("userId") userId: number
-  ): Promise<Profile> {
+  ) {
     const profile = await this.profileService.updateProfile(
       userId,
       profileInput
