@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { IsEmail, Length } from "class-validator";
-import { ArgsType, Field, InputType } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class CreateUserInput {
@@ -18,12 +18,6 @@ export class CreateUserInput {
 
   @Field()
   pronouns!: string;
-}
-
-@ArgsType()
-export class GetUserArgs {
-  @Field()
-  userId!: number;
 }
 
 @InputType()

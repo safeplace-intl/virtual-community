@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import { AuthPayload } from "../../core/dto/auth.dto.js";
 import {
   ChangePasswordInput,
   CreateUserInput,
-  GetUserArgs,
   ResetPasswordInput,
 } from "../../core/dto/user.dto.js";
 import { User } from "../../core/entities/user.entity.js";
@@ -25,8 +24,8 @@ export class UserResolver {
   ) {}
 
   @Query(() => User, { nullable: true })
-  async getUser(@Args() params: GetUserArgs) {
-    const user = await this.userService.getUserById(params.userId);
+  async getUser(@Arg("userId") userId: number) {
+    const user = await this.userService.getUserById(userId);
     return user;
   }
 

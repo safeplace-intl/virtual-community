@@ -12,6 +12,13 @@ input ChangePasswordInput {
   email: String!
   newPassword: String!
   oldPassword: String!
+
+input CreateProfileInput {
+  bio: String!
+  currentLocation: String!
+  fullName: String!
+  pronouns: String!
+  tdaGradYear: Float!
 }
 
 input CreateUserInput {
@@ -28,19 +35,34 @@ input LoginInput {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
+  createProfile(createProfileInput: CreateProfileInput!, userId: Float!): Profile!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deactivateAccount(email: String!): String!
   deleteAccount(id: Float!): Boolean!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
+  updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
 }
 
 type Profile {
+  bio: String!
+  currentLocation: String!
+  fullName: String!
+  homeCountry: String
   id: Float!
+  namePronunciation: String
+  nickname: String
+  profilePic: String
+  pronouns: String!
+  tdaGradYear: Float!
+  tdaGradYearBannerVisible: Boolean
+  userId: Float!
+  website: String
 }
 
 type Query {
+  getProfile(userId: Float!): Profile
   getUser(userId: Float!): User
 }
 
@@ -57,6 +79,19 @@ input ResetPasswordInput {
 type TokensPayload {
   accessToken: String!
   refreshToken: String!
+}
+
+input UpdateProfileInput {
+  bio: String
+  currentLocation: String
+  fullName: String
+  homeCountry: String
+  nickname: String
+  profilePic: String
+  pronouns: String
+  tdaGradYear: Float
+  tdaGradYearBannerVisible: Boolean
+  website: String
 }
 
 type User {
