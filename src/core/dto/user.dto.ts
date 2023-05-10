@@ -1,7 +1,29 @@
 import "reflect-metadata";
 
-import { IsEmail, IsStrongPassword, Length } from "class-validator";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsStrongPassword,
+  Length,
+  MaxLength,
+} from "class-validator";
 import { Field, InputType } from "type-graphql";
+
+interface StrongPasswordOptions {
+  minLength?: number;
+  minLowercase?: number;
+  minUppercase?: number;
+  minNumbers?: number;
+  minSymbols?: number;
+}
+
+const defaultOptions: StrongPasswordOptions = {
+  minLength: 8,
+  minLowercase: 1,
+  minUppercase: 1,
+  minNumbers: 1,
+  minSymbols: 1,
+};
 
 @InputType()
 export class CreateUserInput {
@@ -10,18 +32,17 @@ export class CreateUserInput {
   email!: string;
 
   @Field()
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-  })
+  @IsStrongPassword(defaultOptions)
   password!: string;
 
   @Field()
+  @IsNotEmpty()
+  @MaxLength(100)
   fullName!: string;
 
   @Field()
+  @IsNotEmpty()
+  @MaxLength(15)
   pronouns!: string;
 }
 
@@ -33,12 +54,7 @@ export class ResetPasswordInput {
 
   @Field()
   @Length(8, 53)
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-  })
+  @IsStrongPassword(defaultOptions)
   newPassword!: string;
 }
 
@@ -50,15 +66,11 @@ export class ChangePasswordInput {
 
   @Field()
   @Length(8, 53)
+  @IsNotEmpty()
   oldPassword!: string;
 
   @Field()
   @Length(8, 53)
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-  })
+  @IsStrongPassword(defaultOptions)
   newPassword!: string;
 }

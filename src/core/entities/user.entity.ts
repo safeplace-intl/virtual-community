@@ -2,8 +2,6 @@ import "reflect-metadata";
 
 import { Field, Int, ObjectType } from "type-graphql";
 
-import { Profile } from "./profile.entity.js";
-
 @ObjectType()
 export class User {
   @Field(() => Int)
