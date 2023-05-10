@@ -28,3 +28,14 @@ export class ResetPasswordInput {
   @Field()
   newPassword!: string;
 }
+@InputType()
+export class ChangePasswordInput {
+  @Field()
+  email!: string;
+
+  @Field()
+  oldPassword!: string;
+
+  @Field()
+  newPassword!: string;
+}
