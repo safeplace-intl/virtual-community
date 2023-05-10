@@ -8,7 +8,6 @@ import {
   RefreshTokenInput,
   TokensPayload,
 } from "./core/dto/auth.dto.js";
-import { CreateProfileInput } from "./core/dto/profile.dto.js";
 import { CreateUserInput } from "./core/dto/user.dto.js";
 import { AuthResolver } from "./modules/auth/auth.resolver.js";
 import { ProfileResolver } from "./modules/profile/profile.resolver.js";
@@ -22,14 +21,13 @@ export const schema = await buildSchema({
     TokensPayload,
     AuthPayload,
     RefreshTokenInput,
-    CreateProfileInput,
     CreateUserInput,
     PaginationArgs,
   ],
   emitSchemaFile: true,
   dateScalarMode: "isoDate",
   container: Container, // this is needed to inject services into resolvers
-  validate: false,
+  validate: true,
 });
 
 // dont forget to also update prisma schema file and run prisma migrate to keep all schemas current

@@ -1,4 +1,11 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import { Service } from "typedi";
 
 import { AuthPayload } from "../../core/dto/auth.dto.js";
@@ -8,8 +15,10 @@ import {
   CreateUserInput,
   ResetPasswordInput,
 } from "../../core/dto/user.dto.js";
+import { Profile } from "../../core/entities/profile.entity.js";
 import { User } from "../../core/entities/user.entity.js";
 import { AuthService } from "../auth/auth.service.js";
+import ProfileService from "../profile/profile.service.js";
 import UserService from "./user.service.js";
 
 @Service()
@@ -17,7 +26,8 @@ import UserService from "./user.service.js";
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly profileService: ProfileService
   ) {}
 
   @Query(() => User, { nullable: true })
@@ -75,5 +85,12 @@ export class UserResolver {
   async deleteAccount(@Arg("id") id: number) {
     const deleteAccountResponse = await this.userService.deleteAccount(id);
     return deleteAccountResponse;
+  }
+
+  @FieldResolver(() => Profile)
+  async profile(@Root() user: User) {
+    const profile = await this.profileService.getProfileByUserId(user.id);
+
+    return profile;
   }
 }

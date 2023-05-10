@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+import { IsEmail, IsJWT, Length } from "class-validator";
 import { Field, InputType, ObjectType } from "type-graphql";
 
 import { User } from "../entities/user.entity.js";
@@ -16,9 +17,11 @@ export class TokensPayload {
 @InputType()
 export class LoginInput {
   @Field()
+  @IsEmail()
   email!: string;
 
   @Field()
+  @Length(8, 25)
   password!: string;
 }
 
@@ -40,6 +43,7 @@ export class AuthPayload {
 @InputType()
 export class RefreshTokenInput {
   @Field()
+  @IsJWT()
   refreshToken!: string;
 
   @Field()
