@@ -3,6 +3,11 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type AccountResponse {
+  message: String!
+  statusCode: Float!
+}
+
 type AuthPayload {
   tokens: TokensPayload!
   user: User!
@@ -12,6 +17,7 @@ input ChangePasswordInput {
   email: String!
   newPassword: String!
   oldPassword: String!
+}
 
 input CreateProfileInput {
   bio: String!
@@ -37,8 +43,8 @@ type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
   createProfile(createProfileInput: CreateProfileInput!, userId: Float!): Profile!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
-  deactivateAccount(email: String!): String!
-  deleteAccount(id: Float!): Boolean!
+  deactivateAccount(email: String!): AccountResponse!
+  deleteAccount(id: Float!): AccountResponse!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!

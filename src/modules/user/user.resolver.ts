@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import * as bcrypt from "bcrypt";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import { AuthPayload } from "../../core/dto/auth.dto.js";
+import { AccountResponse } from "../../core/dto/auth.dto.js";
 import {
   ChangePasswordInput,
   CreateUserInput,
@@ -12,8 +11,6 @@ import {
 import { User } from "../../core/entities/user.entity.js";
 import { AuthService } from "../auth/auth.service.js";
 import UserService from "./user.service.js";
-
-const prisma = new PrismaClient();
 
 @Service()
 @Resolver(() => User)
@@ -55,26 +52,28 @@ export class UserResolver {
     return updatedUser;
   }
 
-  @Mutation(() => String)
-  async deactivateAccount(@Arg("email") email: string): Promise<string> {
-    const deactivateAccountMessage = await this.userService.deactivateAccount(
-      email
-    );
-
-    return deactivateAccountMessage;
-  }
-
-  @Mutation(() => Boolean)
-  async deleteAccount(@Arg("id") id: number) {
-    const deleteAccountStatus = await this.userService.deleteAccount(id);
-    return deleteAccountStatus;
-  }
-
   @Mutation(() => User)
   async changePassword(
     @Arg("changePasswordInput") input: ChangePasswordInput
   ): Promise<User> {
     const updatedUser = await this.authService.changePassword(input);
     return updatedUser;
+  }
+
+  @Mutation(() => AccountResponse)
+  async deactivateAccount(
+    @Arg("email") email: string
+  ): Promise<AccountResponse> {
+    const deactivateAccountResponse = await this.userService.deactivateAccount(
+      email
+    );
+
+    return deactivateAccountResponse;
+  }
+
+  @Mutation(() => AccountResponse)
+  async deleteAccount(@Arg("id") id: number) {
+    const deleteAccountResponse = await this.userService.deleteAccount(id);
+    return deleteAccountResponse;
   }
 }

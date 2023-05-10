@@ -45,3 +45,12 @@ export class RefreshTokenInput {
   @Field()
   userId!: number;
 }
+
+@ObjectType()
+export class AccountResponse {
+  @Field()
+  statusCode!: number;
+
+  @Field()
+  message!: string;
+}

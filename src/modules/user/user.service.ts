@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
-import * as bcrypt from "bcrypt";
 import { Service } from "typedi";
 
+import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "../auth/auth.service.js";
@@ -9,13 +9,8 @@ import { AuthService } from "../auth/auth.service.js";
 interface IUserService {
   getUserById(userId: number): Promise<User>;
   createUser(userInput: CreateUserInput): Promise<User>;
-  deactivateAccount(email: string): Promise<string>;
+  deactivateAccount(email: string): Promise<AccountResponse>;
   deleteAccount(id: number): Promise<AccountResponse>;
-}
-
-interface AccountResponse {
-  statusCode: number;
-  message: string;
 }
 
 @Service()
@@ -36,6 +31,7 @@ export default class UserService implements IUserService {
 
   async createUser(userInput: CreateUserInput): Promise<User> {
     const email = userInput.email;
+
     // checks to make sure email is not already in use
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -47,6 +43,7 @@ export default class UserService implements IUserService {
       const password = await this.authService.createPassword(
         userInput.password
       );
+
       // returns the newly created user object to the resolver
       const user = await prisma.user.create({
         data: {
@@ -55,11 +52,12 @@ export default class UserService implements IUserService {
           isActive: true,
         },
       });
+
       return user;
     }
   }
 
-  async deactivateAccount(email: string): Promise<string> {
+  async deactivateAccount(email: string): Promise<AccountResponse> {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
@@ -86,8 +84,7 @@ export default class UserService implements IUserService {
         "Your account has been deactivated and will be deleted in 30 days",
     };
 
-    return deactivateAccountResponse.message;
-    // return JSON.stringify(deactivateReturnMessage); //if we not to return both statusCode and message
+    return deactivateAccountResponse;
   }
 
   async deleteAccount(id: number): Promise<AccountResponse> {
@@ -97,6 +94,7 @@ export default class UserService implements IUserService {
           id,
         },
       });
+
       return {
         statusCode: 200,
         message: "Your account has been permanently deleted",
