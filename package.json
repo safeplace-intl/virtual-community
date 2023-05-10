@@ -44,6 +44,7 @@
     "react-router-dom": "^6.10.0",
     "reflect-metadata": "^0.1.13",
     "tailwindcss": "^3.3.1",
+    "vite": "^4.3.5",
     "wouter-preact": "^2.10.0-alpha.1"
   },
   "devDependencies": {

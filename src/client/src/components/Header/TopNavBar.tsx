@@ -1,7 +1,7 @@
-import { navItems } from "@menuitems";
 import { useState } from "preact/hooks";
 
 import logo from "../../assets/spi-logo.png";
+import { navItems } from "../../menuitems";
 
 interface TopNavBarProps {
   onTopMenuItemClick: (navItem: string) => void;
@@ -10,6 +10,7 @@ interface TopNavBarProps {
 export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState("");
+  const [isLeftNavVisible, setIsLeftNavVisible] = useState(true);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -18,7 +19,11 @@ export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
 
   const handleSubmenuClick = (navItem: string) => {
     setActiveSubmenu(activeSubmenu === navItem ? "" : navItem);
-    setIsOpen(false); //Close the menu when a top nav bar menu item is clicked on again
+  };
+
+  const handleTopMenuItemClick = (navItem: string) => {
+    onTopMenuItemClick(navItem);
+    setIsLeftNavVisible(true); // Show the left nav bar again when a top nav bar menu item is clicked on again
   };
 
   return (
@@ -63,7 +68,7 @@ export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
         {navItems.map((item) => (
           <a
             key={item.title}
-            onClick={() => onTopMenuItemClick(item.onClick)}
+            onClick={() => handleTopMenuItemClick(item.onClick)}
             href="#"
             className="text-base font-normal leading-6 tracking-normal py-2 px-4 hover:underline hover:text-spi-violet-100"
           >
