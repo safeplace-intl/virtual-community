@@ -39,7 +39,7 @@ type Mutation {
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
-  updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
+  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
 }
 
 type Profile {

@@ -1,4 +1,6 @@
-import { Arg, Mutation, Resolver } from "type-graphql";
+import { GraphQLError } from "graphql";
+import { type Context } from "src/context.js";
+import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import { UpdateProfileInput } from "../../core/dto/profile.dto.js";
@@ -13,13 +15,18 @@ export class ProfileResolver {
   @Mutation(() => Profile)
   async updateProfile(
     @Arg("updateProfileInput") profileInput: UpdateProfileInput,
-    @Arg("userId") userId: number
+    @Ctx() ctx: Context
   ) {
-    const profile = await this.profileService.updateProfile(
-      userId,
-      profileInput
-    );
+    const userId = ctx.user?.id;
 
-    return profile;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    } else {
+      const profile = await this.profileService.updateProfile(
+        userId,
+        profileInput
+      );
+      return profile;
+    }
   }
 }
