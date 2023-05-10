@@ -17,9 +17,11 @@ interface IAuthService {
     userId,
   }: RefreshTokenInput): Promise<TokensPayload>;
   createPassword(password: string): Promise<string>;
+  validatePassword(password: string, passwordHash: string): Promise<boolean>;
   resetPassword(resetPasswordInput: ResetPasswordInput): Promise<User>;
   changePassword(changePasswordInput: ChangePasswordInput): Promise<User>;
 }
+
 @Service()
 export class AuthService implements IAuthService {
   // constructor() {}
@@ -66,6 +68,15 @@ export class AuthService implements IAuthService {
     return hashedPassword;
   }
 
+  async validatePassword(
+    password: string,
+    passwordHash: string
+  ): Promise<boolean> {
+    const valid = await bcrypt.compare(password, passwordHash);
+
+    return valid;
+  }
+
   async resetPassword(resetPasswordInput: ResetPasswordInput): Promise<User> {
     const { email, newPassword } = resetPasswordInput;
 
@@ -76,8 +87,7 @@ export class AuthService implements IAuthService {
     }
 
     // Generate new password hash
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(newPassword, salt);
+    const passwordHash = await this.createPassword(newPassword);
 
     // Update user's password hash
     const updatedUser = await prisma.user.update({
@@ -99,15 +109,18 @@ export class AuthService implements IAuthService {
     if (!user) {
       throw new Error("User not found");
     }
-    const salt = await bcrypt.genSalt(10);
+
     const isPasswordMatching = await bcrypt.compare(
       oldPassword,
       user.passwordHash
     );
+
     if (!isPasswordMatching) {
       throw new Error("Incorrect old password");
     }
-    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+    const newPasswordHash = await this.createPassword(newPassword);
+
     const updatedUser = await prisma.user.update({
       where: { email },
       data: { passwordHash: newPasswordHash },
