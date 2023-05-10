@@ -17,9 +17,6 @@ export class User {
 
   @Field()
   isActive!: boolean;
-
-  @Field(() => Profile)
-  Profile?: Profile;
 }
 
 // we need an full list
