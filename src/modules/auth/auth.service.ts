@@ -17,7 +17,7 @@ interface IAuthService {
     refreshToken,
     userId,
   }: RefreshTokenInput): Promise<TokensPayload>;
-  createPassword(userInput: CreateUserInput): Promise<string>;
+  createPassword(password: string): Promise<string>;
   resetPassword(resetPasswordInput: ResetPasswordInput): Promise<User>;
   changePassword(changePasswordInput: ChangePasswordInput): Promise<User>;
 }
@@ -60,9 +60,9 @@ export class AuthService implements IAuthService {
     return newTokens;
   }
 
-  async createPassword(userInput: CreateUserInput): Promise<string> {
+  async createPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(userInput.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     return hashedPassword;
   }

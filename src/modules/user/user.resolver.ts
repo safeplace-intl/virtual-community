@@ -58,15 +58,17 @@ export class UserResolver {
 
   @Mutation(() => String)
   async deactivateAccount(@Arg("email") email: string): Promise<string> {
-    const message = await this.userService.deactivateAccount(email);
+    const deactivateAccountMessage = await this.userService.deactivateAccount(
+      email
+    );
 
-    return message;
+    return deactivateAccountMessage;
   }
 
   @Mutation(() => Boolean)
   async deleteAccount(@Arg("id") id: number) {
-    const status = await this.userService.deleteAccount(id);
-    return status;
+    const deleteAccountStatus = await this.userService.deleteAccount(id);
+    return deleteAccountStatus;
   }
 
   @Mutation(() => User)

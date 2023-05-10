@@ -10,8 +10,14 @@ interface IUserService {
   getUserById(userId: number): Promise<User>;
   createUser(userInput: CreateUserInput): Promise<User>;
   deactivateAccount(email: string): Promise<string>;
-  deleteAccount(id: number): Promise<boolean>;
+  deleteAccount(id: number): Promise<AccountResponse>;
 }
+
+interface AccountResponse {
+  statusCode: number;
+  message: string;
+}
+
 @Service()
 export default class UserService implements IUserService {
   constructor(private readonly authService: AuthService) {}
@@ -38,7 +44,9 @@ export default class UserService implements IUserService {
     if (existingUser) {
       throw new Error("Email already in use.");
     } else {
-      const password = await this.authService.createPassword(userInput);
+      const password = await this.authService.createPassword(
+        userInput.password
+      );
       // returns the newly created user object to the resolver
       const user = await prisma.user.create({
         data: {
@@ -72,19 +80,32 @@ export default class UserService implements IUserService {
       await prisma.user.delete({ where: { email } });
     }, 30 * 24 * 60 * 60 * 1000);
 
-    return "Your account has been deactivated and will be deleted in 30 days";
+    const deactivateAccountResponse: AccountResponse = {
+      statusCode: 200,
+      message:
+        "Your account has been deactivated and will be deleted in 30 days",
+    };
+
+    return deactivateAccountResponse.message;
+    // return JSON.stringify(deactivateReturnMessage); //if we not to return both statusCode and message
   }
 
-  async deleteAccount(id: number): Promise<boolean> {
+  async deleteAccount(id: number): Promise<AccountResponse> {
     try {
       await prisma.user.delete({
         where: {
           id,
         },
       });
-      return true;
-    } catch {
-      return false;
+      return {
+        statusCode: 200,
+        message: "Your account has been permanently deleted",
+      };
+    } catch (error) {
+      return {
+        statusCode: 500,
+        message: (error as Error).message,
+      };
     }
   }
 }
