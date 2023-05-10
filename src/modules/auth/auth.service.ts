@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { Service } from "typedi";
 
 import { RefreshTokenInput, TokensPayload } from "../../core/dto/auth.dto.js";
-import { CreateUserInput } from "../../core/dto/user.dto.js";
 import {
   ChangePasswordInput,
   ResetPasswordInput,
