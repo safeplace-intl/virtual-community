@@ -1,4 +1,3 @@
-import * as bcrypt from "bcrypt";
 import { GraphQLError } from "graphql";
 import { Arg, Mutation, Resolver } from "type-graphql";
 import { Service } from "typedi";
@@ -30,7 +29,10 @@ export class AuthResolver {
     }
 
     // check password
-    const valid = await bcrypt.compare(password, user.passwordHash);
+    const valid = await this.authService.validatePassword(
+      password,
+      user.passwordHash
+    );
 
     if (!valid) {
       throw new GraphQLError("Invalid login credentials");
