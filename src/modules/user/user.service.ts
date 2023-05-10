@@ -5,6 +5,7 @@ import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "../auth/auth.service.js";
+import ProfileService from "../profile/profile.service.js";
 
 interface IUserService {
   getUserById(userId: number): Promise<User>;
@@ -15,7 +16,10 @@ interface IUserService {
 
 @Service()
 export default class UserService implements IUserService {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly profileService: ProfileService
+  ) {}
 
   async getUserById(userId: number): Promise<User> {
     const user = await prisma.user.findUnique({
@@ -51,6 +55,16 @@ export default class UserService implements IUserService {
           passwordHash: password,
           isActive: true,
         },
+      });
+
+      // creates a profile for the new user
+      // TODO: figure this out
+      await this.profileService.createProfile(user.id, {
+        fullName: userInput.fullName,
+        pronouns: userInput.pronouns,
+        tdaGradYear: 2023,
+        currentLocation: "",
+        bio: "",
       });
 
       return user;

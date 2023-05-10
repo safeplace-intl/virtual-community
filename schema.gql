@@ -19,14 +19,6 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
-input CreateProfileInput {
-  bio: String!
-  currentLocation: String!
-  fullName: String!
-  pronouns: String!
-  tdaGradYear: Float!
-}
-
 input CreateUserInput {
   email: String!
   fullName: String!
@@ -41,7 +33,6 @@ input LoginInput {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
-  createProfile(createProfileInput: CreateProfileInput!, userId: Float!): Profile!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deactivateAccount(email: String!): AccountResponse!
   deleteAccount(id: Float!): AccountResponse!
@@ -68,7 +59,6 @@ type Profile {
 }
 
 type Query {
-  getProfile(userId: Float!): Profile
   getUser(userId: Float!): User
 }
 
@@ -101,9 +91,9 @@ input UpdateProfileInput {
 }
 
 type User {
-  Profile: Profile!
   email: String!
   id: Int!
   isActive: Boolean!
   passwordHash: String!
+  profile: Profile!
 }
