@@ -9,6 +9,8 @@ import {
 } from "class-validator";
 import { Field, InputType } from "type-graphql";
 
+import { StringScalar } from "../../utils/scalars/string-sanitizer.util.js";
+
 interface StrongPasswordOptions {
   minLength?: number;
   minLowercase?: number;
@@ -17,7 +19,7 @@ interface StrongPasswordOptions {
   minSymbols?: number;
 }
 
-const defaultOptions: StrongPasswordOptions = {
+const defaultPasswordOpts: StrongPasswordOptions = {
   minLength: 8,
   minLowercase: 1,
   minUppercase: 1,
@@ -32,10 +34,10 @@ export class CreateUserInput {
   email!: string;
 
   @Field()
-  @IsStrongPassword(defaultOptions)
+  @IsStrongPassword(defaultPasswordOpts)
   password!: string;
 
-  @Field()
+  @Field(() => StringScalar)
   @IsNotEmpty()
   @MaxLength(100)
   fullName!: string;
@@ -54,7 +56,7 @@ export class ResetPasswordInput {
 
   @Field()
   @Length(8, 53)
-  @IsStrongPassword(defaultOptions)
+  @IsStrongPassword(defaultPasswordOpts)
   newPassword!: string;
 }
 
@@ -71,6 +73,6 @@ export class ChangePasswordInput {
 
   @Field()
   @Length(8, 53)
-  @IsStrongPassword(defaultOptions)
+  @IsStrongPassword(defaultPasswordOpts)
   newPassword!: string;
 }
