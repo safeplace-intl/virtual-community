@@ -21,7 +21,7 @@ input ChangePasswordInput {
 
 input CreateUserInput {
   email: String!
-  fullName: String!
+  fullName: StringScalar!
   password: String!
   pronouns: String!
 }
@@ -72,17 +72,19 @@ input ResetPasswordInput {
   newPassword: String!
 }
 
+scalar StringScalar
+
 type TokensPayload {
   accessToken: String!
   refreshToken: String!
 }
 
 input UpdateProfileInput {
-  bio: String
-  currentLocation: String
-  fullName: String
-  homeCountry: String
-  nickname: String
+  bio: StringScalar
+  currentLocation: StringScalar
+  fullName: StringScalar
+  homeCountry: StringScalar
+  nickname: StringScalar
   profilePic: String
   pronouns: String
   tdaGradYear: Float
