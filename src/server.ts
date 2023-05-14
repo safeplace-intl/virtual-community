@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import { GraphQLError } from "graphql";
+import depthLimit from "graphql-depth-limit";
 import http from "http";
 
 import { type Context, decodeAuthHeader } from "./context.js";
@@ -28,6 +29,7 @@ const httpServer = http.createServer(app);
 // initialize apollo server, the graphql layer will sit on top of our API
 const apolloServer = new ApolloServer<Context>({
   schema,
+  validationRules: [depthLimit(10)],
   introspection: mode === "production" ? false : true,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   formatError: (err) => {
