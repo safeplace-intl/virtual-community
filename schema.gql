@@ -13,6 +13,16 @@ type AuthPayload {
   user: User!
 }
 
+type BooleanProfileField {
+  value: Boolean!
+  visibleTo: String!
+}
+
+input BooleanProfileFieldInput {
+  value: Boolean!
+  visibleTo: String!
+}
+
 input ChangePasswordInput {
   email: String!
   newPassword: String!
@@ -42,36 +52,30 @@ type Mutation {
   updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
 }
 
-enum PrivacyOption {
-  Friends
-  Private
-  Public
+type NumberProfileField {
+  value: Float!
+  visibleTo: String!
+}
+
+input NumberProfileFieldInput {
+  value: Float!
+  visibleTo: String!
 }
 
 type Profile {
-  bio: ProfileField!
-  currentLocation: ProfileField!
-  fullName: ProfileField!
-  homeCountry: ProfileField
+  bio: StringProfileField!
+  currentLocation: StringProfileField!
+  fullName: StringProfileField!
+  homeCountry: StringProfileField
   id: Float!
-  namePronunciation: ProfileField
-  nickname: ProfileField
-  profilePic: ProfileField
-  pronouns: ProfileField!
-  tdaGradYear: ProfileField!
-  tdaGradYearBannerVisible: ProfileField
+  namePronunciation: StringProfileField
+  nickname: StringProfileField
+  profilePic: StringProfileField
+  pronouns: StringProfileField!
+  tdaGradYear: NumberProfileField!
+  tdaGradYearBannerVisible: BooleanProfileField
   userId: Float!
-  website: ProfileField
-}
-
-type ProfileField {
-  value: String!
-  visibleTo: PrivacyOption!
-}
-
-input ProfileFieldInput {
-  value: String!
-  visibleTo: PrivacyOption
+  website: StringProfileField
 }
 
 type Query {
@@ -88,6 +92,16 @@ input ResetPasswordInput {
   newPassword: String!
 }
 
+type StringProfileField {
+  value: String!
+  visibleTo: String!
+}
+
+input StringProfileFieldInput {
+  value: String!
+  visibleTo: String!
+}
+
 scalar StringScalar
 
 type TokensPayload {
@@ -96,16 +110,16 @@ type TokensPayload {
 }
 
 input UpdateProfileInput {
-  bio: ProfileFieldInput
-  currentLocation: ProfileFieldInput
-  fullName: ProfileFieldInput
-  homeCountry: ProfileFieldInput
-  nickname: ProfileFieldInput
-  profilePic: ProfileFieldInput
-  pronouns: ProfileFieldInput
-  tdaGradYear: ProfileFieldInput
-  tdaGradYearBannerVisible: ProfileFieldInput
-  website: ProfileFieldInput
+  bio: StringProfileFieldInput
+  currentLocation: StringProfileFieldInput
+  fullName: StringProfileFieldInput
+  homeCountry: StringProfileFieldInput
+  nickname: StringProfileFieldInput
+  profilePic: StringProfileFieldInput
+  pronouns: StringProfileFieldInput
+  tdaGradYear: NumberProfileFieldInput
+  tdaGradYearBannerVisible: BooleanProfileFieldInput
+  website: StringProfileFieldInput
 }
 
 type User {

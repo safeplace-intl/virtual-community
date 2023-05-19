@@ -1,4 +1,10 @@
-import { ClassType, Field, ObjectType, registerEnumType } from "type-graphql";
+import {
+  ClassType,
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from "type-graphql";
 
 export enum PrivacyOption {
   Public = "public",
@@ -34,7 +40,7 @@ export function ProfilePrivacyField<T>(TClass: ClassType<T>) {
     value!: T;
 
     @Field()
-    visibleTo!: string;
+    visibleTo!: PrivacyOption;
   }
   return ProfileFieldAbstract;
 }
@@ -58,6 +64,33 @@ export class BooleanProfileField extends ProfilePrivacyField(Boolean) {
   constructor() {
     super();
   }
+}
+
+@InputType()
+export class StringProfileFieldInput {
+  @Field()
+  value!: string;
+
+  @Field()
+  visibleTo!: PrivacyOption;
+}
+
+@InputType()
+export class NumberProfileFieldInput {
+  @Field()
+  value!: number;
+
+  @Field()
+  visibleTo!: PrivacyOption;
+}
+
+@InputType()
+export class BooleanProfileFieldInput {
+  @Field()
+  value!: boolean;
+
+  @Field()
+  visibleTo!: PrivacyOption;
 }
 @ObjectType()
 export class Profile {
