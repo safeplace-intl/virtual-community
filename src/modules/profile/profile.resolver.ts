@@ -17,6 +17,8 @@ export class ProfileResolver {
     @Arg("updateProfileInput") profileInput: UpdateProfileInput,
     @Ctx() ctx: Context
   ) {
+    console.log("hello");
+    console.log(ctx);
     const userId = ctx.user?.id;
 
     if (!userId) {
