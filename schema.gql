@@ -15,12 +15,12 @@ type AuthPayload {
 
 type BooleanProfileField {
   value: Boolean!
-  visibleTo: String!
+  visibleTo: PrivacyOption!
 }
 
 input BooleanProfileFieldInput {
   value: Boolean!
-  visibleTo: String!
+  visibleTo: PrivacyOption!
 }
 
 input ChangePasswordInput {
@@ -54,12 +54,18 @@ type Mutation {
 
 type NumberProfileField {
   value: Float!
-  visibleTo: String!
+  visibleTo: PrivacyOption!
 }
 
 input NumberProfileFieldInput {
   value: Float!
-  visibleTo: String!
+  visibleTo: PrivacyOption!
+}
+
+enum PrivacyOption {
+  Friends
+  Private
+  Public
 }
 
 type Profile {
@@ -94,12 +100,12 @@ input ResetPasswordInput {
 
 type StringProfileField {
   value: String!
-  visibleTo: String!
+  visibleTo: PrivacyOption!
 }
 
 input StringProfileFieldInput {
   value: String!
-  visibleTo: String!
+  visibleTo: PrivacyOption!
 }
 
 scalar StringScalar

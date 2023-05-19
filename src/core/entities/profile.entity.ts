@@ -16,30 +16,13 @@ registerEnumType(PrivacyOption, {
   name: "PrivacyOption",
 });
 
-// @ObjectType()
-// export class ProfileField {
-//   @Field(() => PrivacyOption)
-//   visibleTo!: PrivacyOption;
-//   @Field()
-//   value!: string;
-// }
-
-// @InputType()
-// export class ProfileFieldInput {
-//   @Field(() => PrivacyOption, { nullable: true })
-//   visibleTo!: PrivacyOption;
-
-//   @Field()
-//   value!: string;
-// }
-
 export function ProfilePrivacyField<T>(TClass: ClassType<T>) {
-  @ObjectType({ isAbstract: true })
+  @ObjectType()
   abstract class ProfileFieldAbstract {
     @Field(() => TClass)
     value!: T;
 
-    @Field()
+    @Field(() => PrivacyOption)
     visibleTo!: PrivacyOption;
   }
   return ProfileFieldAbstract;
@@ -71,7 +54,7 @@ export class StringProfileFieldInput {
   @Field()
   value!: string;
 
-  @Field()
+  @Field(() => PrivacyOption)
   visibleTo!: PrivacyOption;
 }
 
@@ -80,7 +63,7 @@ export class NumberProfileFieldInput {
   @Field()
   value!: number;
 
-  @Field()
+  @Field(() => PrivacyOption)
   visibleTo!: PrivacyOption;
 }
 
@@ -89,7 +72,7 @@ export class BooleanProfileFieldInput {
   @Field()
   value!: boolean;
 
-  @Field()
+  @Field(() => PrivacyOption)
   visibleTo!: PrivacyOption;
 }
 @ObjectType()

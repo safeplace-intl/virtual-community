@@ -20,7 +20,6 @@ export class CreateProfileInput {
   bio!: StringProfileFieldInput;
 }
 // WITH decorators
-
 // @InputType()
 // export class CreateProfileInput {
 //   @Field(() => ProfileFieldInput)
