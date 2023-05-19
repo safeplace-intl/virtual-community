@@ -29,17 +29,20 @@ export default class ProfileService {
       where: { id: userId },
     });
 
+    const { fullName, pronouns, tdaGradYear, currentLocation, bio } =
+      profileInput;
+
     if (!user) {
       throw new Error("User not found");
     } else {
       return await prisma.profile.create({
         data: {
           userId: userId,
-          fullName: profileInput.fullName,
-          pronouns: profileInput.pronouns,
-          tdaGradYear: profileInput.tdaGradYear,
-          currentLocation: profileInput.currentLocation,
-          bio: profileInput.bio,
+          fullName: JSON.stringify(fullName),
+          pronouns: JSON.stringify(pronouns),
+          tdaGradYear: JSON.stringify(tdaGradYear),
+          currentLocation: JSON.stringify(currentLocation),
+          bio: JSON.stringify(bio),
         },
       });
     }
@@ -49,9 +52,33 @@ export default class ProfileService {
     userId: number,
     profileUpdateInput: UpdateProfileInput
   ): Promise<Profile> {
+    const {
+      fullName,
+      pronouns,
+      tdaGradYear,
+      currentLocation,
+      bio,
+      profilePic,
+      homeCountry,
+      nickname,
+      website,
+      tdaGradYearBannerVisible,
+    } = profileUpdateInput;
+
     const profile = await prisma.profile.update({
       where: { userId },
-      data: profileUpdateInput,
+      data: {
+        fullName: JSON.stringify(fullName),
+        pronouns: JSON.stringify(pronouns),
+        tdaGradYear: JSON.stringify(tdaGradYear),
+        currentLocation: JSON.stringify(currentLocation),
+        bio: JSON.stringify(bio),
+        profilePic: JSON.stringify(profilePic),
+        homeCountry: JSON.stringify(homeCountry),
+        nickname: JSON.stringify(nickname),
+        website: JSON.stringify(website),
+        tdaGradYearBannerVisible: JSON.stringify(tdaGradYearBannerVisible),
+      },
     });
 
     return profile;

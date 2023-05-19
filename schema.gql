@@ -42,20 +42,36 @@ type Mutation {
   updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
 }
 
+enum PrivacyOption {
+  Friends
+  Private
+  Public
+}
+
 type Profile {
-  bio: String!
-  currentLocation: String!
-  fullName: String!
-  homeCountry: String
+  bio: ProfileField!
+  currentLocation: ProfileField!
+  fullName: ProfileField!
+  homeCountry: ProfileField
   id: Float!
-  namePronunciation: String
-  nickname: String
-  profilePic: String
-  pronouns: String!
-  tdaGradYear: Float!
-  tdaGradYearBannerVisible: Boolean
+  namePronunciation: ProfileField
+  nickname: ProfileField
+  profilePic: ProfileField
+  pronouns: ProfileField!
+  tdaGradYear: ProfileField!
+  tdaGradYearBannerVisible: ProfileField
   userId: Float!
-  website: String
+  website: ProfileField
+}
+
+type ProfileField {
+  value: String!
+  visibleTo: PrivacyOption!
+}
+
+input ProfileFieldInput {
+  value: String!
+  visibleTo: PrivacyOption
 }
 
 type Query {
@@ -80,16 +96,16 @@ type TokensPayload {
 }
 
 input UpdateProfileInput {
-  bio: StringScalar
-  currentLocation: StringScalar
-  fullName: StringScalar
-  homeCountry: StringScalar
-  nickname: StringScalar
-  profilePic: String
-  pronouns: String
-  tdaGradYear: Float
-  tdaGradYearBannerVisible: Boolean
-  website: String
+  bio: ProfileFieldInput
+  currentLocation: ProfileFieldInput
+  fullName: ProfileFieldInput
+  homeCountry: ProfileFieldInput
+  nickname: ProfileFieldInput
+  profilePic: ProfileFieldInput
+  pronouns: ProfileFieldInput
+  tdaGradYear: ProfileFieldInput
+  tdaGradYearBannerVisible: ProfileFieldInput
+  website: ProfileFieldInput
 }
 
 type User {

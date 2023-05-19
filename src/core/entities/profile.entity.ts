@@ -1,5 +1,64 @@
-import { Field, ObjectType } from "type-graphql";
+import { ClassType, Field, ObjectType, registerEnumType } from "type-graphql";
 
+export enum PrivacyOption {
+  Public = "public",
+  Friends = "friends",
+  Private = "private",
+}
+
+registerEnumType(PrivacyOption, {
+  name: "PrivacyOption",
+});
+
+// @ObjectType()
+// export class ProfileField {
+//   @Field(() => PrivacyOption)
+//   visibleTo!: PrivacyOption;
+//   @Field()
+//   value!: string;
+// }
+
+// @InputType()
+// export class ProfileFieldInput {
+//   @Field(() => PrivacyOption, { nullable: true })
+//   visibleTo!: PrivacyOption;
+
+//   @Field()
+//   value!: string;
+// }
+
+export function ProfilePrivacyField<T>(TClass: ClassType<T>) {
+  @ObjectType({ isAbstract: true })
+  abstract class ProfileFieldAbstract {
+    @Field(() => TClass)
+    value!: T;
+
+    @Field()
+    visibleTo!: string;
+  }
+  return ProfileFieldAbstract;
+}
+
+@ObjectType()
+export class StringProfileField extends ProfilePrivacyField(String) {
+  constructor() {
+    super();
+  }
+}
+
+@ObjectType()
+export class NumberProfileField extends ProfilePrivacyField(Number) {
+  constructor() {
+    super();
+  }
+}
+
+@ObjectType()
+export class BooleanProfileField extends ProfilePrivacyField(Boolean) {
+  constructor() {
+    super();
+  }
+}
 @ObjectType()
 export class Profile {
   @Field()
@@ -8,36 +67,36 @@ export class Profile {
   @Field()
   userId!: number;
 
-  @Field()
-  fullName!: string;
+  @Field(() => StringProfileField)
+  fullName!: StringProfileField;
 
-  @Field()
-  pronouns!: string;
+  @Field(() => StringProfileField)
+  pronouns!: StringProfileField;
 
-  @Field()
-  tdaGradYear!: number;
+  @Field(() => NumberProfileField)
+  tdaGradYear!: NumberProfileField;
 
-  @Field()
-  currentLocation!: string;
+  @Field(() => StringProfileField)
+  currentLocation!: StringProfileField;
 
-  @Field()
-  bio!: string;
+  @Field(() => StringProfileField)
+  bio!: StringProfileField;
 
-  @Field({ nullable: true })
-  profilePic?: string;
+  @Field(() => StringProfileField, { nullable: true })
+  profilePic?: StringProfileField;
 
-  @Field({ nullable: true })
-  homeCountry?: string;
+  @Field(() => StringProfileField, { nullable: true })
+  homeCountry?: StringProfileField;
 
-  @Field({ nullable: true })
-  nickname?: string;
+  @Field(() => StringProfileField, { nullable: true })
+  nickname?: StringProfileField;
 
-  @Field({ nullable: true })
-  namePronunciation?: string;
+  @Field(() => StringProfileField, { nullable: true })
+  namePronunciation?: StringProfileField;
 
-  @Field({ nullable: true })
-  website?: string;
+  @Field(() => StringProfileField, { nullable: true })
+  website?: StringProfileField;
 
-  @Field({ nullable: true })
-  tdaGradYearBannerVisible?: boolean;
+  @Field(() => BooleanProfileField, { nullable: true })
+  tdaGradYearBannerVisible?: BooleanProfileField;
 }
