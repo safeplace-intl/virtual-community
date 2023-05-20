@@ -3,7 +3,9 @@ import { type Context } from "src/context.js";
 import { Ctx, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
-import ProfilePhotoService from "./profilephoto.service.js";
+import ProfilePhotoService from "./profile-image.service.js";
+
+// ! This will be for testing only. We won't actually need a resolver here, this is still part of the profile. So profile.service will have a dependency of the profile-photo-service, and it will call the service from there
 
 @Service()
 @Resolver()

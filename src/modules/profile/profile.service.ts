@@ -1,6 +1,7 @@
 import { Profile } from "@prisma/client";
 import { Service } from "typedi";
 
+import ProfileImageService from "../../aws/profile-image.service.js";
 import {
   CreateProfileInput,
   UpdateProfileInput,
@@ -9,6 +10,8 @@ import { prisma } from "../../prisma/index.js";
 
 @Service()
 export default class ProfileService {
+  constructor(private readonly imageService: ProfileImageService) {}
+
   async getProfileByUserId(userId: number): Promise<Profile> {
     const profile = await prisma.profile.findUnique({
       where: { userId },
@@ -40,6 +43,7 @@ export default class ProfileService {
           tdaGradYear: profileInput.tdaGradYear,
           currentLocation: profileInput.currentLocation,
           bio: profileInput.bio,
+          tdaGradYearBannerVisible: false,
         },
       });
     }
@@ -49,6 +53,7 @@ export default class ProfileService {
     userId: number,
     profileUpdateInput: UpdateProfileInput
   ): Promise<Profile> {
+    // ! in here, if profilePic is a field being updated, DO SOME WORK, then we need to call the image service to either create a new profile image, update the image in S3, or delete
     const profile = await prisma.profile.update({
       where: { userId },
       data: profileUpdateInput,

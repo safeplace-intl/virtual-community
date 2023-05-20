@@ -1,5 +1,5 @@
 import {
-  ListBucketsCommand,
+  // ListBucketsCommand,
   S3Client,
   S3ClientConfig,
 } from "@aws-sdk/client-s3";
@@ -21,9 +21,9 @@ export const config: S3ClientConfig = {
 // a client can be shared by different commands.
 export const client = new S3Client(config);
 
-const input = {};
+// const input = {};
 
-const command = new ListBucketsCommand(input);
-const response = await client.send(command);
+// const command = new ListBucketsCommand(input);
+// const response = await client.send(command);
 
-console.log(response);
+// console.log(response);
