@@ -1,6 +1,5 @@
 import "reflect-metadata";
 
-// import { Length, Max, Min } from "class-validator";
 import { Field, InputType } from "type-graphql";
 
 import {
@@ -8,8 +7,6 @@ import {
   NumberProfileFieldInput,
   StringProfileFieldInput,
 } from "../entities/profile.entity.js";
-
-// import { StringScalar } from "../../utils/scalars/string-sanitizer.util.js";
 
 // not using decorators here because we don't want to expose this type to the schema
 export class CreateProfileInput {
@@ -20,24 +17,6 @@ export class CreateProfileInput {
   bio!: StringProfileFieldInput;
   tdaGradYearBannerVisible!: BooleanProfileFieldInput;
 }
-// WITH decorators
-// @InputType()
-// export class CreateProfileInput {
-//   @Field(() => ProfileFieldInput)
-//   fullName!: ProfileFieldInput;
-
-//   @Field(() => ProfileFieldInput)
-//   pronouns!: ProfileFieldInput;
-
-//   @Field(() => ProfileFieldInput)
-//   tdaGradYear!: ProfileFieldInput;
-
-//   @Field(() => ProfileFieldInput)
-//   currentLocation!: ProfileFieldInput;
-
-//   @Field(() => ProfileFieldInput)
-//   bio!: ProfileFieldInput;
-// }
 
 @InputType()
 export class UpdateProfileInput {
