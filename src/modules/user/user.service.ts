@@ -60,6 +60,7 @@ export default class UserService implements IUserService {
 
       // creates a profile for the new user
       // TODO: figure the initial values for required fields out
+      console.log(userInput);
       await this.profileService.createProfile(user.id, {
         fullName: {
           value: userInput.fullName,

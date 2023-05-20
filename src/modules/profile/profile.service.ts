@@ -1,4 +1,5 @@
-import { Profile } from "@prisma/client";
+import { Prisma, Profile } from "@prisma/client";
+import { profile } from "console";
 import { Service } from "typedi";
 
 import {
@@ -16,9 +17,9 @@ export default class ProfileService {
 
     if (!profile) {
       throw new Error("Profile not found");
+    } else {
+      return profile;
     }
-
-    return profile;
   }
 
   async createProfile(
@@ -44,12 +45,13 @@ export default class ProfileService {
       return await prisma.profile.create({
         data: {
           userId: userId,
-          fullName: JSON.stringify(fullName),
-          pronouns: JSON.stringify(pronouns),
-          tdaGradYear: JSON.stringify(tdaGradYear),
-          currentLocation: JSON.stringify(currentLocation),
-          bio: JSON.stringify(bio),
-          tdaGradYearBannerVisible: JSON.stringify(tdaGradYearBannerVisible),
+          fullName: fullName as unknown as Prisma.JsonObject,
+          pronouns: pronouns as unknown as Prisma.JsonObject,
+          tdaGradYear: tdaGradYear as unknown as Prisma.JsonObject,
+          currentLocation: currentLocation as unknown as Prisma.JsonObject,
+          bio: bio as unknown as Prisma.JsonObject,
+          tdaGradYearBannerVisible:
+            tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
         },
       });
     }
@@ -75,16 +77,18 @@ export default class ProfileService {
     const profile = await prisma.profile.update({
       where: { userId },
       data: {
-        fullName: JSON.stringify(fullName),
-        pronouns: JSON.stringify(pronouns),
-        tdaGradYear: JSON.stringify(tdaGradYear),
-        currentLocation: JSON.stringify(currentLocation),
-        bio: JSON.stringify(bio),
-        profilePic: JSON.stringify(profilePic),
-        homeCountry: JSON.stringify(homeCountry),
-        nickname: JSON.stringify(nickname),
-        website: JSON.stringify(website),
-        tdaGradYearBannerVisible: JSON.stringify(tdaGradYearBannerVisible),
+        userId: userId,
+        fullName: fullName as unknown as Prisma.JsonObject,
+        pronouns: pronouns as unknown as Prisma.JsonObject,
+        tdaGradYear: tdaGradYear as unknown as Prisma.JsonObject,
+        currentLocation: currentLocation as unknown as Prisma.JsonObject,
+        bio: bio as unknown as Prisma.JsonObject,
+        tdaGradYearBannerVisible:
+          tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
+        profilePic: profilePic as unknown as Prisma.JsonObject,
+        homeCountry: homeCountry as unknown as Prisma.JsonObject,
+        nickname: nickname as unknown as Prisma.JsonObject,
+        website: website as unknown as Prisma.JsonObject,
       },
     });
 
