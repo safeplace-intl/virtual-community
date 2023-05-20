@@ -79,7 +79,7 @@ type Profile {
   profilePic: StringProfileField
   pronouns: StringProfileField!
   tdaGradYear: NumberProfileField!
-  tdaGradYearBannerVisible: BooleanProfileField
+  tdaGradYearBannerVisible: BooleanProfileField!
   userId: Float!
   website: StringProfileField
 }

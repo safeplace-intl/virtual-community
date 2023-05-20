@@ -18,6 +18,7 @@ export class CreateProfileInput {
   tdaGradYear!: NumberProfileFieldInput;
   currentLocation!: StringProfileFieldInput;
   bio!: StringProfileFieldInput;
+  tdaGradYearBannerVisible!: BooleanProfileFieldInput;
 }
 // WITH decorators
 // @InputType()

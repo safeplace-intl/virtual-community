@@ -29,8 +29,14 @@ export default class ProfileService {
       where: { id: userId },
     });
 
-    const { fullName, pronouns, tdaGradYear, currentLocation, bio } =
-      profileInput;
+    const {
+      fullName,
+      pronouns,
+      tdaGradYear,
+      currentLocation,
+      bio,
+      tdaGradYearBannerVisible,
+    } = profileInput;
 
     if (!user) {
       throw new Error("User not found");
@@ -43,6 +49,7 @@ export default class ProfileService {
           tdaGradYear: JSON.stringify(tdaGradYear),
           currentLocation: JSON.stringify(currentLocation),
           bio: JSON.stringify(bio),
+          tdaGradYearBannerVisible: JSON.stringify(tdaGradYearBannerVisible),
         },
       });
     }

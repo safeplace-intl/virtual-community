@@ -49,32 +49,41 @@ export class BooleanProfileField extends ProfilePrivacyField(Boolean) {
   }
 }
 
-@InputType()
-export class StringProfileFieldInput {
-  @Field()
-  value!: string;
+export function ProfilePrivacyFieldInput<T>(TClass: ClassType<T>) {
+  @InputType()
+  abstract class ProfileFieldInputAbstract {
+    @Field(() => TClass)
+    value!: T;
 
-  @Field(() => PrivacyOption)
-  visibleTo!: PrivacyOption;
+    @Field(() => PrivacyOption)
+    visibleTo!: PrivacyOption;
+  }
+  return ProfileFieldInputAbstract;
 }
 
 @InputType()
-export class NumberProfileFieldInput {
-  @Field()
-  value!: number;
-
-  @Field(() => PrivacyOption)
-  visibleTo!: PrivacyOption;
+export class StringProfileFieldInput extends ProfilePrivacyFieldInput(String) {
+  constructor() {
+    super();
+  }
 }
 
 @InputType()
-export class BooleanProfileFieldInput {
-  @Field()
-  value!: boolean;
-
-  @Field(() => PrivacyOption)
-  visibleTo!: PrivacyOption;
+export class NumberProfileFieldInput extends ProfilePrivacyFieldInput(Number) {
+  constructor() {
+    super();
+  }
 }
+
+@InputType()
+export class BooleanProfileFieldInput extends ProfilePrivacyFieldInput(
+  Boolean
+) {
+  constructor() {
+    super();
+  }
+}
+
 @ObjectType()
 export class Profile {
   @Field()
@@ -113,6 +122,6 @@ export class Profile {
   @Field(() => StringProfileField, { nullable: true })
   website?: StringProfileField;
 
-  @Field(() => BooleanProfileField, { nullable: true })
-  tdaGradYearBannerVisible?: BooleanProfileField;
+  @Field(() => BooleanProfileField)
+  tdaGradYearBannerVisible!: BooleanProfileField;
 }
