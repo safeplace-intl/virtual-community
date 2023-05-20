@@ -22,20 +22,19 @@ model User {
   Profile      Profile?
 }
 
-
 model Profile {
-  id                       Int     @id @default(autoincrement())
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                   Int     @unique
+  id                       Int   @id @default(autoincrement())
+  user                     User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   Int   @unique
   fullName                 Json
   pronouns                 Json
   tdaGradYear              Json
   currentLocation          Json
-  bio                      Json  
+  bio                      Json
   profilePic               Json?
   homeCountry              Json?
   nickname                 Json?
   namePronunciation        Json?
   website                  Json?
-  tdaGradYearBannerVisible Json?
+  tdaGradYearBannerVisible Json
 }
