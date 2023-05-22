@@ -40,7 +40,6 @@ export default class ProfileService {
           tdaGradYear: profileInput.tdaGradYear,
           currentLocation: profileInput.currentLocation,
           bio: profileInput.bio,
-          tdaGradYearBannerVisible: false,
         },
       });
     }
