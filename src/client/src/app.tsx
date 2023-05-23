@@ -1,4 +1,4 @@
-import Header from "@components/Header/Header";
+import Header from "@components/header/Header";
 import { useState } from "preact/hooks";
 import {} from "preact/hooks";
 
@@ -11,12 +11,7 @@ export function App() {
 
   return (
     <>
-      <div className="relative">
-        <Header
-          activeMenuItem={activeTopMenuItem}
-          onTopMenuItemClick={handleTopMenuItemClick}
-        />
-      </div>
+      <Header onTopMenuItemClick={handleTopMenuItemClick} />
     </>
   );
 }

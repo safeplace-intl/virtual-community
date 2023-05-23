@@ -7,10 +7,10 @@ interface TopNavBarProps {
   onTopMenuItemClick: (navItem: string) => void;
 }
 
-export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
+export default function Header({ onTopMenuItemClick }: TopNavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState("");
-  const [isLeftNavVisible, setIsLeftNavVisible] = useState(true);
+  // const [isLeftNavVisible, setIsLeftNavVisible] = useState(true);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -23,7 +23,7 @@ export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
 
   const handleTopMenuItemClick = (navItem: string) => {
     onTopMenuItemClick(navItem);
-    setIsLeftNavVisible(true); // Show the left nav bar again when a top nav bar menu item is clicked on again
+    // setIsLeftNavVisible(true); // Show the left nav bar again when a top nav bar menu item is clicked on again
   };
 
   return (
@@ -36,30 +36,28 @@ export default function TopNavBar({ onTopMenuItemClick }: TopNavBarProps) {
           <label htmlFor="default-search" className="sr-only">
             Search
           </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg
-                className="w-5 h-5 text-gray-500 text-4xl font-bold leading-56 tracking-wide"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                ></path>
-              </svg>
-            </div>
-            <input
-              type="search"
-              id="default-search"
-              className="py-3 block w-full pl-10 text-gray-900 border rounded focus:ring focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Search"
-              required
-            ></input>
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg
+              className="w-5 h-5 text-gray-500 text-4xl font-bold leading-56 tracking-wide"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
           </div>
+          <input
+            type="search"
+            id="default-search"
+            className="py-3 block w-full pl-10 text-gray-900 border rounded focus:ring focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
+            placeholder="Search"
+            required
+          ></input>
         </form>
       </div>
 
