@@ -7,9 +7,9 @@ import {
 } from "type-graphql";
 
 export enum PrivacyOption {
-  Public = "public",
+  Community = "community",
   Friends = "friends",
-  Private = "private",
+  Groups = "groups",
 }
 
 registerEnumType(PrivacyOption, {
@@ -49,41 +49,32 @@ export class BooleanProfileField extends ProfilePrivacyField(Boolean) {
   }
 }
 
-export function ProfilePrivacyFieldInput<T>(TClass: ClassType<T>) {
-  @InputType()
-  abstract class ProfileFieldInputAbstract {
-    @Field(() => TClass)
-    value!: T;
+@InputType()
+export class StringProfileFieldInput {
+  @Field()
+  value!: string;
 
-    @Field(() => PrivacyOption)
-    visibleTo!: PrivacyOption;
-  }
-  return ProfileFieldInputAbstract;
+  @Field(() => PrivacyOption)
+  visibleTo!: PrivacyOption;
 }
 
 @InputType()
-export class StringProfileFieldInput extends ProfilePrivacyFieldInput(String) {
-  constructor() {
-    super();
-  }
+export class NumberProfileFieldInput {
+  @Field()
+  value!: number;
+
+  @Field(() => PrivacyOption)
+  visibleTo!: PrivacyOption;
 }
 
 @InputType()
-export class NumberProfileFieldInput extends ProfilePrivacyFieldInput(Number) {
-  constructor() {
-    super();
-  }
-}
+export class BooleanProfileFieldInput {
+  @Field()
+  value!: boolean;
 
-@InputType()
-export class BooleanProfileFieldInput extends ProfilePrivacyFieldInput(
-  Boolean
-) {
-  constructor() {
-    super();
-  }
+  @Field(() => PrivacyOption)
+  visibleTo!: PrivacyOption;
 }
-
 @ObjectType()
 export class Profile {
   @Field()
@@ -122,6 +113,6 @@ export class Profile {
   @Field(() => StringProfileField, { nullable: true })
   website?: StringProfileField;
 
-  @Field(() => BooleanProfileField)
-  tdaGradYearBannerVisible!: BooleanProfileField;
+  @Field(() => BooleanProfileField, { nullable: true })
+  tdaGradYearBannerVisible?: BooleanProfileField;
 }

@@ -49,7 +49,7 @@ type Mutation {
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
-  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
+  updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
 }
 
 type NumberProfileField {
@@ -63,9 +63,9 @@ input NumberProfileFieldInput {
 }
 
 enum PrivacyOption {
+  Community
   Friends
-  Private
-  Public
+  Groups
 }
 
 type Profile {
@@ -79,7 +79,7 @@ type Profile {
   profilePic: StringProfileField
   pronouns: StringProfileField!
   tdaGradYear: NumberProfileField!
-  tdaGradYearBannerVisible: BooleanProfileField!
+  tdaGradYearBannerVisible: BooleanProfileField
   userId: Float!
   website: StringProfileField
 }

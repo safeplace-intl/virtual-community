@@ -73,10 +73,17 @@ export default class ProfileService {
       tdaGradYearBannerVisible,
     } = profileUpdateInput;
 
+    const existingProfile = await prisma.profile.findUnique({
+      where: { userId },
+    });
+
+    if (!existingProfile) {
+      throw new Error("Profile not found");
+    }
+
     const profile = await prisma.profile.update({
       where: { userId },
       data: {
-        userId: userId,
         fullName: fullName as unknown as Prisma.JsonObject,
         pronouns: pronouns as unknown as Prisma.JsonObject,
         tdaGradYear: tdaGradYear as unknown as Prisma.JsonObject,
