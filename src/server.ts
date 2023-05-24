@@ -4,9 +4,11 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+import { GraphQLError } from "graphql";
+import depthLimit from "graphql-depth-limit";
 import http from "http";
 
-// import type { Context } from "./context.js";
+import { type Context, decodeAuthHeader } from "./context.js";
 import {
   ServeClient,
   ServeClientStaticAssets,
@@ -25,8 +27,9 @@ const mode = GetApplicationMode();
 const httpServer = http.createServer(app);
 
 // initialize apollo server, the graphql layer will sit on top of our API
-const apolloServer = new ApolloServer({
+const apolloServer = new ApolloServer<Context>({
   schema,
+  validationRules: [depthLimit(10)],
   introspection: mode === "production" ? false : true,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   formatError: (err) => {
@@ -48,8 +51,28 @@ app.use(
   bodyParser.json(),
   expressMiddleware(apolloServer, {
     context: async ({ req }) => {
-      const token = req.headers.token || "";
-      return { token };
+      if (!req.headers.authorization) {
+        return {};
+      } // do i want to throw an error here?
+
+      try {
+        const userId = decodeAuthHeader(req.headers.authorization);
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
+        // when this is turned on, headers must be available or else the request will fail
+        // TODO: make login and create user public and able to bypass this
+        // if (!user) {
+        //   throw new GraphQLError("User is not authenticated");
+        // }
+
+        return {
+          user: user || undefined,
+        };
+      } catch (error) {
+        throw new GraphQLError("Error authenticating user");
+      }
     },
   })
 );

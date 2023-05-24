@@ -1,31 +1,38 @@
-import { PrismaClient } from "@prisma/client";
-import * as bcrypt from "bcrypt";
-import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import { Service } from "typedi";
 
 import { AuthPayload } from "../../core/dto/auth.dto.js";
+import { AccountResponse } from "../../core/dto/auth.dto.js";
 import {
+  ChangePasswordInput,
   CreateUserInput,
-  GetUserArgs,
   ResetPasswordInput,
 } from "../../core/dto/user.dto.js";
+import { Profile } from "../../core/entities/profile.entity.js";
 import { User } from "../../core/entities/user.entity.js";
 import { AuthService } from "../auth/auth.service.js";
+import ProfileService from "../profile/profile.service.js";
 import UserService from "./user.service.js";
-
-const prisma = new PrismaClient();
 
 @Service()
 @Resolver(() => User)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly profileService: ProfileService
   ) {}
 
   @Query(() => User, { nullable: true })
-  async getUser(@Args() params: GetUserArgs) {
-    const user = await this.userService.getUserById(params.userId);
+  async getUser(@Arg("userId") userId: number) {
+    const user = await this.userService.getUserById(userId);
     return user;
   }
 
@@ -47,39 +54,43 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async resetPassword(@Arg("input") input: ResetPasswordInput): Promise<User> {
-    const { email, newPassword } = input;
-
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // Generate new password hash
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(newPassword, salt);
-
-    // Update user's password hash
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { passwordHash },
-    });
+  async resetPassword(
+    @Arg("resetPasswordInput") input: ResetPasswordInput
+  ): Promise<User> {
+    const updatedUser = await this.authService.resetPassword(input);
 
     return updatedUser;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => User)
+  async changePassword(
+    @Arg("changePasswordInput") input: ChangePasswordInput
+  ): Promise<User> {
+    const updatedUser = await this.authService.changePassword(input);
+    return updatedUser;
+  }
+
+  @Mutation(() => AccountResponse)
+  async deactivateAccount(
+    @Arg("email") email: string
+  ): Promise<AccountResponse> {
+    const deactivateAccountResponse = await this.userService.deactivateAccount(
+      email
+    );
+
+    return deactivateAccountResponse;
+  }
+
+  @Mutation(() => AccountResponse)
   async deleteAccount(@Arg("id") id: number) {
-    try {
-      await prisma.user.delete({
-        where: {
-          id,
-        },
-      });
-      return true;
-    } catch {
-      return false;
-    }
+    const deleteAccountResponse = await this.userService.deleteAccount(id);
+    return deleteAccountResponse;
+  }
+
+  @FieldResolver(() => Profile)
+  async profile(@Root() user: User) {
+    const profile = await this.profileService.getProfileByUserId(user.id);
+
+    return profile;
   }
 }
