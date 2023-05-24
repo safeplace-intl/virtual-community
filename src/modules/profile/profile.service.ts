@@ -69,6 +69,7 @@ export default class ProfileService {
       profilePic,
       homeCountry,
       nickname,
+      namePronunciation,
       website,
       tdaGradYearBannerVisible,
     } = profileUpdateInput;
@@ -94,6 +95,7 @@ export default class ProfileService {
         profilePic: profilePic as unknown as Prisma.JsonObject,
         homeCountry: homeCountry as unknown as Prisma.JsonObject,
         nickname: nickname as unknown as Prisma.JsonObject,
+        namePronunciation: namePronunciation as unknown as Prisma.JsonObject,
         website: website as unknown as Prisma.JsonObject,
       },
     });

@@ -45,6 +45,9 @@ export class UpdateProfileInput {
   nickname?: StringProfileFieldInput;
 
   @Field(() => StringProfileFieldInput, { nullable: true })
+  namePronunciation?: StringProfileFieldInput;
+
+  @Field(() => StringProfileFieldInput, { nullable: true })
   website?: StringProfileFieldInput;
 
   @Field(() => BooleanProfileFieldInput, { nullable: true })

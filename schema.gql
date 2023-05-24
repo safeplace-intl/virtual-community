@@ -120,6 +120,7 @@ input UpdateProfileInput {
   currentLocation: StringProfileFieldInput
   fullName: StringProfileFieldInput
   homeCountry: StringProfileFieldInput
+  namePronunciation: StringProfileFieldInput
   nickname: StringProfileFieldInput
   profilePic: StringProfileFieldInput
   pronouns: StringProfileFieldInput

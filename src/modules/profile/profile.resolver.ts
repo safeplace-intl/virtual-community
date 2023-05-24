@@ -1,6 +1,12 @@
 import { GraphQLError } from "graphql";
-import { type Context } from "src/context.js";
-import { Arg, Ctx, Float, Int, Mutation, Resolver } from "type-graphql";
+// import { type Context } from "src/context.js";
+import {
+  Arg,
+  // Ctx,
+  Float,
+  Mutation,
+  Resolver,
+} from "type-graphql";
 import { Service } from "typedi";
 
 import { UpdateProfileInput } from "../../core/dto/profile.dto.js";
@@ -35,6 +41,7 @@ export class ProfileResolver {
   //   }
   // }
 
+  // Temporarily mutation without context
   @Mutation(() => Profile)
   async updateProfile(
     @Arg("userId", () => Float) userId: number,
