@@ -1,57 +1,54 @@
 import "reflect-metadata";
 
-import { Length, Max, Min } from "class-validator";
+import { Allow } from "class-validator";
 import { Field, InputType } from "type-graphql";
 
-import { StringScalar } from "../../utils/scalars/string-sanitizer.util.js";
+import {
+  BooleanProfileFieldInput,
+  NumberProfileFieldInput,
+  StringProfileFieldInput,
+} from "../entities/profile.entity.js";
 
 // not using decorators here because we don't want to expose this type to the schema
 export class CreateProfileInput {
-  fullName!: string;
-  pronouns!: string;
-  tdaGradYear!: number;
-  currentLocation!: string;
-  bio!: string;
+  fullName!: StringProfileFieldInput;
+  pronouns?: StringProfileFieldInput;
+  tdaGradYearBannerVisible!: BooleanProfileFieldInput;
 }
 
 @InputType()
 export class UpdateProfileInput {
-  @Field(() => StringScalar || String, { nullable: true })
-  @Length(1, 100)
-  fullName?: string;
+  @Allow()
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  fullName?: StringProfileFieldInput;
 
-  @Field({ nullable: true })
-  @Length(1, 15)
-  pronouns?: string;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  pronouns?: StringProfileFieldInput;
 
-  @Field({ nullable: true })
-  @Min(2015)
-  @Max(2050)
-  tdaGradYear?: number;
+  @Field(() => NumberProfileFieldInput, { nullable: true })
+  tdaGradYear?: NumberProfileFieldInput;
 
-  @Field(() => StringScalar || String, { nullable: true })
-  @Length(1, 100)
-  currentLocation?: string;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  currentLocation?: StringProfileFieldInput;
 
-  @Field(() => StringScalar || String, { nullable: true })
-  @Length(1, 500)
-  bio?: string;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  bio?: StringProfileFieldInput;
 
-  @Field({ nullable: true })
-  profilePic?: string;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  profilePic?: StringProfileFieldInput;
 
-  @Field(() => StringScalar || String, { nullable: true })
-  @Length(1, 100)
-  homeCountry?: string;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  homeCountry?: StringProfileFieldInput;
 
-  @Field(() => StringScalar || String, { nullable: true })
-  @Length(1, 100)
-  nickname?: string;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  nickname?: StringProfileFieldInput;
 
-  @Field({ nullable: true })
-  @Length(1, 100)
-  website?: string;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  namePronunciation?: StringProfileFieldInput;
 
-  @Field({ nullable: true })
-  tdaGradYearBannerVisible?: boolean;
+  @Field(() => StringProfileFieldInput, { nullable: true })
+  website?: StringProfileFieldInput;
+
+  @Field(() => BooleanProfileFieldInput, { nullable: true })
+  tdaGradYearBannerVisible?: BooleanProfileFieldInput;
 }

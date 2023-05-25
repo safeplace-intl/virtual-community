@@ -13,6 +13,16 @@ type AuthPayload {
   user: User!
 }
 
+type BooleanProfileField {
+  value: Boolean!
+  visibleTo: PrivacyOption!
+}
+
+input BooleanProfileFieldInput {
+  value: Boolean!
+  visibleTo: PrivacyOption!
+}
+
 input ChangePasswordInput {
   email: String!
   newPassword: String!
@@ -23,7 +33,7 @@ input CreateUserInput {
   email: String!
   fullName: StringScalar!
   password: String!
-  pronouns: String!
+  pronouns: String
 }
 
 input LoginInput {
@@ -39,23 +49,39 @@ type Mutation {
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
-  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
+  updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
+}
+
+type NumberProfileField {
+  value: Float!
+  visibleTo: PrivacyOption!
+}
+
+input NumberProfileFieldInput {
+  value: Float!
+  visibleTo: PrivacyOption!
+}
+
+enum PrivacyOption {
+  Community
+  Friends
+  Groups
 }
 
 type Profile {
-  bio: String!
-  currentLocation: String!
-  fullName: String!
-  homeCountry: String
+  bio: StringProfileField
+  currentLocation: StringProfileField
+  fullName: StringProfileField!
+  homeCountry: StringProfileField
   id: Float!
-  namePronunciation: String
-  nickname: String
-  profilePic: String
-  pronouns: String!
-  tdaGradYear: Float!
-  tdaGradYearBannerVisible: Boolean
+  namePronunciation: StringProfileField
+  nickname: StringProfileField
+  profilePic: StringProfileField
+  pronouns: StringProfileField
+  tdaGradYear: NumberProfileField
+  tdaGradYearBannerVisible: BooleanProfileField
   userId: Float!
-  website: String
+  website: StringProfileField
 }
 
 type Query {
@@ -72,6 +98,16 @@ input ResetPasswordInput {
   newPassword: String!
 }
 
+type StringProfileField {
+  value: String!
+  visibleTo: PrivacyOption!
+}
+
+input StringProfileFieldInput {
+  value: String!
+  visibleTo: PrivacyOption!
+}
+
 scalar StringScalar
 
 type TokensPayload {
@@ -80,16 +116,17 @@ type TokensPayload {
 }
 
 input UpdateProfileInput {
-  bio: StringScalar
-  currentLocation: StringScalar
-  fullName: StringScalar
-  homeCountry: StringScalar
-  nickname: StringScalar
-  profilePic: String
-  pronouns: String
-  tdaGradYear: Float
-  tdaGradYearBannerVisible: Boolean
-  website: String
+  bio: StringProfileFieldInput
+  currentLocation: StringProfileFieldInput
+  fullName: StringProfileFieldInput
+  homeCountry: StringProfileFieldInput
+  namePronunciation: StringProfileFieldInput
+  nickname: StringProfileFieldInput
+  profilePic: StringProfileFieldInput
+  pronouns: StringProfileFieldInput
+  tdaGradYear: NumberProfileFieldInput
+  tdaGradYearBannerVisible: BooleanProfileFieldInput
+  website: StringProfileFieldInput
 }
 
 type User {
