@@ -8,13 +8,13 @@ import {
 } from "type-graphql";
 import { Service } from "typedi";
 
-import { AuthPayload } from "../../core/dto/auth.dto.js";
-import { AccountResponse } from "../../core/dto/auth.dto.js";
 import {
+  AuthPayload,
   ChangePasswordInput,
-  CreateUserInput,
   ResetPasswordInput,
-} from "../../core/dto/user.dto.js";
+} from "../../core/dto/auth.dto.js";
+import { AccountResponse } from "../../core/dto/auth.dto.js";
+import { CreateUserInput } from "../../core/dto/user.dto.js";
 import { Profile } from "../../core/entities/profile.entity.js";
 import { User } from "../../core/entities/user.entity.js";
 import { AuthService } from "../auth/auth.service.js";
