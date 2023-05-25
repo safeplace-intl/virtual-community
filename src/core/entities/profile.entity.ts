@@ -75,6 +75,7 @@ export class BooleanProfileFieldInput {
   @Field(() => PrivacyOption)
   visibleTo!: PrivacyOption;
 }
+
 @ObjectType()
 export class Profile {
   @Field()
@@ -86,17 +87,17 @@ export class Profile {
   @Field(() => StringProfileField)
   fullName!: StringProfileField;
 
-  @Field(() => StringProfileField)
-  pronouns!: StringProfileField;
+  @Field(() => StringProfileField, { nullable: true })
+  pronouns?: StringProfileField;
 
-  @Field(() => NumberProfileField)
-  tdaGradYear!: NumberProfileField;
+  @Field(() => NumberProfileField, { nullable: true })
+  tdaGradYear?: NumberProfileField;
 
-  @Field(() => StringProfileField)
-  currentLocation!: StringProfileField;
+  @Field(() => StringProfileField, { nullable: true })
+  currentLocation?: StringProfileField;
 
-  @Field(() => StringProfileField)
-  bio!: StringProfileField;
+  @Field(() => StringProfileField, { nullable: true })
+  bio?: StringProfileField;
 
   @Field(() => StringProfileField, { nullable: true })
   profilePic?: StringProfileField;

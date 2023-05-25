@@ -33,7 +33,7 @@ input CreateUserInput {
   email: String!
   fullName: StringScalar!
   password: String!
-  pronouns: String!
+  pronouns: String
 }
 
 input LoginInput {
@@ -69,16 +69,16 @@ enum PrivacyOption {
 }
 
 type Profile {
-  bio: StringProfileField!
-  currentLocation: StringProfileField!
+  bio: StringProfileField
+  currentLocation: StringProfileField
   fullName: StringProfileField!
   homeCountry: StringProfileField
   id: Float!
   namePronunciation: StringProfileField
   nickname: StringProfileField
   profilePic: StringProfileField
-  pronouns: StringProfileField!
-  tdaGradYear: NumberProfileField!
+  pronouns: StringProfileField
+  tdaGradYear: NumberProfileField
   tdaGradYearBannerVisible: BooleanProfileField
   userId: Float!
   website: StringProfileField

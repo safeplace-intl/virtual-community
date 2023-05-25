@@ -27,10 +27,10 @@ model Profile {
   user                     User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                   Int   @unique
   fullName                 Json
-  pronouns                 Json
-  tdaGradYear              Json
-  currentLocation          Json
-  bio                      Json
+  pronouns                 Json?
+  tdaGradYear              Json?
+  currentLocation          Json?
+  bio                      Json?
   profilePic               Json?
   homeCountry              Json?
   nickname                 Json?

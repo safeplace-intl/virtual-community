@@ -11,10 +11,7 @@ import {
 // not using decorators here because we don't want to expose this type to the schema
 export class CreateProfileInput {
   fullName!: StringProfileFieldInput;
-  pronouns!: StringProfileFieldInput;
-  tdaGradYear!: NumberProfileFieldInput;
-  currentLocation!: StringProfileFieldInput;
-  bio!: StringProfileFieldInput;
+  pronouns?: StringProfileFieldInput;
   tdaGradYearBannerVisible!: BooleanProfileFieldInput;
 }
 

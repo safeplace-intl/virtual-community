@@ -29,14 +29,7 @@ export default class ProfileService {
       where: { id: userId },
     });
 
-    const {
-      fullName,
-      pronouns,
-      tdaGradYear,
-      currentLocation,
-      bio,
-      tdaGradYearBannerVisible,
-    } = profileInput;
+    const { fullName, pronouns, tdaGradYearBannerVisible } = profileInput;
 
     if (!user) {
       throw new Error("User not found");
@@ -45,10 +38,7 @@ export default class ProfileService {
         data: {
           userId: userId,
           fullName: fullName as unknown as Prisma.JsonObject,
-          pronouns: pronouns as unknown as Prisma.JsonObject,
-          tdaGradYear: tdaGradYear as unknown as Prisma.JsonObject,
-          currentLocation: currentLocation as unknown as Prisma.JsonObject,
-          bio: bio as unknown as Prisma.JsonObject,
+          pronouns: (pronouns as unknown as Prisma.JsonObject) || undefined,
           tdaGradYearBannerVisible:
             tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
         },

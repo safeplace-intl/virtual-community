@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Profile" ALTER COLUMN "pronouns" DROP NOT NULL,
+ALTER COLUMN "tdaGradYear" DROP NOT NULL,
+ALTER COLUMN "currentLocation" DROP NOT NULL,
+ALTER COLUMN "bio" DROP NOT NULL;

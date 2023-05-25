@@ -16,6 +16,3 @@ export class User {
   @Field()
   isActive!: boolean;
 }
-
-// we need an full list
-export type Pronouns = "he/him" | "she/her" | "they/them" | "ze/zir";

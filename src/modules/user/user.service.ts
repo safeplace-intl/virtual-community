@@ -58,35 +58,31 @@ export default class UserService implements IUserService {
         },
       });
 
-      // creates a profile for the new user
-      // TODO: figure the initial values for required fields out
-      await this.profileService.createProfile(user.id, {
+      const requiredCreateProfileFields = {
         fullName: {
           value: userInput.fullName,
-          visibleTo: PrivacyOption.Friends,
-        },
-        pronouns: {
-          value: userInput.pronouns,
-          visibleTo: PrivacyOption.Friends,
-        },
-        tdaGradYear: {
-          value: 2023,
-          visibleTo: PrivacyOption.Friends,
-        },
-        currentLocation: {
-          value: "",
-          visibleTo: PrivacyOption.Friends,
-        },
-        bio: {
-          value: "",
           visibleTo: PrivacyOption.Friends,
         },
         tdaGradYearBannerVisible: {
           value: false,
           visibleTo: PrivacyOption.Friends,
         },
-      });
+      };
 
+      // creates a profile for the new user with or without the pronouns field
+      if (userInput.pronouns === undefined || userInput.pronouns === null) {
+        await this.profileService.createProfile(user.id, {
+          ...requiredCreateProfileFields,
+        });
+      } else {
+        await this.profileService.createProfile(user.id, {
+          ...requiredCreateProfileFields,
+          pronouns: {
+            value: userInput.pronouns,
+            visibleTo: PrivacyOption.Friends,
+          },
+        });
+      }
       return user;
     }
   }
