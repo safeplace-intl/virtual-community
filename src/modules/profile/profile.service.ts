@@ -1,4 +1,4 @@
-import { Profile } from "@prisma/client";
+import { Prisma, Profile } from "@prisma/client";
 import { Service } from "typedi";
 
 import {
@@ -16,9 +16,9 @@ export default class ProfileService {
 
     if (!profile) {
       throw new Error("Profile not found");
+    } else {
+      return profile;
     }
-
-    return profile;
   }
 
   async createProfile(
@@ -29,17 +29,18 @@ export default class ProfileService {
       where: { id: userId },
     });
 
+    const { fullName, pronouns, tdaGradYearBannerVisible } = profileInput;
+
     if (!user) {
       throw new Error("User not found");
     } else {
       return await prisma.profile.create({
         data: {
           userId: userId,
-          fullName: profileInput.fullName,
-          pronouns: profileInput.pronouns,
-          tdaGradYear: profileInput.tdaGradYear,
-          currentLocation: profileInput.currentLocation,
-          bio: profileInput.bio,
+          fullName: fullName as unknown as Prisma.JsonObject,
+          pronouns: (pronouns as unknown as Prisma.JsonObject) || undefined,
+          tdaGradYearBannerVisible:
+            tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
         },
       });
     }
@@ -49,9 +50,44 @@ export default class ProfileService {
     userId: number,
     profileUpdateInput: UpdateProfileInput
   ): Promise<Profile> {
+    const {
+      fullName,
+      pronouns,
+      tdaGradYear,
+      currentLocation,
+      bio,
+      profilePic,
+      homeCountry,
+      nickname,
+      namePronunciation,
+      website,
+      tdaGradYearBannerVisible,
+    } = profileUpdateInput;
+
+    const existingProfile = await prisma.profile.findUnique({
+      where: { userId },
+    });
+
+    if (!existingProfile) {
+      throw new Error("Profile not found");
+    }
+
     const profile = await prisma.profile.update({
       where: { userId },
-      data: profileUpdateInput,
+      data: {
+        fullName: fullName as unknown as Prisma.JsonObject,
+        pronouns: pronouns as unknown as Prisma.JsonObject,
+        tdaGradYear: tdaGradYear as unknown as Prisma.JsonObject,
+        currentLocation: currentLocation as unknown as Prisma.JsonObject,
+        bio: bio as unknown as Prisma.JsonObject,
+        tdaGradYearBannerVisible:
+          tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
+        profilePic: profilePic as unknown as Prisma.JsonObject,
+        homeCountry: homeCountry as unknown as Prisma.JsonObject,
+        nickname: nickname as unknown as Prisma.JsonObject,
+        namePronunciation: namePronunciation as unknown as Prisma.JsonObject,
+        website: website as unknown as Prisma.JsonObject,
+      },
     });
 
     return profile;

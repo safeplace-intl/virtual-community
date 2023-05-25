@@ -23,18 +23,18 @@ model User {
 }
 
 model Profile {
-  id                       Int     @id @default(autoincrement())
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                   Int     @unique
-  fullName                 String
-  pronouns                 String
-  tdaGradYear              Int
-  currentLocation          String
-  bio                      String  @db.VarChar(500)
-  profilePic               String?
-  homeCountry              String?
-  nickname                 String?
-  namePronunciation        String?
-  website                  String?
-  tdaGradYearBannerVisible Boolean @default(false)
+  id                       Int   @id @default(autoincrement())
+  user                     User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   Int   @unique
+  fullName                 Json
+  pronouns                 Json?
+  tdaGradYear              Json?
+  currentLocation          Json?
+  bio                      Json?
+  profilePic               Json?
+  homeCountry              Json?
+  nickname                 Json?
+  namePronunciation        Json?
+  website                  Json?
+  tdaGradYearBannerVisible Json
 }
