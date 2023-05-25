@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+import { Allow } from "class-validator";
 import { Field, InputType } from "type-graphql";
 
 import {
@@ -17,6 +18,7 @@ export class CreateProfileInput {
 
 @InputType()
 export class UpdateProfileInput {
+  @Allow()
   @Field(() => StringProfileFieldInput, { nullable: true })
   fullName?: StringProfileFieldInput;
 

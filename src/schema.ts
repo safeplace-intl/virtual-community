@@ -27,7 +27,7 @@ export const schema = await buildSchema({
   emitSchemaFile: true,
   dateScalarMode: "isoDate",
   container: Container, // this is needed to inject services into resolvers
-  validate: false,
+  validate: true,
 });
 
 // dont forget to also update prisma schema file and run prisma migrate to keep all schemas current

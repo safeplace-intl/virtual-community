@@ -52,11 +52,11 @@ export class BooleanProfileField extends ProfilePrivacyField(Boolean) {
 export function ProfilePrivacyFieldInput<T>(TClass: ClassType<T>) {
   @InputType()
   abstract class ProfileFieldInputAbstract {
-    @Field(() => TClass, { nullable: true })
-    value?: T;
+    @Field(() => TClass)
+    value!: T;
 
-    @Field(() => PrivacyOption, { nullable: true })
-    visibleTo?: PrivacyOption;
+    @Field(() => PrivacyOption)
+    visibleTo!: PrivacyOption;
   }
   return ProfileFieldInputAbstract;
 }
