@@ -49,31 +49,39 @@ export class BooleanProfileField extends ProfilePrivacyField(Boolean) {
   }
 }
 
-@InputType()
-export class StringProfileFieldInput {
-  @Field()
-  value!: string;
+export function ProfilePrivacyFieldInput<T>(TClass: ClassType<T>) {
+  @InputType()
+  abstract class ProfileFieldInputAbstract {
+    @Field(() => TClass, { nullable: true })
+    value?: T;
 
-  @Field(() => PrivacyOption)
-  visibleTo!: PrivacyOption;
+    @Field(() => PrivacyOption, { nullable: true })
+    visibleTo?: PrivacyOption;
+  }
+  return ProfileFieldInputAbstract;
 }
 
 @InputType()
-export class NumberProfileFieldInput {
-  @Field()
-  value!: number;
-
-  @Field(() => PrivacyOption)
-  visibleTo!: PrivacyOption;
+export class StringProfileFieldInput extends ProfilePrivacyFieldInput(String) {
+  constructor() {
+    super();
+  }
 }
 
 @InputType()
-export class BooleanProfileFieldInput {
-  @Field()
-  value!: boolean;
+export class NumberProfileFieldInput extends ProfilePrivacyFieldInput(Number) {
+  constructor() {
+    super();
+  }
+}
 
-  @Field(() => PrivacyOption)
-  visibleTo!: PrivacyOption;
+@InputType()
+export class BooleanProfileFieldInput extends ProfilePrivacyFieldInput(
+  Boolean
+) {
+  constructor() {
+    super();
+  }
 }
 
 @ObjectType()

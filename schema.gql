@@ -19,8 +19,8 @@ type BooleanProfileField {
 }
 
 input BooleanProfileFieldInput {
-  value: Boolean!
-  visibleTo: PrivacyOption!
+  value: Boolean
+  visibleTo: PrivacyOption
 }
 
 input ChangePasswordInput {
@@ -58,8 +58,8 @@ type NumberProfileField {
 }
 
 input NumberProfileFieldInput {
-  value: Float!
-  visibleTo: PrivacyOption!
+  value: Float
+  visibleTo: PrivacyOption
 }
 
 enum PrivacyOption {
@@ -104,8 +104,8 @@ type StringProfileField {
 }
 
 input StringProfileFieldInput {
-  value: String!
-  visibleTo: PrivacyOption!
+  value: String
+  visibleTo: PrivacyOption
 }
 
 scalar StringScalar
