@@ -5,7 +5,7 @@ import S3Service from "./image.service.js";
 interface IProfileImageService {
   generateSignedUrlByUserId(userId: number): Promise<string>;
   uploadImageByUserId(userId: number): Promise<string>;
-  getImageByUserId(userId: number): Promise<string>;
+  getImageByUserId(userId: number): Promise<string | undefined>;
   deleteImageByUserId(userId: number): Promise<string>;
 }
 
@@ -33,8 +33,17 @@ export default class ProfileImageService
     }
   }
 
-  getImageByUserId(userId: number): Promise<string> {
-    throw new Error("Method not implemented.");
+  async getImageByUserId(userId: number): Promise<string | undefined> {
+    try {
+      const imageStr = await this.getImageFromS3({
+        bucket: "spi-virtual-cmnty-profile-image-bucket",
+        key: userId.toString(),
+      });
+      return imageStr;
+    } catch (err) {
+      console.error(err);
+      return "error";
+    }
   }
 
   uploadImageByUserId(userId: number): Promise<string> {

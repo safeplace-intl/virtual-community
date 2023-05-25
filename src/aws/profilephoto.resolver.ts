@@ -1,6 +1,6 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
-import { Ctx, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import ProfilePhotoService from "./profile-image.service.js";
@@ -21,6 +21,20 @@ export class ProfilePhotoResolver {
         await this.ProfilePhotoService.generateSignedUrlByUserId(userId);
 
       return signedUrl;
+    }
+  }
+
+  @Query(() => String)
+  async getProfilePhotoByUserId(
+    @Ctx() ctx: Context,
+    @Arg("userId") userId: number
+  ) {
+    const validUserId = ctx.user?.id;
+    if (!validUserId) {
+      throw new GraphQLError("Invalid user making query");
+    } else {
+      const imageStr = await this.ProfilePhotoService.getImageByUserId(userId);
+      return imageStr;
     }
   }
 }

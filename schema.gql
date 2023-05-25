@@ -59,6 +59,7 @@ type Profile {
 }
 
 type Query {
+  getProfilePhotoByUserId(userId: Float!): String!
   getS3SignedUrl: String!
   getUser(userId: Float!): User
 }

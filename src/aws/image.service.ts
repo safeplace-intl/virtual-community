@@ -1,4 +1,4 @@
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { client } from "./s3.config.js";
@@ -32,5 +32,25 @@ export default class S3Service implements IBaseImageService {
   }: SignedUrlClientOptions): Promise<string> {
     const command = new PutObjectCommand({ Bucket: bucket, Key: key });
     return getSignedUrl(client, command, { expiresIn: 3600 });
+  }
+
+  async getImageFromS3({
+    bucket,
+    key,
+  }: SignedUrlClientOptions): Promise<string | undefined> {
+    const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+    try {
+      const response = await client.send(command);
+      const str = await response.Body?.transformToString();
+      console.log(str);
+      if (!response.Body) {
+        return "error";
+      } else {
+        return str;
+      }
+    } catch (err) {
+      console.error(err);
+      return "nope";
+    }
   }
 }
