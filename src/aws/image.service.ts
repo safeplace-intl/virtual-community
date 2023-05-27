@@ -1,4 +1,8 @@
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { client } from "./s3.config.js";
@@ -51,6 +55,26 @@ export default class S3Service implements IBaseImageService {
     } catch (err) {
       console.error(err);
       return "nope";
+    }
+  }
+
+  async deleteImageFromS3({
+    bucket,
+    key,
+  }: SignedUrlClientOptions): Promise<string> {
+    const command = new DeleteObjectsCommand({
+      Bucket: bucket,
+      Delete: {
+        Objects: [{ Key: key }],
+      },
+    });
+    try {
+      const { Deleted } = await client.send(command);
+      console.log(`Successfully deleted ${Deleted}`);
+      return "Deleted";
+    } catch (err) {
+      console.error(err);
+      return "Error occurred within S3 service";
     }
   }
 }

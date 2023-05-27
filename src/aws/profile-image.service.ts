@@ -6,7 +6,7 @@ interface IProfileImageService {
   generateSignedUrlByUserId(userId: number): Promise<string>;
   uploadImageByUserId(userId: number): Promise<string>;
   getImageByUserId(userId: number): Promise<string | undefined>;
-  deleteImageByUserId(userId: number): Promise<string>;
+  deleteImageByUserId(userId: number): Promise<string> | string;
 }
 
 // ! This is where you will implement the other methods for the profile photo service, and then profile service will utilize them
@@ -48,9 +48,20 @@ export default class ProfileImageService
 
   uploadImageByUserId(userId: number): Promise<string> {
     throw new Error("Method not implemented.");
+    //not sure how to implement this method as I can't pass in
   }
 
-  deleteImageByUserId(userId: number): Promise<string> {
-    throw new Error("Method not implemented.");
+  deleteImageByUserId(userId: number): Promise<string> | string {
+    try {
+      const deleted = this.deleteImageFromS3({
+        bucket: "spi-virtual-cmnty-profile-image-bucket",
+        key: userId.toString(),
+      });
+      return deleted;
+    } catch (err) {
+      console.error(err);
+      return "error occured";
+      //return "error in profile image service";
+    }
   }
 }

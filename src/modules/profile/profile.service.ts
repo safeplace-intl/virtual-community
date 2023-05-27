@@ -54,6 +54,16 @@ export default class ProfileService {
     profileUpdateInput: UpdateProfileInput
   ): Promise<Profile> {
     // ! in here, if profilePic is a field being updated, DO SOME WORK, then we need to call the image service to either create a new profile image, update the image in S3, or delete
+    console.log(profileUpdateInput);
+    if (
+      "profilePic" in profileUpdateInput &&
+      profileUpdateInput["profilePic"] == null
+    ) {
+      console.log("field is here and null");
+    } else {
+      console.log("field is not here or not null");
+    }
+
     const profile = await prisma.profile.update({
       where: { userId },
       data: profileUpdateInput,
