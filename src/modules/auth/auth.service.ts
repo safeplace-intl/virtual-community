@@ -7,7 +7,7 @@ import { RefreshTokenInput, TokensPayload } from "../../core/dto/auth.dto.js";
 import {
   ChangePasswordInput,
   ResetPasswordInput,
-} from "../../core/dto/user.dto.js";
+} from "../../core/dto/auth.dto.js";
 import { prisma } from "../../prisma/index.js";
 
 interface IAuthService {
