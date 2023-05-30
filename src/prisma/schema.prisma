@@ -14,12 +14,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
   passwordHash String
   isActive     Boolean  @default(true)
   Profile      Profile?
+  Posts        Post[]   @relation("UserToPost")
 }
 
 model Profile {
@@ -37,4 +39,17 @@ model Profile {
   namePronunciation        Json?
   website                  Json?
   tdaGradYearBannerVisible Json
+}
+
+model Post {
+  id                 Int   @id @default(autoincrement())
+  userId             Int?   @unique
+  user               User?  @relation("UserToPost",fields: [userId], references: [id])
+  content            String
+  image              String?
+  likes              Int?      @default(0)
+  dislikes           Int?      @default(0)
+  isDraft            Boolean?
+  hasSensitiveTopic  Boolean?
+  // privacyOption      PrivacyOption?
 }
