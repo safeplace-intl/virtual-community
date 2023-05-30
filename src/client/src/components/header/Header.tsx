@@ -1,6 +1,7 @@
 import TopNavBar from "./TopNavBar";
 
 interface HeaderProps {
+  activeMenuItem: string;
   onTopMenuItemClick: (menuItem: string) => void;
 }
 
