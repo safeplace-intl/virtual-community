@@ -59,8 +59,7 @@ type Profile {
 }
 
 type Query {
-  getProfilePhotoByUserId(userId: Float!): String!
-  getS3SignedUrl: String!
+  getS3SignedUrl: S3Response!
   getUser(userId: Float!): User
 }
 
@@ -72,6 +71,13 @@ input RefreshTokenInput {
 input ResetPasswordInput {
   email: String!
   newPassword: String!
+}
+
+type S3Response {
+  imageUrl: String!
+  message: String!
+  signedUrl: String!
+  statusCode: Float!
 }
 
 scalar StringScalar

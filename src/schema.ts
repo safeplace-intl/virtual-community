@@ -3,7 +3,6 @@ import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { Container } from "typedi";
 
-import { ProfilePhotoResolver } from "./aws/profilephoto.resolver.js";
 import { PaginationArgs } from "./core/dto/args.dto.js";
 import {
   AuthPayload,
@@ -18,12 +17,7 @@ import { UserResolver } from "./modules/user/user.resolver.js";
 
 // the types and resolvers specified here are what will be auto-generated in the graphql schema file
 export const schema = await buildSchema({
-  resolvers: [
-    AuthResolver,
-    ProfileResolver,
-    UserResolver,
-    ProfilePhotoResolver,
-  ],
+  resolvers: [AuthResolver, ProfileResolver, UserResolver],
   orphanedTypes: [
     LoginInput,
     TokensPayload,

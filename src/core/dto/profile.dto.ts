@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { Length, Max, Min } from "class-validator";
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 
 import { StringScalar } from "../../utils/scalars/string-sanitizer.util.js";
 
@@ -54,4 +54,19 @@ export class UpdateProfileInput {
 
   @Field({ nullable: true })
   tdaGradYearBannerVisible?: boolean;
+}
+
+@ObjectType()
+export class S3Response {
+  @Field()
+  statusCode!: number;
+
+  @Field()
+  message?: string;
+
+  @Field()
+  imageUrl?: string;
+
+  @Field()
+  signedUrl?: string;
 }

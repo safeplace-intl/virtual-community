@@ -1,12 +1,12 @@
 import { Profile } from "@prisma/client";
 import { Service } from "typedi";
 
-import ProfileImageService from "../../aws/profile-image.service.js";
 import {
   CreateProfileInput,
   UpdateProfileInput,
 } from "../../core/dto/profile.dto.js";
 import { prisma } from "../../prisma/index.js";
+import ProfileImageService from "./profile-image.service.js";
 
 @Service()
 export default class ProfileService {
@@ -54,6 +54,7 @@ export default class ProfileService {
     profileUpdateInput: UpdateProfileInput
   ): Promise<Profile> {
     // ! in here, if profilePic is a field being updated, DO SOME WORK, then we need to call the image service to either create a new profile image, update the image in S3, or delete
+    // ! are we storing a url reference in the DB or do we need to call getImage everytime the user profile is resolved?
     console.log(profileUpdateInput);
     if (
       "profilePic" in profileUpdateInput &&
@@ -70,5 +71,9 @@ export default class ProfileService {
     });
 
     return profile;
+  }
+
+  async getS3Url(userId: number) {
+    return await this.imageService.generateSignedUrlByUserId(userId);
   }
 }

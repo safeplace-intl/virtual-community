@@ -1,9 +1,9 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
-import { UpdateProfileInput } from "../../core/dto/profile.dto.js";
+import { S3Response, UpdateProfileInput } from "../../core/dto/profile.dto.js";
 import { Profile } from "../../core/entities/profile.entity.js";
 import ProfileService from "./profile.service.js";
 
@@ -17,8 +17,6 @@ export class ProfileResolver {
     @Arg("updateProfileInput") profileInput: UpdateProfileInput,
     @Ctx() ctx: Context
   ) {
-    console.log("hello");
-    console.log(ctx);
     const userId = ctx.user?.id;
 
     if (!userId) {
@@ -29,6 +27,18 @@ export class ProfileResolver {
         profileInput
       );
       return profile;
+    }
+  }
+
+  @Query(() => S3Response)
+  async getS3SignedUrl(@Ctx() ctx: Context) {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    } else {
+      const signedUrl = await this.profileService.getS3Url(userId);
+
+      return signedUrl;
     }
   }
 }

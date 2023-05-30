@@ -1,15 +1,13 @@
 import { Service } from "typedi";
 
-import S3Service from "./image.service.js";
+import S3Service, { genericAWSErrorMessage } from "../../aws/image.service.js";
+import { S3Response } from "../../core/dto/profile.dto.js";
 
 interface IProfileImageService {
-  generateSignedUrlByUserId(userId: number): Promise<string>;
-  uploadImageByUserId(userId: number): Promise<string>;
-  getImageByUserId(userId: number): Promise<string | undefined>;
-  deleteImageByUserId(userId: number): Promise<string> | string;
+  generateSignedUrlByUserId(userId: number): Promise<S3Response>;
+  getImageByUserId(userId: number): Promise<S3Response>;
+  deleteImageByUserId(userId: number): Promise<S3Response>;
 }
-
-// ! This is where you will implement the other methods for the profile photo service, and then profile service will utilize them
 
 @Service()
 export default class ProfileImageService
@@ -20,7 +18,8 @@ export default class ProfileImageService
     // calling super means that this service will inherit the methods from the S3Service class, including the generateSignedUrlByClient method, so it can call with this.generateSignedUrlByClient
     super();
   }
-  async generateSignedUrlByUserId(userId: number): Promise<string> {
+
+  async generateSignedUrlByUserId(userId: number): Promise<S3Response> {
     try {
       const clientUrl = await this.generateSignedUrlByClient({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
@@ -29,11 +28,14 @@ export default class ProfileImageService
       return clientUrl;
     } catch (err) {
       console.error(err);
-      return "error";
+      return {
+        statusCode: 500,
+        message: genericAWSErrorMessage,
+      };
     }
   }
 
-  async getImageByUserId(userId: number): Promise<string | undefined> {
+  async getImageByUserId(userId: number): Promise<S3Response> {
     try {
       const imageStr = await this.getImageFromS3({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
@@ -42,26 +44,25 @@ export default class ProfileImageService
       return imageStr;
     } catch (err) {
       console.error(err);
-      return "error";
+      return {
+        statusCode: 500,
+        message: genericAWSErrorMessage,
+      };
     }
   }
 
-  uploadImageByUserId(userId: number): Promise<string> {
-    throw new Error("Method not implemented.");
-    //not sure how to implement this method as I can't pass in
-  }
-
-  deleteImageByUserId(userId: number): Promise<string> | string {
+  async deleteImageByUserId(userId: number): Promise<S3Response> {
     try {
-      const deleted = this.deleteImageFromS3({
+      const deleted = await this.deleteImageFromS3({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
         key: userId.toString(),
       });
       return deleted;
     } catch (err) {
-      console.error(err);
-      return "error occured";
-      //return "error in profile image service";
+      return {
+        statusCode: 500,
+        message: genericAWSErrorMessage,
+      };
     }
   }
 }
