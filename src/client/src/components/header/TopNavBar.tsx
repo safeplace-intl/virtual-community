@@ -4,13 +4,12 @@ import logo from "../../assets/spi-logo.png";
 import { navItems } from "../../menuitems";
 
 interface TopNavBarProps {
-  onTopMenuItemClick: (navItem: string) => void;
+  onTopMenuItemClick?: (navItem: string) => void;
 }
 
 export default function Header({ onTopMenuItemClick }: TopNavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState("");
-  // const [isLeftNavVisible, setIsLeftNavVisible] = useState(true);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -22,12 +21,14 @@ export default function Header({ onTopMenuItemClick }: TopNavBarProps) {
   };
 
   const handleTopMenuItemClick = (navItem: string) => {
-    onTopMenuItemClick(navItem);
+    if (onTopMenuItemClick) {
+      onTopMenuItemClick(navItem);
+    }
     // setIsLeftNavVisible(true); // Show the left nav bar again when a top nav bar menu item is clicked on again
   };
 
   return (
-    <nav className="sticky top-0 z-50 flex justify-between py-0 px-100 md:px-10 h-64px w-1440px bg-modal-100 border border-black-100 shadow box-shadow-[0_4px_4px_0px]-black-100">
+    <nav className="sticky top-0 z-50 flex justify-between py-0 px-100 md:px-10 h-64px w-1440px bg-modal-100 border border-spi-black-100 shadow box-shadow-[0_4px_4px_0px]-spi-black-100">
       <div className="flex items-center">
         <a href="#">
           <img src={logo} alt="SPI Logo" className="h-8 mr-4"></img>
@@ -62,7 +63,7 @@ export default function Header({ onTopMenuItemClick }: TopNavBarProps) {
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex items-center text-black-100 py-2 gap-4">
+      <div className="hidden md:flex items-center text-spi-black-100 py-2 gap-4">
         {navItems.map((item) => (
           <a
             key={item.title}
@@ -127,7 +128,11 @@ export default function Header({ onTopMenuItemClick }: TopNavBarProps) {
                       {item.subpages.map((subItem) => (
                         <li key={subItem}>
                           <a
-                            onClick={() => onTopMenuItemClick(subItem)}
+                            onClick={() => {
+                              if (onTopMenuItemClick) {
+                                onTopMenuItemClick(subItem);
+                              }
+                            }}
                             href="#"
                             className="block py-2 pl-4 font-subHeading text-subHeading hover:underline hover:text-spi-violet-100 text-left"
                           >
@@ -139,7 +144,7 @@ export default function Header({ onTopMenuItemClick }: TopNavBarProps) {
                   )}
                 </div>
               ))}
-              <button className="w-1/2 py-2 px-4 font-heading text-center bg-modal-100 text-spi-violet-100 border rounded-lg border-spi-violet-100 mt-4">
+              <button className="w-fit py-2 px-4 h-fit text-center bg-modal-100 text-spi-violet-100 border rounded-lg border-spi-violet-100 mt-4">
                 Log In
               </button>
             </div>
