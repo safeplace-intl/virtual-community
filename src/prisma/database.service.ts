@@ -18,6 +18,7 @@ interface FindUniqueWhereOptions {
   where: {
     id?: number;
     email?: string;
+    userId?: number;
   };
 }
 
@@ -25,6 +26,7 @@ interface WhereOptions {
   where: {
     id?: number;
     email?: string;
+    userId?: number;
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;

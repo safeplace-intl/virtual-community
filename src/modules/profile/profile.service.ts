@@ -5,12 +5,19 @@ import {
   CreateProfileInput,
   UpdateProfileInput,
 } from "../../core/dto/profile.dto.js";
+import { DatabaseService } from "../../prisma/database.service.js";
 import { prisma } from "../../prisma/index.js";
 
 @Service()
 export default class ProfileService {
+  private readonly databaseService: DatabaseService;
+
+  constructor(prismaDbService: DatabaseService) {
+    this.databaseService = prismaDbService.getInstance();
+  }
+
   async getProfileByUserId(userId: number): Promise<Profile> {
-    const profile = await prisma.profile.findUnique({
+    const profile = await this.databaseService.profiles.findUnique({
       where: { userId },
     });
 
@@ -25,7 +32,7 @@ export default class ProfileService {
     userId: number,
     profileInput: CreateProfileInput
   ): Promise<Profile> {
-    const user = await prisma.user.findUnique({
+    const user = await this.databaseService.users.findUnique({
       where: { id: userId },
     });
 
@@ -34,7 +41,7 @@ export default class ProfileService {
     if (!user) {
       throw new Error("User not found");
     } else {
-      return await prisma.profile.create({
+      return await this.databaseService.profiles.create({
         data: {
           userId: userId,
           fullName: fullName as unknown as Prisma.JsonObject,
@@ -64,7 +71,7 @@ export default class ProfileService {
       tdaGradYearBannerVisible,
     } = profileUpdateInput;
 
-    const existingProfile = await prisma.profile.findUnique({
+    const existingProfile = await this.databaseService.profiles.findUnique({
       where: { userId },
     });
 
@@ -72,7 +79,7 @@ export default class ProfileService {
       throw new Error("Profile not found");
     }
 
-    const profile = await prisma.profile.update({
+    const profile = await this.databaseService.profiles.update({
       where: { userId },
       data: {
         fullName: fullName as unknown as Prisma.JsonObject,
