@@ -6,7 +6,6 @@ import {
   UpdateProfileInput,
 } from "../../core/dto/profile.dto.js";
 import { DatabaseService } from "../../prisma/database.service.js";
-import { prisma } from "../../prisma/index.js";
 
 @Service()
 export default class ProfileService {
