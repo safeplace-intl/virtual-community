@@ -1,7 +1,7 @@
 import Layout from "@components/layout";
 
 export default {
-  title: "Atomic/Layout",
+  title: "Composite/Layout",
   component: Layout,
   tags: ["autodocs"],
   argTypes: {
