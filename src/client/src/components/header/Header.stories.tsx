@@ -1,7 +1,7 @@
 import Header from "@components/header";
 
 export default {
-  title: "Atomic/Header",
+  title: "Composite/Header",
   component: Header,
   tags: ["autodocs"],
   argTypes: {
