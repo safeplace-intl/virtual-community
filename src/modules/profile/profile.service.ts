@@ -57,12 +57,12 @@ export default class ProfileService {
     // ! are we storing a url reference in the DB or do we need to call getImage everytime the user profile is resolved?
     console.log(profileUpdateInput);
     if (
+      // Delete is the only time that the image service needs to be called
       "profilePic" in profileUpdateInput &&
       profileUpdateInput["profilePic"] == null
     ) {
-      console.log("field is here and null");
-    } else {
-      console.log("field is not here or not null");
+      const response = this.imageService.deleteImageByUserId(userId);
+      console.log(response);
     }
 
     const profile = await prisma.profile.update({
