@@ -4,7 +4,7 @@ import { Service } from "typedi";
 import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
 import { PrivacyOption } from "../../core/entities/profile.entity.js";
-import { prisma } from "../../prisma/index.js";
+import { DatabaseService } from "../../prisma/database.service.js";
 import { AuthService } from "../auth/auth.service.js";
 import ProfileService from "../profile/profile.service.js";
 
@@ -17,13 +17,18 @@ interface IUserService {
 
 @Service()
 export default class UserService implements IUserService {
+  private readonly databaseService: DatabaseService;
+
   constructor(
     private readonly authService: AuthService,
-    private readonly profileService: ProfileService
-  ) {}
+    private readonly profileService: ProfileService,
+    prismaDbService: DatabaseService
+  ) {
+    this.databaseService = prismaDbService.getInstance();
+  }
 
   async getUserById(userId: number): Promise<User> {
-    const user = await prisma.user.findUnique({
+    const user = await this.databaseService.users.findUnique({
       where: { id: userId },
     });
 
@@ -38,7 +43,7 @@ export default class UserService implements IUserService {
     const email = userInput.email;
 
     // checks to make sure email is not already in use
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await this.databaseService.users.findUnique({
       where: { email },
     });
 
@@ -50,7 +55,7 @@ export default class UserService implements IUserService {
       );
 
       // returns the newly created user object to the resolver
-      const user = await prisma.user.create({
+      const user = await this.databaseService.users.create({
         data: {
           email: userInput.email,
           passwordHash: password,
@@ -88,7 +93,9 @@ export default class UserService implements IUserService {
   }
 
   async deactivateAccount(email: string): Promise<AccountResponse> {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await this.databaseService.users.findUnique({
+      where: { email },
+    });
 
     if (!user) {
       throw new Error("User not found");
@@ -98,14 +105,14 @@ export default class UserService implements IUserService {
       throw new Error("User is already inactive");
     }
 
-    await prisma.user.update({
+    await this.databaseService.users.update({
       where: { email },
       data: { isActive: false },
     });
 
     // Set a timer to delete the account after 30 days
     setTimeout(async () => {
-      await prisma.user.delete({ where: { email } });
+      await this.databaseService.users.delete({ where: { email } });
     }, 30 * 24 * 60 * 60 * 1000);
 
     const deactivateAccountResponse: AccountResponse = {
@@ -119,7 +126,7 @@ export default class UserService implements IUserService {
 
   async deleteAccount(id: number): Promise<AccountResponse> {
     try {
-      await prisma.user.delete({
+      await this.databaseService.users.delete({
         where: {
           id,
         },

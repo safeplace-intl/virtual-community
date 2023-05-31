@@ -8,9 +8,12 @@ import {
   ChangePasswordInput,
   ResetPasswordInput,
 } from "../../core/dto/auth.dto.js";
-import { prisma } from "../../prisma/index.js";
+import {
+  DatabaseService,
+  // prismaDbService,
+} from "../../prisma/database.service.js";
 
-interface IAuthService {
+export interface IAuthService {
   createTokens(userId: number): Promise<TokensPayload>;
   getNewTokens({
     refreshToken,
@@ -24,7 +27,11 @@ interface IAuthService {
 
 @Service()
 export class AuthService implements IAuthService {
-  // constructor() {}
+  private readonly databaseService: DatabaseService;
+
+  constructor(prismaDbService: DatabaseService) {
+    this.databaseService = prismaDbService.getInstance();
+  }
 
   async createTokens(userId: number): Promise<TokensPayload> {
     const accessToken = jwt.sign(
@@ -81,7 +88,10 @@ export class AuthService implements IAuthService {
     const { email, newPassword } = resetPasswordInput;
 
     // Check if user exists
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await this.databaseService.users.findUnique({
+      where: { email },
+    });
+
     if (!user) {
       throw new Error("User not found");
     }
@@ -90,7 +100,7 @@ export class AuthService implements IAuthService {
     const passwordHash = await this.createPassword(newPassword);
 
     // Update user's password hash
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await this.databaseService.users.update({
       where: { email },
       data: { passwordHash },
     });
@@ -102,7 +112,8 @@ export class AuthService implements IAuthService {
     changePasswordInput: ChangePasswordInput
   ): Promise<User> {
     const { email, newPassword, oldPassword } = changePasswordInput;
-    const user = await prisma.user.findUnique({
+
+    const user = await this.databaseService.users.findUnique({
       where: { email },
     });
 
@@ -110,7 +121,7 @@ export class AuthService implements IAuthService {
       throw new Error("User not found");
     }
 
-    const isPasswordMatching = await bcrypt.compare(
+    const isPasswordMatching = await this.validatePassword(
       oldPassword,
       user.passwordHash
     );
@@ -121,10 +132,11 @@ export class AuthService implements IAuthService {
 
     const newPasswordHash = await this.createPassword(newPassword);
 
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await this.databaseService.users.update({
       where: { email },
       data: { passwordHash: newPasswordHash },
     });
+
     return updatedUser;
   }
 }
