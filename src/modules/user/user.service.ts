@@ -5,7 +5,6 @@ import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
 import { PrivacyOption } from "../../core/entities/profile.entity.js";
 import { DatabaseService } from "../../prisma/database.service.js";
-import { prisma } from "../../prisma/index.js";
 import { AuthService } from "../auth/auth.service.js";
 import ProfileService from "../profile/profile.service.js";
 
