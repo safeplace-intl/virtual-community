@@ -9,6 +9,7 @@ const importAliases = {
   "@assets": path.resolve(__dirname, "./src/assets"),
   "@features": path.resolve(__dirname, "./src/features"),
   "@services": path.resolve(__dirname, "./src/services"),
+  "@pages": path.resolve(__dirname, "./src/pages"),
 };
 
 if (process.env.NODE_ENV === "production") {
