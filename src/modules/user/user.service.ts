@@ -3,6 +3,7 @@ import { Service } from "typedi";
 
 import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
+import { PrivacyOption } from "../../core/entities/profile.entity.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "../auth/auth.service.js";
 import ProfileService from "../profile/profile.service.js";
@@ -57,16 +58,31 @@ export default class UserService implements IUserService {
         },
       });
 
-      // creates a profile for the new user
-      // TODO: figure this out
-      await this.profileService.createProfile(user.id, {
-        fullName: userInput.fullName,
-        pronouns: userInput.pronouns,
-        tdaGradYear: 2023,
-        currentLocation: "",
-        bio: "",
-      });
+      const requiredCreateProfileFields = {
+        fullName: {
+          value: userInput.fullName,
+          visibleTo: PrivacyOption.Friends,
+        },
+        tdaGradYearBannerVisible: {
+          value: false,
+          visibleTo: PrivacyOption.Friends,
+        },
+      };
 
+      // creates a profile for the new user with or without the pronouns field
+      if (userInput.pronouns === undefined || userInput.pronouns === null) {
+        await this.profileService.createProfile(user.id, {
+          ...requiredCreateProfileFields,
+        });
+      } else {
+        await this.profileService.createProfile(user.id, {
+          ...requiredCreateProfileFields,
+          pronouns: {
+            value: userInput.pronouns,
+            visibleTo: PrivacyOption.Friends,
+          },
+        });
+      }
       return user;
     }
   }

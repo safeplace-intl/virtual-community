@@ -1,6 +1,6 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Float, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import { S3Response, UpdateProfileInput } from "../../core/dto/profile.dto.js";
@@ -12,22 +12,45 @@ import ProfileService from "./profile.service.js";
 export class ProfileResolver {
   constructor(private readonly profileService: ProfileService) {}
 
+  // @Mutation(() => Profile)
+  // async updateProfile(
+  //   @Arg("updateProfileInput") profileInput: UpdateProfileInput,
+  //   @Ctx() ctx: Context
+  // ) {
+  //   const userId = ctx.user?.id;
+
+  //   if (!userId) {
+  //     throw new GraphQLError("User not found");
+  //   } else {
+  //     const profile = await this.profileService.updateProfile(
+  //       userId,
+  //       profileInput
+  //     );
+
+  //     if (!profile) {
+  //       throw new GraphQLError("Profile not found");
+  //     }
+
+  //     return profile;
+  //   }
+  // }
+
+  // Temporarily mutation without context
   @Mutation(() => Profile)
   async updateProfile(
-    @Arg("updateProfileInput") profileInput: UpdateProfileInput,
-    @Ctx() ctx: Context
+    @Arg("userId", () => Float) userId: number,
+    @Arg("updateProfileInput") profileInput: UpdateProfileInput
   ) {
-    const userId = ctx.user?.id;
+    const profile = await this.profileService.updateProfile(
+      userId,
+      profileInput
+    );
 
-    if (!userId) {
-      throw new GraphQLError("User not found");
-    } else {
-      const profile = await this.profileService.updateProfile(
-        userId,
-        profileInput
-      );
-      return profile;
+    if (!profile) {
+      throw new GraphQLError("Profile not found");
     }
+
+    return profile;
   }
 
   @Query(() => S3Response)
