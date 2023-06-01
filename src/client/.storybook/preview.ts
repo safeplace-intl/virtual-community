@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/preact";
-import "../src/index.css"
+import "../src/index.css";
 
 const preview: Preview = {
   parameters: {
