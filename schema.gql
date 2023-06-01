@@ -29,6 +29,13 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
+input CreatePostInput {
+  content: String
+  hasSensitiveTopic: Boolean
+  image: String
+  visibleTo: PrivacyOption! = Community
+}
+
 input CreateUserInput {
   email: String!
   fullName: StringScalar!
@@ -59,6 +66,19 @@ type NumberProfileField {
 
 input NumberProfileFieldInput {
   value: Float!
+  visibleTo: PrivacyOption!
+}
+
+type Post {
+  content: String!
+  dislikes: Int!
+  hasSensitiveTopic: Boolean!
+  id: Float!
+  image: String
+  isDraft: Boolean!
+  likes: Int!
+  user: User!
+  userId: Float!
   visibleTo: PrivacyOption!
 }
 
@@ -115,6 +135,16 @@ type TokensPayload {
   refreshToken: String!
 }
 
+input UpdatePostInput {
+  content: String
+  dislikes: Int
+  hasSensitiveTopic: Boolean
+  image: String
+  isDraft: Boolean
+  likes: Int
+  visibleTo: PrivacyOption
+}
+
 input UpdateProfileInput {
   bio: StringProfileFieldInput
   currentLocation: StringProfileFieldInput
@@ -134,5 +164,6 @@ type User {
   id: Int!
   isActive: Boolean!
   passwordHash: String!
+  post: [Post!]!
   profile: Profile!
 }

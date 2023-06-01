@@ -21,7 +21,7 @@ model User {
   passwordHash String
   isActive     Boolean  @default(true)
   Profile      Profile?
-  Posts        Post[]   @relation("UserToPost")
+  Posts        Post[]   
 }
 
 model Profile {
@@ -42,14 +42,14 @@ model Profile {
 }
 
 model Post {
-  id                 Int   @id @default(autoincrement())
-  userId             Int?   @unique
-  user               User?  @relation("UserToPost",fields: [userId], references: [id])
+  id                 Int    @id @default(autoincrement())
+  userId             Int  
+  user               User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   content            String
   image              String?
-  likes              Int?      @default(0)
-  dislikes           Int?      @default(0)
-  isDraft            Boolean?
-  hasSensitiveTopic  Boolean?
-  // privacyOption      PrivacyOption?
+  likes              Int      @default(0)
+  dislikes           Int      @default(0)
+  isDraft            Boolean  @default(false)
+  hasSensitiveTopic  Boolean  @default(false)
+  visibleTo          String   @default("community")
 }

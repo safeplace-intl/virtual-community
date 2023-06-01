@@ -1,38 +1,37 @@
-import "reflect-metadata";
-
 import { Field, Int, ObjectType } from "type-graphql";
 
-import {
-  //   BooleanProfileField,
-  //   NumberProfileField,
-  //   ProfilePrivacyField,
-  //   ProfilePrivacyFieldInput,
-  StringProfileField,
-} from "./profile.entity";
+import { PrivacyOption } from "./profile.entity.js";
+import { User } from "./user.entity.js";
 
 @ObjectType()
 export class Post {
-  @Field(() => Int)
+  @Field()
   id!: number;
 
   @Field()
-  userId?: number;
+  userId!: number;
 
-  @Field(() => StringProfileField, { nullable: true })
-  content!: StringProfileField;
+  @Field(() => User)
+  user!: User;
 
-  @Field()
+  @Field(() => String)
+  content!: string;
+
+  @Field(() => String, { nullable: true })
   image?: string;
 
-  @Field()
+  @Field(() => Int, { defaultValue: 0 })
   likes!: number;
 
-  @Field()
+  @Field(() => Int, { defaultValue: 0 })
   dislikes!: number;
 
-  @Field()
-  isDraft?: boolean;
+  @Field(() => Boolean, { defaultValue: false })
+  isDraft!: boolean;
 
-  @Field()
-  hasSensitiveTopic?: boolean;
+  @Field(() => Boolean, { defaultValue: false })
+  hasSensitiveTopic!: boolean;
+
+  @Field(() => PrivacyOption, { defaultValue: PrivacyOption.Community })
+  visibleTo!: PrivacyOption;
 }
