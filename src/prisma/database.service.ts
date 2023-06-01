@@ -11,7 +11,7 @@ export interface BaseRepository<T> {
   update(updateOpts: WhereOptions): Promise<T>;
   delete(deleteOpts: DeleteOptions): Promise<T>;
   find(): Promise<T[]>;
-  findUnique(findUniqueOpts: FindUniqueWhereOptions): Promise<T>;
+  findUnique(findUniqueOpts: FindUniqueWhereOptions): Promise<T | null>;
 }
 
 interface FindUniqueWhereOptions {
@@ -48,24 +48,26 @@ export class UserRepository implements BaseRepository<User> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  create(createData: any): Promise<User> {
-    return this.database.user.create(createData);
+  async create(createData: any): Promise<User> {
+    return await this.database.user.create(createData);
   }
 
-  update(updateOpts: WhereOptions): Promise<User> {
-    return this.database.user.update(updateOpts);
+  async update(updateOpts: WhereOptions): Promise<User> {
+    return await this.database.user.update(updateOpts);
   }
 
-  delete(deleteOpts: DeleteOptions): Promise<User> {
-    return this.database.user.delete(deleteOpts);
+  async delete(deleteOpts: DeleteOptions): Promise<User> {
+    return await this.database.user.delete(deleteOpts);
   }
 
-  find(): Promise<User[]> {
-    return this.database.user.findMany();
+  async find(): Promise<User[]> {
+    return await this.database.user.findMany();
   }
 
-  findUnique(findUniqueOpts: FindUniqueWhereOptions): Promise<User> {
-    return this.database.user.findUnique(findUniqueOpts);
+  async findUnique(
+    findUniqueOpts: FindUniqueWhereOptions
+  ): Promise<User | null> {
+    return await this.database.user.findUnique(findUniqueOpts);
   }
 }
 
@@ -78,24 +80,26 @@ export class ProfileRepository implements BaseRepository<Profile> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  create(createData: any): Promise<Profile> {
-    return this.database.profile.create(createData);
+  async create(createData: any): Promise<Profile> {
+    return await this.database.profile.create(createData);
   }
 
-  update(updateOpts: WhereOptions): Promise<Profile> {
-    return this.database.profile.update(updateOpts);
+  async update(updateOpts: WhereOptions): Promise<Profile> {
+    return await this.database.profile.update(updateOpts);
   }
 
-  delete(deleteOpts: DeleteOptions): Promise<Profile> {
-    return this.database.profile.delete(deleteOpts);
+  async delete(deleteOpts: DeleteOptions): Promise<Profile> {
+    return await this.database.profile.delete(deleteOpts);
   }
 
-  find(): Promise<Profile[]> {
-    return this.database.profile.findMany();
+  async find(): Promise<Profile[]> {
+    return await this.database.profile.findMany();
   }
 
-  findUnique(findUniqueOpts: FindUniqueWhereOptions): Promise<Profile> {
-    return this.database.profile.findUnique(findUniqueOpts);
+  async findUnique(
+    findUniqueOpts: FindUniqueWhereOptions
+  ): Promise<Profile | null> {
+    return await this.database.profile.findUnique(findUniqueOpts);
   }
 }
 
@@ -113,10 +117,10 @@ export interface DatabaseClient {
 export class DatabaseService implements DatabaseClient {
   users;
   profiles;
+  protected database;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(private readonly database: any) {
-    this.database = database;
+  constructor() {
+    this.database = prisma;
     this.users = new UserRepository(this.database);
     this.profiles = new ProfileRepository(this.database);
   }
@@ -145,7 +149,7 @@ export class DatabaseService implements DatabaseClient {
 @Service()
 export class PrismaDatabaseService extends DatabaseService {
   constructor() {
-    super(prisma);
+    super();
   }
 }
 
