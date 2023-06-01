@@ -26,4 +26,4 @@ Here are some [notes on working with a team](https://www.prisma.io/docs/guides/m
 
 ## Migrations
 
-`npx prisma migrate dev --name < name-of-migration >` will create a new migration for whatever changes have been made to `schema.prisma`
+`npx prisma migrate dev --name < name-of-migration > --schema=./src/prisma/schema.prisma` will create a new migration for whatever changes have been made to `schema.prisma`
