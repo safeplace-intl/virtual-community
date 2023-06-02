@@ -8,7 +8,13 @@ import {
   RefreshTokenInput,
   TokensPayload,
 } from "./core/dto/auth.dto.js";
+import {
+  CreatePostInput,
+  UpdatePostInput,
+} from "./core/dto/social-feed.dto.js";
 import { CreateUserInput } from "./core/dto/user.dto.js";
+import { Post } from "./core/entities/post.entity.js";
+import { User } from "./core/entities/user.entity.js";
 import { AuthResolver } from "./modules/auth/auth.resolver.js";
 import { ProfileResolver } from "./modules/profile/profile.resolver.js";
 import { UserResolver } from "./modules/user/user.resolver.js";
@@ -23,6 +29,10 @@ export const schema = await buildSchema({
     RefreshTokenInput,
     CreateUserInput,
     PaginationArgs,
+    User,
+    Post,
+    CreatePostInput,
+    UpdatePostInput,
   ],
   emitSchemaFile: true,
   dateScalarMode: "isoDate",
