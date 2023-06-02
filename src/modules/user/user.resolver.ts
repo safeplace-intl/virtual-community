@@ -98,8 +98,8 @@ export class UserResolver {
   }
 
   @FieldResolver(() => [Post])
-  async post(@Root() user: User): Promise<Post[]> {
+  async post(@Root() user: User) {
     const posts = await this.postService.getPostByUserId(user.id);
-    return posts as Post[];
+    return posts;
   }
 }

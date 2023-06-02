@@ -1,7 +1,6 @@
 import { Field, Int, ObjectType } from "type-graphql";
 
 import { PrivacyOption } from "./profile.entity.js";
-import { User } from "./user.entity.js";
 
 @ObjectType()
 export class Post {
@@ -11,11 +10,8 @@ export class Post {
   @Field()
   userId!: number;
 
-  @Field(() => User)
-  user!: User;
-
-  @Field(() => String)
-  content!: string;
+  @Field(() => String, { nullable: true })
+  content?: string;
 
   @Field(() => String, { nullable: true })
   image?: string;

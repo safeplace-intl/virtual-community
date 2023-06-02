@@ -31,8 +31,9 @@ input ChangePasswordInput {
 
 input CreatePostInput {
   content: String
-  hasSensitiveTopic: Boolean
+  hasSensitiveTopic: Boolean!
   image: String
+  isDraft: Boolean!
   visibleTo: PrivacyOption! = Community
 }
 
@@ -70,14 +71,13 @@ input NumberProfileFieldInput {
 }
 
 type Post {
-  content: String!
+  content: String
   dislikes: Int!
   hasSensitiveTopic: Boolean!
   id: Float!
   image: String
   isDraft: Boolean!
   likes: Int!
-  user: User!
   userId: Float!
   visibleTo: PrivacyOption!
 }

@@ -8,7 +8,6 @@ export default class PostService {
   async getPostByUserId(userId: number): Promise<Post[]> {
     const posts = await prisma.post.findMany({
       where: { id: userId },
-      include: { user: true },
     });
 
     if (!posts) {
@@ -16,8 +15,7 @@ export default class PostService {
     } else {
       return posts.map((post) => ({
         ...post,
-        user: post.user,
-      })) as Post[];
+      }));
     }
   }
 }
