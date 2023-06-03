@@ -11,6 +11,12 @@ const config: StorybookConfig = {
         postCSS: true,
       },
     },
+    {
+      name: "@storybook/addon-styling",
+      options: {
+        postCSS: true,
+      },
+    },
   ],
   framework: {
     name: "@storybook/preact-vite",
