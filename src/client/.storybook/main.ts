@@ -9,8 +9,14 @@ const config: StorybookConfig = {
       name: "@storybook/addon-styling",
       options: {
         postCSS: true,
-      }
-    }
+      },
+    },
+    {
+      name: "@storybook/addon-styling",
+      options: {
+        postCSS: true,
+      },
+    },
   ],
   framework: {
     name: "@storybook/preact-vite",

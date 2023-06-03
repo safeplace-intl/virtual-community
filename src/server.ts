@@ -15,7 +15,11 @@ import {
 } from "./middlewares/client.middleware.js";
 import EnvInit from "./middlewares/env.middleware.js";
 import generalMiddleware from "./middlewares/general.middleware.js";
-import { initializeDatabase, prisma } from "./prisma/index.js";
+import {
+  disconnectDatabase,
+  initializeDatabase,
+  prisma,
+} from "./prisma/index.js";
 import { schema } from "./schema.js";
 import { GetApplicationMode } from "./utils/mode.util.js";
 
@@ -90,11 +94,11 @@ console.log(`🚀  Server ready at http://localhost:${port}`);
 // initialize database connection via prisma
 initializeDatabase()
   .then(async () => {
-    await prisma.$disconnect();
+    disconnectDatabase();
   })
   .catch(async (e) => {
     // eslint-disable-next-line no-console
     console.error(e);
-    await prisma.$disconnect();
+    disconnectDatabase();
     process.exit(1);
   });
