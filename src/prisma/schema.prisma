@@ -52,4 +52,6 @@ model Post {
   isDraft            Boolean  @default(false)
   hasSensitiveTopic  Boolean  @default(false)
   visibleTo          String   @default("community")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 }

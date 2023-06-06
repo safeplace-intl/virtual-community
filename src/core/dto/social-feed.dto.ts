@@ -18,6 +18,12 @@ export class CreatePostInput {
 
   @Field(() => PrivacyOption, { defaultValue: PrivacyOption.Community })
   visibleTo?: PrivacyOption;
+
+  @Field(() => Date, { nullable: true })
+  createdAt?: Date;
+
+  @Field(() => Date, { nullable: true })
+  updatedAt?: Date;
 }
 
 @InputType()
@@ -42,4 +48,10 @@ export class UpdatePostInput {
 
   @Field(() => PrivacyOption, { nullable: true })
   visibleTo?: PrivacyOption;
+
+  @Field(() => Date, { nullable: true })
+  createdAt?: Date;
+
+  @Field(() => Date, { nullable: true })
+  updatedAt?: Date;
 }
