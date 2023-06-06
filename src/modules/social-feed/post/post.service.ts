@@ -17,7 +17,6 @@ export default class PostService {
       }));
     }
   }
-  // TODO: type of error needs a further review
   catch(error: unknown) {
     throw new Error((error as Error).message);
   }

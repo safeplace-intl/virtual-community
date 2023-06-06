@@ -8,9 +8,12 @@ import {
   ChangePasswordInput,
   ResetPasswordInput,
 } from "../../core/dto/auth.dto.js";
-import { prisma } from "../../prisma/index.js";
+import {
+  DatabaseService,
+  // prismaDbService,
+} from "../../prisma/database.service.js";
 
-interface IAuthService {
+export interface IAuthService {
   createTokens(userId: number): Promise<TokensPayload>;
   getNewTokens({
     refreshToken,
@@ -24,107 +27,140 @@ interface IAuthService {
 
 @Service()
 export class AuthService implements IAuthService {
-  // constructor() {}
+  private readonly databaseService: DatabaseService;
+
+  constructor(prismaDbService: DatabaseService) {
+    this.databaseService = prismaDbService.getInstance();
+  }
 
   async createTokens(userId: number): Promise<TokensPayload> {
-    const accessToken = jwt.sign(
-      { userId: userId },
-      String(process.env.JWT_SECRET),
-      { expiresIn: "1h" }
-    );
+    try {
+      const accessToken = jwt.sign(
+        { userId: userId },
+        String(process.env.JWT_SECRET),
+        { expiresIn: "1h" }
+      );
 
-    const refreshToken = jwt.sign(
-      { userId: userId },
-      String(process.env.JWT_SECRET),
-      { expiresIn: "1h" }
-    );
+      const refreshToken = jwt.sign(
+        { userId: userId },
+        String(process.env.JWT_SECRET),
+        { expiresIn: "1h" }
+      );
 
-    const payload: TokensPayload = { accessToken, refreshToken };
+      const payload: TokensPayload = { accessToken, refreshToken };
 
-    return payload;
+      return payload;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 
   async getNewTokens({
     refreshToken,
     userId,
   }: RefreshTokenInput): Promise<TokensPayload> {
-    const valid = jwt.verify(refreshToken, String(process.env.JWT_SECRET));
+    try {
+      const valid = jwt.verify(refreshToken, String(process.env.JWT_SECRET));
 
-    let newTokens: TokensPayload;
+      let newTokens: TokensPayload;
 
-    if (valid) {
-      newTokens = await this.createTokens(userId);
-    } else {
-      throw new Error("Invalid refresh token");
+      if (valid) {
+        newTokens = await this.createTokens(userId);
+      } else {
+        throw new Error("Invalid refresh token");
+      }
+
+      return newTokens;
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
-
-    return newTokens;
   }
 
   async createPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
-    return hashedPassword;
+      return hashedPassword;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 
   async validatePassword(
     password: string,
     passwordHash: string
   ): Promise<boolean> {
-    const valid = await bcrypt.compare(password, passwordHash);
+    try {
+      const valid = await bcrypt.compare(password, passwordHash);
 
-    return valid;
+      return valid;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 
   async resetPassword(resetPasswordInput: ResetPasswordInput): Promise<User> {
-    const { email, newPassword } = resetPasswordInput;
+    try {
+      const { email, newPassword } = resetPasswordInput;
 
-    // Check if user exists
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      throw new Error("User not found");
+      // Check if user exists
+      const user = await this.databaseService.users.findUnique({
+        where: { email },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Generate new password hash
+      const passwordHash = await this.createPassword(newPassword);
+
+      // Update user's password hash
+      const updatedUser = await this.databaseService.users.update({
+        where: { email },
+        data: { passwordHash },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
-
-    // Generate new password hash
-    const passwordHash = await this.createPassword(newPassword);
-
-    // Update user's password hash
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { passwordHash },
-    });
-
-    return updatedUser;
   }
 
   async changePassword(
     changePasswordInput: ChangePasswordInput
   ): Promise<User> {
-    const { email, newPassword, oldPassword } = changePasswordInput;
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    try {
+      const { email, newPassword, oldPassword } = changePasswordInput;
 
-    if (!user) {
-      throw new Error("User not found");
+      const user = await this.databaseService.users.findUnique({
+        where: { email },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const isPasswordMatching = await this.validatePassword(
+        oldPassword,
+        user.passwordHash
+      );
+
+      if (!isPasswordMatching) {
+        throw new Error("Incorrect old password");
+      }
+
+      const newPasswordHash = await this.createPassword(newPassword);
+
+      const updatedUser = await this.databaseService.users.update({
+        where: { email },
+        data: { passwordHash: newPasswordHash },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
-
-    const isPasswordMatching = await bcrypt.compare(
-      oldPassword,
-      user.passwordHash
-    );
-
-    if (!isPasswordMatching) {
-      throw new Error("Incorrect old password");
-    }
-
-    const newPasswordHash = await this.createPassword(newPassword);
-
-    const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { passwordHash: newPasswordHash },
-    });
-    return updatedUser;
   }
 }
