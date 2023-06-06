@@ -30,4 +30,10 @@ export class Post {
 
   @Field(() => PrivacyOption, { defaultValue: PrivacyOption.Community })
   visibleTo!: PrivacyOption;
+
+  @Field(() => Date, { nullable: true })
+  createdAt?: Date;
+
+  @Field(() => Date, { nullable: true })
+  updatedAt?: Date;
 }

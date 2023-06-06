@@ -31,9 +31,11 @@ input ChangePasswordInput {
 
 input CreatePostInput {
   content: String
+  createdAt: DateTime
   hasSensitiveTopic: Boolean!
   image: String
   isDraft: Boolean!
+  updatedAt: DateTime
   visibleTo: PrivacyOption! = Community
 }
 
@@ -43,6 +45,11 @@ input CreateUserInput {
   password: String!
   pronouns: String
 }
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
 
 input LoginInput {
   email: String!
@@ -72,12 +79,14 @@ input NumberProfileFieldInput {
 
 type Post {
   content: String
+  createdAt: DateTime
   dislikes: Int!
   hasSensitiveTopic: Boolean!
   id: Float!
   image: String
   isDraft: Boolean!
   likes: Int!
+  updatedAt: DateTime
   userId: Float!
   visibleTo: PrivacyOption!
 }
@@ -137,11 +146,13 @@ type TokensPayload {
 
 input UpdatePostInput {
   content: String
+  createdAt: DateTime
   dislikes: Int
   hasSensitiveTopic: Boolean
   image: String
   isDraft: Boolean
   likes: Int
+  updatedAt: DateTime
   visibleTo: PrivacyOption
 }
 
