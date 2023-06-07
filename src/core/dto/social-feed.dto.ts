@@ -55,3 +55,5 @@ export class UpdatePostInput {
   @Field(() => Date, { nullable: true })
   updatedAt?: Date;
 }
+
+// create comment input

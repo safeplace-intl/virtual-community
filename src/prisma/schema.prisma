@@ -14,14 +14,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
   passwordHash String
-  isActive     Boolean  @default(true)
+  isActive     Boolean   @default(true)
   Profile      Profile?
-  Posts        Post[]   
+  Posts        Post[]
+  Comment      Comment[]
 }
 
 model Profile {
@@ -42,16 +42,30 @@ model Profile {
 }
 
 model Post {
-  id                 Int    @id @default(autoincrement())
-  userId             Int  
-  user               User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content            String?
-  image              String?
-  likes              Int      @default(0)
-  dislikes           Int      @default(0)
-  isDraft            Boolean  @default(false)
-  hasSensitiveTopic  Boolean  @default(false)
-  visibleTo          String   @default("community")
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content           String?
+  image             String?
+  likes             Int       @default(0)
+  dislikes          Int       @default(0)
+  isDraft           Boolean   @default(false)
+  hasSensitiveTopic Boolean   @default(false)
+  visibleTo         String    @default("community")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  Comment           Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  content   String
+  likes     Int      @default(0)
+  dislikes  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
