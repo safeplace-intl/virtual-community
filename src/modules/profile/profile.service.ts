@@ -55,7 +55,6 @@ export default class ProfileService {
   ): Promise<Profile | undefined> {
     // ! in here, if profilePic is a field being updated, DO SOME WORK, then we need to call the image service to either create a new profile image, update the image in S3, or delete
     // ! are we storing a url reference in the DB or do we need to call getImage everytime the user profile is resolved?
-    console.log(profileUpdateInput, "in profile.service");
     if (
       // Delete is the only time that the image service needs to be called
       "profilePic" in profileUpdateInput &&
@@ -65,6 +64,7 @@ export default class ProfileService {
       const response = this.imageService.deleteImageByUserId(userId);
       console.log(response);
     }
+
     const {
       fullName,
       pronouns,
@@ -82,12 +82,18 @@ export default class ProfileService {
     const existingProfile = await prisma.profile.findUnique({
       where: { userId },
     });
-    console.log(existingProfile, "hello");
 
     if (!existingProfile) {
       throw new Error("Profile not found");
     }
 
+    if (profileUpdateInput.profilePic?.value == "null") {
+      console.log("changing profilePic value to null");
+      console.log(typeof existingProfile["profilePic"]);
+      console.log(typeof existingProfile.profilePic === "object");
+      console.log(existingProfile["profilePic"].value);
+      const test = existingProfile["profilePic"];
+    }
     const profile = await prisma.profile.update({
       where: { userId },
       data: {

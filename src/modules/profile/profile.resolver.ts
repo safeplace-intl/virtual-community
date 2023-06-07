@@ -45,8 +45,6 @@ export class ProfileResolver {
       userId,
       profileInput
     );
-    console.log(profile);
-    console.log("profile.resolver");
 
     if (!profile) {
       throw new GraphQLError("Profile not found");
