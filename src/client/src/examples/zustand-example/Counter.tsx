@@ -1,4 +1,4 @@
-import { useCounterStore } from "@features/zustand-example";
+import { useCounterStore } from "@examples/zustand-example";
 
 export default function Counter() {
   const { count, increaseCount } = useCounterStore();
