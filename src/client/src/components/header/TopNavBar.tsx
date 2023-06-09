@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 
 import logo from "../../assets/spi-logo.png";
-import { navItems } from "../../menuitems";
+import { navItems } from "../../routes/menuitems";
 
 interface TopNavBarProps {
   onTopMenuItemClick?: (navItem: string) => void;
