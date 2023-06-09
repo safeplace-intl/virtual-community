@@ -56,4 +56,23 @@ export class UpdatePostInput {
   updatedAt?: Date;
 }
 
-// create comment input
+@InputType()
+export class CreateCommentInput {
+  @Field(() => String, { nullable: true })
+  content?: string;
+
+  @Field(() => Date, { nullable: true })
+  createdAt?: Date;
+
+  @Field(() => Date, { nullable: true })
+  updatedAt?: Date;
+
+  @Field(() => Int, { nullable: true })
+  postId?: number;
+}
+
+@InputType()
+export class UpdateCommentInput {
+  @Field(() => String, { nullable: true })
+  content?: string;
+}
