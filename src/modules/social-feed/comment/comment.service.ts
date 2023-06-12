@@ -1,8 +1,5 @@
 import { Comment } from "@prisma/client";
-import {
-  CreateCommentInput,
-  UpdateCommentInput,
-} from "src/core/dto/social-feed.dto.js";
+import { CreateCommentInput } from "src/core/dto/social-feed.dto.js";
 import { Service } from "typedi";
 
 import { prisma } from "../../../prisma/index.js";
@@ -27,34 +24,15 @@ export default class CommentService {
     }
   }
 
-  async updateComment(
-    commentId: number,
-    updateInput: UpdateCommentInput
-  ): Promise<Comment> {
-    try {
-      const comment = await prisma.comment.update({
-        where: { id: commentId },
-        data: {
-          content: updateInput.content,
-        },
-      });
-      return comment;
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-  }
-
-  async getCommentsByUserId(userId: number): Promise<Comment[]> {
+  async getCommentsByPostId(postId: number): Promise<Comment[]> {
     try {
       const comments = await prisma.comment.findMany({
-        where: { userId },
+        where: { postId },
       });
-      if (!comments) {
+      if (comments.length === 0) {
         throw new Error("Comments not found");
       } else {
-        return comments.map((comments) => ({
-          ...comments,
-        }));
+        return comments;
       }
     } catch (error) {
       throw new Error((error as Error).message);

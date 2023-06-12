@@ -20,9 +20,9 @@ export class Comment {
   @Field(() => Int, { defaultValue: 0 })
   dislikes!: number;
 
-  @Field()
+  @Field(() => Date)
   createdAt!: Date;
 
-  @Field()
+  @Field(() => Date)
   updatedAt!: Date;
 }
