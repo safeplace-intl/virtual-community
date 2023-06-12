@@ -29,6 +29,22 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
+type Comment {
+  content: String!
+  createdAt: DateTime!
+  dislikes: Int!
+  id: Float!
+  likes: Int!
+  postId: Float!
+  updatedAt: DateTime!
+  userId: Float!
+}
+
+input CreateCommentInput {
+  content: String!
+  postId: Int!
+}
+
 input CreatePostInput {
   content: String
   createdAt: DateTime
@@ -58,6 +74,7 @@ input LoginInput {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deactivateAccount(email: String!): AccountResponse!
   deleteAccount(id: Float!): AccountResponse!
@@ -114,6 +131,8 @@ type Profile {
 }
 
 type Query {
+  getCommentById(commentId: Float!): Comment
+  getCommentsByPostId(postId: Float!): [Comment!]
   getUser(userId: Float!): User
 }
 

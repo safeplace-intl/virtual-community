@@ -23,6 +23,27 @@ export default class CommentService {
       throw new Error((error as Error).message);
     }
   }
+  async deleteComment(commentId: number, userId: number): Promise<boolean> {
+    try {
+      const comment = await prisma.comment.findUnique({
+        where: { id: commentId },
+      });
+      if (comment.userId !== userId) {
+        throw new Error("userId provided does not match the comments userId");
+      } else {
+        const deletedComment = await prisma.comment.delete({
+          where: { id: commentId },
+        });
+        if (!deletedComment) {
+          throw new Error("failed to deete comment");
+        }
+
+        return true;
+      }
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  }
 
   async getCommentsByPostId(postId: number): Promise<Comment[]> {
     try {
