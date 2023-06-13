@@ -1,16 +1,6 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
-import { prisma } from "src/prisma/index.js";
-import {
-  Arg,
-  Ctx,
-  FieldResolver,
-  ForbiddenError,
-  Mutation,
-  Query,
-  Resolver,
-  Root,
-} from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import { CreateCommentInput } from "../../../core/dto/social-feed.dto.js";
