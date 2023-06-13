@@ -32,8 +32,8 @@ export class Post {
   visibleTo!: PrivacyOption;
 
   @Field(() => Date, { nullable: true })
-  createdAt?: Date;
+  createdAt!: Date;
 
   @Field(() => Date, { nullable: true })
-  updatedAt?: Date;
+  updatedAt!: Date;
 }
