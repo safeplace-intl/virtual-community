@@ -1,9 +1,11 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
+import { prisma } from "src/prisma/index.js";
 import {
   Arg,
   Ctx,
   FieldResolver,
+  ForbiddenError,
   Mutation,
   Query,
   Resolver,
@@ -62,5 +64,37 @@ export class CommentResolver {
       );
       return deletedComment;
     }
+  }
+
+  @Mutation(() => Comment)
+  async likeComment(
+    @Arg("CommentId") commentId: number,
+    @Ctx() ctx: Context
+  ): Promise<Comment> {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    }
+    const likedComment = await this.commentService.likeComment(
+      commentId,
+      userId
+    );
+    return likedComment;
+  }
+
+  @Mutation(() => Comment)
+  async dislikeComment(
+    @Arg("CommentId") commentId: number,
+    @Ctx() ctx: Context
+  ): Promise<Comment> {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    }
+    const dislikedComment = await this.commentService.dislikeComment(
+      commentId,
+      userId
+    );
+    return dislikedComment;
   }
 }

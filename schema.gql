@@ -32,8 +32,10 @@ input ChangePasswordInput {
 type Comment {
   content: String!
   createdAt: DateTime!
+  dislikedBy: [Int!]!
   dislikes: Int!
   id: Float!
+  likedBy: [Int!]!
   likes: Int!
   postId: Float!
   updatedAt: DateTime!
@@ -79,6 +81,8 @@ type Mutation {
   deactivateAccount(email: String!): AccountResponse!
   deleteAccount(id: Float!): AccountResponse!
   deleteComment(deleteComment: Float!): Comment!
+  dislikeComment(CommentId: Float!): Comment!
+  likeComment(CommentId: Float!): Comment!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
