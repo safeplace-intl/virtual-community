@@ -98,8 +98,8 @@ export class UserResolver {
   }
 
   @FieldResolver(() => [Post])
-  async post(@Root() user: User) {
-    const posts = await this.postService.getPostByUserId(user.id);
+  async posts(@Root() user: User) {
+    const posts = await this.postService.getPostsByUserId(user.id);
     return posts;
   }
 }

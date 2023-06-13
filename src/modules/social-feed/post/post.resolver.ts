@@ -20,8 +20,9 @@ export class PostResolver {
     return post;
   }
   @Query(() => Post, { nullable: true })
-  async getPostByUserId(@Arg("userId") userId: number) {
-    const posts = await this.postService.getPostByUserId(userId);
+  async getPostsByUserId(@Arg("userId") userId: number) {
+    const posts = await this.postService.getPostsByUserId(userId);
+    console.log(`this is resolver ${posts}`);
     return posts;
   }
 

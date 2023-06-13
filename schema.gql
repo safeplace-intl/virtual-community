@@ -122,7 +122,7 @@ type Profile {
 
 type Query {
   getPostById(postId: Float!): Post
-  getPostByUserId(userId: Float!): Post
+  getPostsByUserId(userId: Float!): Post
   getUser(userId: Float!): User
 }
 
@@ -181,6 +181,6 @@ type User {
   id: Int!
   isActive: Boolean!
   passwordHash: String!
-  post: [Post!]!
+  posts: [Post!]!
   profile: Profile!
 }

@@ -29,7 +29,7 @@ interface WhereOptions {
     userId?: number;
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  data?: any;
 }
 
 interface DeleteOptions {
@@ -123,14 +123,8 @@ export class PostRepository implements BaseRepository<Post> {
     return await this.database.post.delete(deleteOpts);
   }
 
-  // async find(findOpts: WhereOptions): Promise<Post[]> {
-  //   return await this.database.post.findMany(findOpts);
-  // }
-
   async find(findOpts: WhereOptions): Promise<Post[]> {
-    const { where, data } = findOpts;
-    const whereWithOptionalData = { ...where, ...data };
-    return await this.database.post.findMany({ where: whereWithOptionalData });
+    return await this.database.post.findMany(findOpts);
   }
 
   async findUnique(

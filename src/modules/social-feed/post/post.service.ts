@@ -9,7 +9,7 @@ import {
 import { DatabaseService } from "../../../prisma/database.service.js";
 
 interface IPostService {
-  getPostByUserId(userId: number): Promise<Post[]>;
+  getPostsByUserId(userId: number): Promise<Post[]>;
   getPostById(postId: number): Promise<Post>;
   createPost(userInput: CreatePostInput, userId: number): Promise<Post>;
   updatePost(userInput: UpdatePostInput, id: number): Promise<Post>;
@@ -22,23 +22,17 @@ export default class PostService implements IPostService {
     this.databaseService = prismaDbService.getInstance();
   }
 
-  async getPostByUserId(userId: number): Promise<Post[]> {
-    const posts = await this.databaseService.posts.find({
-      where: { userId },
-      data: {},
-    });
-    if (!posts || posts.length === 0) {
-      throw new Error("Posts not found");
-    } else {
-      return posts.map((post) => ({
-        ...post,
-      }));
+  async getPostsByUserId(userId: number) {
+    try {
+      const posts = await this.databaseService.posts.find({
+        where: { userId },
+      });
+      console.log(posts);
+      return posts;
+    } catch (error: unknown) {
+      throw new Error((error as Error).message);
     }
   }
-  catch(error: unknown) {
-    throw new Error((error as Error).message);
-  }
-
   async getPostById(postId: number): Promise<Post> {
     try {
       const post = await this.databaseService.posts.findUnique({
