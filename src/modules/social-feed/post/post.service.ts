@@ -22,12 +22,11 @@ export default class PostService implements IPostService {
     this.databaseService = prismaDbService.getInstance();
   }
 
-  async getPostsByUserId(userId: number) {
+  async getPostsByUserId(userId: number): Promise<Post[]> {
     try {
       const posts = await this.databaseService.posts.find({
         where: { userId },
       });
-      console.log(posts);
       return posts;
     } catch (error: unknown) {
       throw new Error((error as Error).message);
