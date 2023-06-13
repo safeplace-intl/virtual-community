@@ -28,6 +28,9 @@ export default class CommentService {
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
       });
+      if (!comment) {
+        throw new Error("Comment not found");
+      }
       if (comment.userId !== userId) {
         throw new Error("userId provided does not match the comments userId");
       } else {
@@ -50,11 +53,7 @@ export default class CommentService {
       const comments = await prisma.comment.findMany({
         where: { postId },
       });
-      if (comments.length === 0) {
-        throw new Error("Comments not found");
-      } else {
-        return comments;
-      }
+      return comments;
     } catch (error) {
       throw new Error((error as Error).message);
     }

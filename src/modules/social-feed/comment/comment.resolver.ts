@@ -46,4 +46,21 @@ export class CommentResolver {
       return comment;
     }
   }
+
+  @Mutation(() => Comment)
+  async deleteComment(
+    @Arg("deleteComment") commentId: number,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    } else {
+      const deletedComment = await this.commentService.deleteComment(
+        commentId,
+        userId
+      );
+      return deletedComment;
+    }
+  }
 }
