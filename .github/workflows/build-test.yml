@@ -13,7 +13,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: test
+  
+    env:
+      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/test?schema=public"
+      JWT_SECRET: "s#cret"
+    
     strategy:
       matrix:
         node-version: [18.x]
