@@ -39,6 +39,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      - name: Install client side dependencies
+#         run: cd src/client && npm ci
+#         run: cd .. & cd ..
 
       - name: Connect to PostgreSQL
         # Runs a script that creates a PostgreSQL table, populates
