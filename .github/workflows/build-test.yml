@@ -6,7 +6,7 @@ run-name: ${{ github.actor }} Build and test CI
 
 on:
   push:
-    branches: ["main", "staging"]
+    branches: ["main", "staging", "add-image-service"]
   pull_request:
     branches: ["main", "staging"]
 
