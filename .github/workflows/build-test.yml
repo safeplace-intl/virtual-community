@@ -54,7 +54,7 @@ jobs:
           PGHOST: localhost
           PGPORT: 5432
       - name: Wait for test database to start
-        run: docker-compose exec test-db pg_isready -q
+        run: docker-compose exec test-db pg_isready -d test
       - name: Run database migrations
         run: npm run migrate:prisma
       - name: Run build if present
