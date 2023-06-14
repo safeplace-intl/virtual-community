@@ -60,7 +60,7 @@ jobs:
 #       - name: Wait for test database to start
 #         run: docker compose exec test-db pg_isready -d test
       - name: Run database migrations
-        run: docker compose exec test-db npm run migrate:prisma
+        run: docker compose exec test-db prisma migrate dev --schema=./src/prisma/schema.prisma
       - name: Run build if present
         run: npm run build --if-present
       - name: Run tests if present
