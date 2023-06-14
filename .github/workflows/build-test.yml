@@ -46,15 +46,15 @@ jobs:
         run: cd src/client && npm ci
       - run: cd .. & cd ..
       - name: Start test database
-        run: docker-compose -f .devcontainer/docker-compose.yml up -d test-db
+        run: docker compose -f .devcontainer/docker-compose.yml up -d test-db
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: test
           PGHOST: localhost
           PGPORT: 5432
-      - name: Wait for test database to start
-        run: docker-compose exec test-db pg_isready -d test
+#       - name: Wait for test database to start
+#         run: docker compose exec test-db pg_isready -d test
       - name: Run database migrations
         run: npm run migrate:prisma
       - name: Run build if present
