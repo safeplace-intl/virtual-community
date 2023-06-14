@@ -62,4 +62,4 @@ jobs:
       - name: Run tests if present
         run: npm run test --if-present
       - name: Stop test database
-        run: docker-compose down
+        run: docker compose down
