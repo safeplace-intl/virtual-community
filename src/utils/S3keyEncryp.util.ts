@@ -1,8 +1,14 @@
-import * as bcrypt from "bcrypt";
+import crypto from "crypto";
 
-export async function generateSlug(userId: number) {
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(userId.toString(), salt);
-
-  return hash;
+export async function generateFileName(userId: number) {
+  try {
+    const hash = crypto.createHash("sha256");
+    hash.update(userId.toString());
+    const fileName = hash.digest("hex").slice(0, 60);
+    fileName.replace(/\//g, "");
+    return fileName;
+  } catch (err) {
+    console.error(err);
+    throw new Error("Error generating filename");
+  }
 }

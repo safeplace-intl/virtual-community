@@ -5,8 +5,23 @@ import {
   CreateProfileInput,
   UpdateProfileInput,
 } from "../../core/dto/profile.dto.js";
+import { PrivacyOption } from "../../core/entities/profile.entity.js";
 import { prisma } from "../../prisma/index.js";
 import ProfileImageService from "./profile-image.service.js";
+
+export interface IProfileService {
+  getProfileByUserId(userId: number): Promise<Profile>;
+  createProfile(
+    userId: number,
+    profileInput: CreateProfileInput
+  ): Promise<Profile>;
+  updateProfile(
+    userId: number,
+    profileUpdate: UpdateProfileInput
+  ): Promise<Profile>;
+  transferProfileImageFileName(userId: number, filename: string): Promise<void>;
+  restoreDefaultProfileImage(userId: number): Promise<void>;
+}
 
 @Service()
 export default class ProfileService {
@@ -26,52 +41,71 @@ export default class ProfileService {
 
   async createProfile(
     userId: number,
-    profileInput: CreateProfileInput
+    fullName: string,
+    pronouns?: string
   ): Promise<Profile> {
+    const requiredCreateProfileFields = {
+      fullName: {
+        value: fullName,
+        visibleTo: PrivacyOption.Friends,
+      },
+      tdaGradYearBannerVisible: {
+        value: false,
+        visibleTo: PrivacyOption.Friends,
+      },
+    };
+
+    const optionalCreateProfileFields = {
+      pronouns: {
+        value: pronouns,
+        visibleTo: PrivacyOption.Friends,
+      },
+    };
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
 
-    const { fullName, pronouns, tdaGradYearBannerVisible } = profileInput;
+    const defaultProfileImageFileName = (
+      await this.imageService.getDefaultProfileImage()
+    ).message;
 
     if (!user) {
       throw new Error("User not found");
     } else {
-      return await prisma.profile.create({
+      const profile = await prisma.profile.create({
         data: {
           userId: userId,
-          fullName: fullName as unknown as Prisma.JsonObject,
-          pronouns: (pronouns as unknown as Prisma.JsonObject) || undefined,
+          fullName:
+            requiredCreateProfileFields.fullName as unknown as Prisma.JsonObject,
+          pronouns:
+            (optionalCreateProfileFields.pronouns as unknown as Prisma.JsonObject) ||
+            undefined,
+          // profilePic is where we store the randomized filename string for the profile image
+          // in the profile resolver, we have a field resolver for profileImage that will get the image from S3
+          profilePic: {
+            value: defaultProfileImageFileName,
+            visibleTo: PrivacyOption.Friends,
+          } as unknown as Prisma.JsonObject,
           tdaGradYearBannerVisible:
-            tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
+            requiredCreateProfileFields.tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
         },
       });
+
+      return profile;
     }
   }
 
   async updateProfile(
     userId: number,
     profileUpdateInput: UpdateProfileInput
-  ): Promise<Profile | undefined> {
-    // ! in here, if profilePic is a field being updated, DO SOME WORK, then we need to call the image service to either create a new profile image, update the image in S3, or delete
-    // ! are we storing a url reference in the DB or do we need to call getImage everytime the user profile is resolved?
-    if (
-      // Delete is the only time that the image service needs to be called
-      "profilePic" in profileUpdateInput &&
-      profileUpdateInput["profilePic"] == null
-    ) {
-      console.log("inside delete");
-      const response = this.imageService.deleteImageByUserId(userId);
-      console.log(response);
-    }
-
+  ): Promise<Profile> {
     const {
       fullName,
       pronouns,
       tdaGradYear,
       currentLocation,
       bio,
-      profilePic,
       homeCountry,
       nickname,
       namePronunciation,
@@ -79,23 +113,10 @@ export default class ProfileService {
       tdaGradYearBannerVisible,
     } = profileUpdateInput;
 
-    const existingProfile = await prisma.profile.findUnique({
-      where: { userId },
-    });
+    const existingProfile = await this.getProfileByUserId(userId);
 
-    if (!existingProfile) {
-      throw new Error("Profile not found");
-    }
-
-    if (profileUpdateInput.profilePic?.value == "null") {
-      console.log("changing profilePic value to null");
-      console.log(typeof existingProfile["profilePic"]);
-      console.log(typeof existingProfile.profilePic === "object");
-      console.log(existingProfile["profilePic"].value);
-      const test = existingProfile["profilePic"];
-    }
     const profile = await prisma.profile.update({
-      where: { userId },
+      where: { userId: existingProfile.userId },
       data: {
         fullName: fullName as unknown as Prisma.JsonObject,
         pronouns: pronouns as unknown as Prisma.JsonObject,
@@ -104,7 +125,6 @@ export default class ProfileService {
         bio: bio as unknown as Prisma.JsonObject,
         tdaGradYearBannerVisible:
           tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
-        profilePic: profilePic as unknown as Prisma.JsonObject,
         homeCountry: homeCountry as unknown as Prisma.JsonObject,
         nickname: nickname as unknown as Prisma.JsonObject,
         namePronunciation: namePronunciation as unknown as Prisma.JsonObject,
@@ -115,7 +135,41 @@ export default class ProfileService {
     return profile;
   }
 
-  async getS3Url(userId: number) {
-    return await this.imageService.generateSignedUrlByUserId(userId);
+  // this function is called from the profile resolver, when it creates a new key and signed url for an upload
+  // the hole in this, is that if the client gets a new key and signed url, but does not complete the upload, we may have incorrect data. We did not have time to implement a solution for this.
+  async transferProfileImageFileName(userId: number, filename: string) {
+    const existingProfile = await this.getProfileByUserId(userId);
+    const profilePrivacy = existingProfile?.profilePic;
+    const { visibleTo } = profilePrivacy as Prisma.JsonObject;
+
+    await prisma.profile.update({
+      where: { userId: existingProfile.userId },
+      data: {
+        profilePic: {
+          value: filename,
+          visibleTo,
+        } as unknown as Prisma.JsonObject,
+      },
+    });
+  }
+
+  async restoreDefaultProfileImage(userId: number) {
+    const existingProfile = await this.getProfileByUserId(userId);
+    const profilePrivacy = existingProfile?.profilePic;
+    const { visibleTo } = profilePrivacy as Prisma.JsonObject;
+
+    const defaultProfileImageFileName = (
+      await this.imageService.getDefaultProfileImage()
+    ).message;
+
+    await prisma.profile.update({
+      where: { userId: existingProfile.userId },
+      data: {
+        profilePic: {
+          value: defaultProfileImageFileName,
+          visibleTo,
+        } as unknown as Prisma.JsonObject,
+      },
+    });
   }
 }

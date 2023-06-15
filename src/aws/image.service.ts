@@ -5,14 +5,17 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-import { S3Response } from "../core/dto/profile.dto.js";
+import {
+  S3MessageResponse,
+  S3SignedUrlResponse,
+} from "../core/dto/profile.dto.js";
 import { client } from "./s3.config.js";
 
-export interface IBaseImageService {
+export interface BaseImageService {
   generateSignedUrlByClient({
     bucket,
     key,
-  }: SignedUrlClientOptions): Promise<S3Response>;
+  }: SignedUrlClientOptions): Promise<S3SignedUrlResponse>;
 }
 
 export interface SignedUrlClientOptions {
@@ -20,17 +23,18 @@ export interface SignedUrlClientOptions {
   key: string;
 }
 
-export const genericAWSErrorMessage = "An error occured within AWS S3 service";
-
-export default class S3Service implements IBaseImageService {
+export default class S3Service implements BaseImageService {
   // Here are our base methods for the s3 service class:
   // we will extend this class in our profile photo service, and then again later when we are making an image service for posts, etc..
   async generateSignedUrlByClient({
     bucket,
     key,
-  }: SignedUrlClientOptions): Promise<S3Response> {
+  }: SignedUrlClientOptions): Promise<S3SignedUrlResponse> {
     const command = new PutObjectCommand({ Bucket: bucket, Key: key });
-    const signedUrl = await getSignedUrl(client, command, { expiresIn: 3600 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const signedUrl = await getSignedUrl(client as any, command as any, {
+      expiresIn: 3600,
+    });
 
     return {
       statusCode: 200,
@@ -41,8 +45,11 @@ export default class S3Service implements IBaseImageService {
   async getImageFromS3({
     bucket,
     key,
-  }: SignedUrlClientOptions): Promise<S3Response> {
-    const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+  }: SignedUrlClientOptions): Promise<S3MessageResponse> {
+    const command = new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+    });
     try {
       const response = await client.send(command);
       const str = await response.Body?.transformToString();
@@ -50,26 +57,20 @@ export default class S3Service implements IBaseImageService {
       if (str !== undefined) {
         return {
           statusCode: 200,
-          imageUrl: str,
+          message: str,
         };
       } else {
-        return {
-          statusCode: 400,
-          message: "Error retrieving image",
-        };
+        throw new Error("Error retrieving image");
       }
-    } catch (err) {
-      return {
-        statusCode: 500,
-        message: genericAWSErrorMessage,
-      };
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   }
 
   async deleteImageFromS3({
     bucket,
     key,
-  }: SignedUrlClientOptions): Promise<S3Response> {
+  }: SignedUrlClientOptions): Promise<S3MessageResponse> {
     const command = new DeleteObjectsCommand({
       Bucket: bucket,
       Delete: {
@@ -78,23 +79,16 @@ export default class S3Service implements IBaseImageService {
     });
 
     try {
-      const { Deleted } = await client.send(command);
+      await client.send(command);
 
-      console.log(`Successfully deleted ${Deleted}`);
-
-      const successResponse: S3Response = {
+      const successResponse: S3MessageResponse = {
         statusCode: 200,
         message: "Image deleted",
       };
 
       return successResponse;
-    } catch (err) {
-      const errorResponse: S3Response = {
-        statusCode: 500,
-        message: genericAWSErrorMessage,
-      };
-
-      return errorResponse;
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   }
 }

@@ -13,6 +13,8 @@ dist-ssr
 build
 *.local
 
+**/test/**
+
 # Editor directories and files
 !.vscode/extensions.json
 .idea

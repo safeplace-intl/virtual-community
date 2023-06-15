@@ -1,13 +1,18 @@
 import { Service } from "typedi";
 
-import S3Service, { genericAWSErrorMessage } from "../../aws/image.service.js";
-import { S3Response } from "../../core/dto/profile.dto.js";
-import { generateSlug } from "../../utils/S3keyEncryp.util.js";
+import S3Service from "../../aws/image.service.js";
+import {
+  S3MessageResponse,
+  S3SignedUrlAndKeyResponse,
+  S3SignedUrlResponse,
+} from "../../core/dto/profile.dto.js";
+import { generateFileName } from "../../utils/S3keyEncryp.util.js";
 
 interface IProfileImageService {
-  generateSignedUrlByUserId(userId: number): Promise<S3Response>;
-  getImageByUserId(userId: number): Promise<S3Response>;
-  deleteImageByUserId(userId: number): Promise<S3Response>;
+  generateSignedUrlByUserId(userId: number): Promise<S3SignedUrlResponse>;
+  getImageByUserId(userId: number, key: string): Promise<S3MessageResponse>;
+  deleteImageByUserId(userId: number, key: string): Promise<S3MessageResponse>;
+  getDefaultProfileImage(): Promise<S3MessageResponse>;
 }
 
 @Service()
@@ -20,52 +25,63 @@ export default class ProfileImageService
     super();
   }
 
-  async generateSignedUrlByUserId(userId: number): Promise<S3Response> {
+  async getDefaultProfileImage(): Promise<S3MessageResponse> {
+    return {
+      statusCode: 200,
+      message:
+        "https://spi-virtual-cmnty-profile-image-bucket.s3.amazonaws.com/default.png", // this is an example url
+    };
+  }
+
+  async generateSignedUrlByUserId(
+    userId: number
+  ): Promise<S3SignedUrlAndKeyResponse> {
     try {
-      const key = await generateSlug(userId);
-      console.log(key);
+      const key = await generateFileName(userId);
+
       const clientUrl = await this.generateSignedUrlByClient({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
         key: key,
       });
-      return clientUrl;
-    } catch (err) {
-      console.error(err);
-      return {
-        statusCode: 500,
-        message: genericAWSErrorMessage,
+
+      const signedUrlResponse: S3SignedUrlAndKeyResponse = {
+        ...clientUrl,
+        hashedFileName: key,
       };
+
+      return signedUrlResponse;
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   }
 
-  async getImageByUserId(userId: number): Promise<S3Response> {
+  async getImageByUserId(
+    userId: number,
+    key: string
+  ): Promise<S3MessageResponse> {
     try {
       const imageStr = await this.getImageFromS3({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
-        key: userId.toString(),
+        key: key,
       });
       return imageStr;
-    } catch (err) {
-      console.error(err);
-      return {
-        statusCode: 500,
-        message: genericAWSErrorMessage,
-      };
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   }
 
-  async deleteImageByUserId(userId: number): Promise<S3Response> {
+  async deleteImageByUserId(
+    userId: number,
+    key: string
+  ): Promise<S3MessageResponse> {
     try {
       const deleted = await this.deleteImageFromS3({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
-        key: userId.toString(),
+        key: key,
       });
       return deleted;
-    } catch (err) {
-      return {
-        statusCode: 500,
-        message: genericAWSErrorMessage,
-      };
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   }
 }

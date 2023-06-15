@@ -15,12 +15,13 @@ export const config: S3ClientConfig = {
     accessKeyId: process.env.AWS_ACCESS_KEY as string,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
   },
-  region: "us-east-1",
+  region: "us-east-1", // enable af-south-1 at a later date (read AWS docs about this first)
 };
 
 // a client can be shared by different commands.
 export const client = new S3Client(config);
 
+// example:
 // const input = {};
 
 // const command = new ListBucketsCommand(input);

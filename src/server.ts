@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
@@ -44,7 +46,6 @@ const apolloServer = new ApolloServer<Context>({
 
 await apolloServer.start();
 
-// serve client assets
 app.use(
   "/",
   cors<cors.CorsRequest>(),
@@ -85,7 +86,7 @@ app.use("/client", ServeClient);
 await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
 
 // eslint-disable-next-line no-console
-console.log(`🚀  Server ready at http://localhost:${port}`);
+console.log(`[server] 🚀  server ready at http://localhost:${port}/graphql`);
 
 // initialize database connection via prisma
 initializeDatabase()

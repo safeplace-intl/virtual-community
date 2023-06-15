@@ -3,7 +3,6 @@ import { Service } from "typedi";
 
 import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
-import { PrivacyOption } from "../../core/entities/profile.entity.js";
 import { prisma } from "../../prisma/index.js";
 import { AuthService } from "../auth/auth.service.js";
 import ProfileService from "../profile/profile.service.js";
@@ -58,30 +57,15 @@ export default class UserService implements IUserService {
         },
       });
 
-      const requiredCreateProfileFields = {
-        fullName: {
-          value: userInput.fullName,
-          visibleTo: PrivacyOption.Friends,
-        },
-        tdaGradYearBannerVisible: {
-          value: false,
-          visibleTo: PrivacyOption.Friends,
-        },
-      };
-
       // creates a profile for the new user with or without the pronouns field
       if (userInput.pronouns === undefined || userInput.pronouns === null) {
-        await this.profileService.createProfile(user.id, {
-          ...requiredCreateProfileFields,
-        });
+        await this.profileService.createProfile(user.id, user.email);
       } else {
-        await this.profileService.createProfile(user.id, {
-          ...requiredCreateProfileFields,
-          pronouns: {
-            value: userInput.pronouns,
-            visibleTo: PrivacyOption.Friends,
-          },
-        });
+        await this.profileService.createProfile(
+          user.id,
+          user.email,
+          userInput.pronouns
+        );
       }
       return user;
     }
@@ -130,10 +114,7 @@ export default class UserService implements IUserService {
         message: "Your account has been permanently deleted",
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        message: (error as Error).message,
-      };
+      throw new Error((error as Error).message);
     }
   }
 }
