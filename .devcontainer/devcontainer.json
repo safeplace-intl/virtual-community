@@ -4,7 +4,7 @@
   "name": "Node.js & PostgreSQL",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
-  "runServices": ["db", "app"],
+  "runServices": ["db", "test-db", "app"],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
@@ -12,7 +12,7 @@
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // This can be used to network with other containers or with the host.
-  "forwardPorts": [3001, 8081, 5432],
+  "forwardPorts": [3001, 8081, 5432, 5434],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "npm install && cd src/client && npm install",
@@ -32,7 +32,8 @@
         "aaron-bond.better-comments",
         "ms-azuretools.vscode-docker",
         "prisma.prisma",
-        "yoavbls.pretty-ts-errors"
+        "yoavbls.pretty-ts-errors",
+        "eamodio.gitlens"
       ]
     }
   },
