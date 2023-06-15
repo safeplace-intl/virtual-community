@@ -1,4 +1,6 @@
 import { Post } from "@prisma/client";
+import { type Context } from "src/context.js";
+import { Ctx } from "type-graphql";
 import { Service } from "typedi";
 
 import {
@@ -32,6 +34,7 @@ export default class PostService implements IPostService {
       throw new Error((error as Error).message);
     }
   }
+
   async getPostById(postId: number): Promise<Post> {
     try {
       const post = await this.databaseService.posts.findUnique({
@@ -69,7 +72,6 @@ export default class PostService implements IPostService {
   async updatePost(
     updatePostInput: UpdatePostInput,
     postId: number
-    // userId: number //? do we need userId
   ): Promise<Post> {
     try {
       const post = await this.databaseService.posts.findUnique({
@@ -79,7 +81,7 @@ export default class PostService implements IPostService {
         throw new Error("Post not found");
       }
       const updatedPost = await this.databaseService.posts.update({
-        where: { id: postId }, //? interface WhereOptions require where and data
+        where: { id: postId },
         data: { ...updatePostInput, userId: post.userId },
       });
       return updatedPost;

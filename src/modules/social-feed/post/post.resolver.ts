@@ -1,4 +1,6 @@
+import { type Context } from "src/context.js";
 import { Arg, Float, Mutation, Query, Resolver } from "type-graphql";
+import { Ctx } from "type-graphql";
 import { Service } from "typedi";
 
 import {
@@ -19,30 +21,40 @@ export class PostResolver {
     const post = await this.postService.getPostById(postId);
     return post;
   }
+
   @Query(() => [Post])
-  async getPostsByUserId(@Arg("userId") userId: number) {
-    const posts = await this.postService.getPostsByUserId(userId);
-    return posts;
+  async getPostsByUserId(@Ctx() context: Context) {
+    if (context.user?.id) {
+      const posts = await this.postService.getPostsByUserId(context.user?.id);
+      return posts;
+    } else {
+      throw new Error("no user id");
+    }
   }
 
   @Mutation(() => Post)
   async createPost(
-    @Arg("userId", () => Float) userId: number,
+    @Ctx() context: Context,
     @Arg("createPostInput") createPostInput: CreatePostInput
   ) {
-    const post = await this.postService.createPost(createPostInput, userId);
-    return post;
+    if (context.user?.id) {
+      const post = await this.postService.createPost(
+        createPostInput,
+        context.user?.id
+      );
+      return post;
+    } else {
+      throw new Error("no user id");
+    }
   }
 
   @Mutation(() => Post)
   async updatePost(
-    // @Arg("userId", () => Float) userId: number,
     @Arg("postId", () => Float) postId: number,
     @Arg("updatePostInput") updatePostInput: UpdatePostInput
   ) {
     const updatedPost = await this.postService.updatePost(
       updatePostInput,
-      // userId,
       postId
     );
     return updatedPost;

@@ -57,7 +57,7 @@ input LoginInput {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
-  createPost(createPostInput: CreatePostInput!, userId: Float!): Post!
+  createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deactivateAccount(email: String!): AccountResponse!
   deleteAccount(id: Float!): AccountResponse!
@@ -122,7 +122,7 @@ type Profile {
 
 type Query {
   getPostById(postId: Float!): Post
-  getPostsByUserId(userId: Float!): [Post!]!
+  getPostsByUserId: [Post!]!
   getUser(userId: Float!): User
 }
 
