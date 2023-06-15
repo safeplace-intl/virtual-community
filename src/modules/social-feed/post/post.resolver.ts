@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
 import { Arg, Float, Mutation, Query, Resolver } from "type-graphql";
 import { Ctx } from "type-graphql";
@@ -19,6 +20,7 @@ export class PostResolver {
   @Query(() => Post, { nullable: true })
   async getPostById(@Arg("postId") postId: number) {
     const post = await this.postService.getPostById(postId);
+
     return post;
   }
 
@@ -26,9 +28,10 @@ export class PostResolver {
   async getPostsByUserId(@Ctx() context: Context) {
     if (context.user?.id) {
       const posts = await this.postService.getPostsByUserId(context.user?.id);
+
       return posts;
     } else {
-      throw new Error("no user id");
+      throw new GraphQLError("no user id");
     }
   }
 
@@ -42,27 +45,24 @@ export class PostResolver {
         createPostInput,
         context.user?.id
       );
+
       return post;
     } else {
-      throw new Error("no user id");
+      throw new GraphQLError("no user id");
     }
   }
 
   @Mutation(() => Post)
-  async updatePost(
-    @Arg("postId", () => Float) postId: number,
-    @Arg("updatePostInput") updatePostInput: UpdatePostInput
-  ) {
-    const updatedPost = await this.postService.updatePost(
-      updatePostInput,
-      postId
-    );
+  async updatePost(@Arg("updatePostInput") updatePostInput: UpdatePostInput) {
+    const updatedPost = await this.postService.updatePost(updatePostInput);
+
     return updatedPost;
   }
 
   @Mutation(() => PostDeletedResponse)
   async deletePost(@Arg("id") id: number) {
     const deletePostResponse = await this.postService.deletePost(id);
+
     return deletePostResponse;
   }
 }

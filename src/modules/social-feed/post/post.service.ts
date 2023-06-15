@@ -1,6 +1,4 @@
 import { Post } from "@prisma/client";
-import { type Context } from "src/context.js";
-import { Ctx } from "type-graphql";
 import { Service } from "typedi";
 
 import {
@@ -17,9 +15,11 @@ interface IPostService {
   updatePost(userInput: UpdatePostInput, id: number): Promise<Post>;
   deletePost(id: number): Promise<PostDeletedResponse>;
 }
+
 @Service()
 export default class PostService implements IPostService {
   private readonly databaseService: DatabaseService;
+
   constructor(prismaDbService: DatabaseService) {
     this.databaseService = prismaDbService.getInstance();
   }
@@ -29,6 +29,7 @@ export default class PostService implements IPostService {
       const posts = await this.databaseService.posts.find({
         where: { userId },
       });
+
       return posts;
     } catch (error: unknown) {
       throw new Error((error as Error).message);
@@ -44,6 +45,7 @@ export default class PostService implements IPostService {
       if (!post) {
         throw new Error("Post not found");
       }
+
       return post;
     } catch (error) {
       throw new Error((error as Error).message);
@@ -55,35 +57,31 @@ export default class PostService implements IPostService {
     userId: number
   ): Promise<Post> {
     try {
-      const user = await this.databaseService.users.findUnique({
-        where: { id: userId },
-      });
-      if (!user) {
-        throw new Error("User not found");
-      }
       const post = await this.databaseService.posts.create({
-        data: { ...createPostInput, userId: userId },
+        data: { ...createPostInput, userId },
       });
+
       return post;
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
-  async updatePost(
-    updatePostInput: UpdatePostInput,
-    postId: number
-  ): Promise<Post> {
+
+  async updatePost(updatePostInput: UpdatePostInput): Promise<Post> {
     try {
       const post = await this.databaseService.posts.findUnique({
-        where: { id: postId },
+        where: { id: updatePostInput.postId },
       });
+
       if (!post) {
         throw new Error("Post not found");
       }
+
       const updatedPost = await this.databaseService.posts.update({
-        where: { id: postId },
+        where: { id: updatePostInput.postId },
         data: { ...updatePostInput, userId: post.userId },
       });
+
       return updatedPost;
     } catch (error) {
       throw new Error((error as Error).message);
@@ -93,9 +91,7 @@ export default class PostService implements IPostService {
   async deletePost(id: number): Promise<PostDeletedResponse> {
     try {
       await this.databaseService.posts.delete({
-        where: {
-          id,
-        },
+        where: { id },
       });
 
       return {
@@ -103,10 +99,7 @@ export default class PostService implements IPostService {
         message: "Your post has been permanently deleted",
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        message: (error as Error).message,
-      };
+      throw new Error((error as Error).message);
     }
   }
 }

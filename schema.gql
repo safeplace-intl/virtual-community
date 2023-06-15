@@ -31,11 +31,11 @@ input ChangePasswordInput {
 
 input CreatePostInput {
   content: String
-  hasSensitiveTopic: Boolean!
+  hasSensitiveTopic: Boolean
   image: String
-  isDraft: Boolean!
-  user: String
-  visibleTo: PrivacyOption! = Community
+  isDraft: Boolean
+  userId: Float!
+  visibleTo: PrivacyOption
 }
 
 input CreateUserInput {
@@ -65,7 +65,7 @@ type Mutation {
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
-  updatePost(postId: Float!, updatePostInput: UpdatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
   updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
 }
 
@@ -81,14 +81,14 @@ input NumberProfileFieldInput {
 
 type Post {
   content: String
-  createdAt: DateTime
-  dislikes: Int!
+  createdAt: DateTime!
+  dislikes: Float!
   hasSensitiveTopic: Boolean!
   id: Float!
   image: String
   isDraft: Boolean!
-  likes: Int!
-  updatedAt: DateTime
+  likes: Float!
+  updatedAt: DateTime!
   userId: Float!
   visibleTo: PrivacyOption!
 }
@@ -155,11 +155,13 @@ type TokensPayload {
 
 input UpdatePostInput {
   content: String
+  dislikes: Float
   hasSensitiveTopic: Boolean
   image: String
   isDraft: Boolean
-  user: String
-  visibleTo: PrivacyOption
+  likes: Float
+  postId: Float!
+  visibleTo: String
 }
 
 input UpdateProfileInput {
