@@ -3,7 +3,6 @@ import { Service } from "typedi";
 
 import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
-import { PrivacyOption } from "../../core/entities/profile.entity.js";
 import { DatabaseService } from "../../prisma/database.service.js";
 import { AuthService } from "../auth/auth.service.js";
 import ProfileService from "../profile/profile.service.js";
@@ -68,32 +67,17 @@ export default class UserService implements IUserService {
           },
         });
 
-        const requiredCreateProfileFields = {
-          fullName: {
-            value: userInput.fullName,
-            visibleTo: PrivacyOption.Friends,
-          },
-          tdaGradYearBannerVisible: {
-            value: false,
-            visibleTo: PrivacyOption.Friends,
-          },
-        };
-
         // creates a profile for the new user with or without the pronouns field
         if (userInput.pronouns === undefined || userInput.pronouns === null) {
-          await this.profileService.createProfile(user.id, {
-            ...requiredCreateProfileFields,
-          });
+          await this.profileService.createProfile(user.id, userInput.fullName);
         } else {
-          await this.profileService.createProfile(user.id, {
-            ...requiredCreateProfileFields,
-            pronouns: {
-              value: userInput.pronouns,
-              visibleTo: PrivacyOption.Friends,
-            },
-          });
+          await this.profileService.createProfile(
+            user.id,
+            userInput.fullName,
+            userInput.pronouns
+          );
         }
-        
+
         return user;
       }
     } catch (error) {

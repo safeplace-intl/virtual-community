@@ -25,12 +25,13 @@ export interface IProfileService {
 
 @Service()
 export default class ProfileService {
- private readonly databaseService: DatabaseService;
+  private readonly databaseService: DatabaseService;
 
   constructor(
-    prismaDbService: DatabaseService, 
-    private readonly imageService: ProfileImageService) {
-      this.databaseService = prismaDbService.getInstance();
+    prismaDbService: DatabaseService,
+    private readonly imageService: ProfileImageService
+  ) {
+    this.databaseService = prismaDbService.getInstance();
   }
 
   async getProfileByUserId(userId: number): Promise<Profile> {
@@ -54,56 +55,57 @@ export default class ProfileService {
     fullName: string,
     pronouns?: string
   ): Promise<Profile> {
-    const requiredCreateProfileFields = {
-      fullName: {
-        value: fullName,
-        visibleTo: PrivacyOption.Friends,
-      },
-      tdaGradYearBannerVisible: {
-        value: false,
-        visibleTo: PrivacyOption.Friends,
-      },
-    };
+    try {
+      const requiredCreateProfileFields = {
+        fullName: {
+          value: fullName,
+          visibleTo: PrivacyOption.Friends,
+        },
+        tdaGradYearBannerVisible: {
+          value: false,
+          visibleTo: PrivacyOption.Friends,
+        },
+      };
 
-    const optionalCreateProfileFields = {
-      pronouns: {
-        value: pronouns,
-        visibleTo: PrivacyOption.Friends,
-      },
-    };
+      const optionalCreateProfileFields = {
+        pronouns: {
+          value: pronouns,
+          visibleTo: PrivacyOption.Friends,
+        },
+      };
 
-     const user = await this.databaseService.users.findUnique({
+      const user = await this.databaseService.users.findUnique({
         where: { id: userId },
       });
 
-    const defaultProfileImageFileName = (
-      await this.imageService.getDefaultProfileImage()
-    ).message;
+      const defaultProfileImageFileName = (
+        await this.imageService.getDefaultProfileImage()
+      ).message;
 
-    if (!user) {
-      throw new Error("User not found");
-    } else {
-      
-      const profile = await this.databaseService.profiles.create({
-        data: {
-          userId: userId,
-          fullName:
-            requiredCreateProfileFields.fullName as unknown as Prisma.JsonObject,
-          pronouns:
-            (optionalCreateProfileFields.pronouns as unknown as Prisma.JsonObject) ||
-            undefined,
-          // profilePic is where we store the randomized filename string for the profile image
-          // in the profile resolver, we have a field resolver for profileImage that will get the image from S3
-          profilePic: {
-            value: defaultProfileImageFileName,
-            visibleTo: PrivacyOption.Friends,
-          } as unknown as Prisma.JsonObject,
-          tdaGradYearBannerVisible:
-            requiredCreateProfileFields.tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
-        },
-      });
-      
-      return profile;
+      if (!user) {
+        throw new Error("User not found");
+      } else {
+        const profile = await this.databaseService.profiles.create({
+          data: {
+            userId: userId,
+            fullName:
+              requiredCreateProfileFields.fullName as unknown as Prisma.JsonObject,
+            pronouns:
+              (optionalCreateProfileFields.pronouns as unknown as Prisma.JsonObject) ||
+              undefined,
+            // profilePic is where we store the randomized filename string for the profile image
+            // in the profile resolver, we have a field resolver for profileImage that will get the image from S3
+            profilePic: {
+              value: defaultProfileImageFileName,
+              visibleTo: PrivacyOption.Friends,
+            } as unknown as Prisma.JsonObject,
+            tdaGradYearBannerVisible:
+              requiredCreateProfileFields.tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
+          },
+        });
+
+        return profile;
+      }
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -127,26 +129,34 @@ export default class ProfileService {
     } = profileUpdateInput;
 
     try {
-        const existingProfile = await this.databaseService.profiles.findUnique({
-          where: { userId },
-        });
+      const existingProfile = await this.databaseService.profiles.findUnique({
+        where: { userId },
+      });
 
-        const profile = await this.databaseService.profiles.update({
-          where: { userId: existingProfile.userId },
-          data: {
-            fullName: fullName as unknown as Prisma.JsonObject,
-            pronouns: pronouns as unknown as Prisma.JsonObject,
-            tdaGradYear: tdaGradYear as unknown as Prisma.JsonObject,
-            currentLocation: currentLocation as unknown as Prisma.JsonObject,
-            bio: bio as unknown as Prisma.JsonObject,
-            tdaGradYearBannerVisible:
-              tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
-            homeCountry: homeCountry as unknown as Prisma.JsonObject,
-            nickname: nickname as unknown as Prisma.JsonObject,
-            namePronunciation: namePronunciation as unknown as Prisma.JsonObject,
-            website: website as unknown as Prisma.JsonObject,
-          },
-        });
+      let lookupId: number;
+
+      if (existingProfile?.userId) {
+        lookupId = existingProfile.userId;
+      } else {
+        lookupId = userId;
+      }
+
+      const profile = await this.databaseService.profiles.update({
+        where: { userId: lookupId },
+        data: {
+          fullName: fullName as unknown as Prisma.JsonObject,
+          pronouns: pronouns as unknown as Prisma.JsonObject,
+          tdaGradYear: tdaGradYear as unknown as Prisma.JsonObject,
+          currentLocation: currentLocation as unknown as Prisma.JsonObject,
+          bio: bio as unknown as Prisma.JsonObject,
+          tdaGradYearBannerVisible:
+            tdaGradYearBannerVisible as unknown as Prisma.JsonObject,
+          homeCountry: homeCountry as unknown as Prisma.JsonObject,
+          nickname: nickname as unknown as Prisma.JsonObject,
+          namePronunciation: namePronunciation as unknown as Prisma.JsonObject,
+          website: website as unknown as Prisma.JsonObject,
+        },
+      });
 
       return profile;
     } catch (error) {
