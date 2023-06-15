@@ -9,3 +9,6 @@ export async function initializeDatabase() {
     console.log(`[server] connected to postgres database with prisma`);
   });
 }
+export async function disconnectDatabase() {
+  await prisma.$disconnect();
+}
