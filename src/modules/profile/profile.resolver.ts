@@ -47,7 +47,6 @@ export class ProfileResolver {
         throw new GraphQLError("Profile not found");
       }
 
-      console.log(profile);
       return profile;
     }
   }
@@ -82,12 +81,14 @@ export class ProfileResolver {
       }
 
       const imageKey = profile.profilePic.toString();
+
       const message = await this.imageService.deleteImageByUserId(
         userId,
         imageKey
       );
-      console.log(message);
+
       await this.profileService.restoreDefaultProfileImage(userId);
+
       return message;
     }
   }
@@ -95,10 +96,13 @@ export class ProfileResolver {
   @FieldResolver(() => String, { nullable: true })
   async profileImage(@Root() profile: Profile) {
     const key = profile.profilePic?.value as string;
+
     if (!key) {
       return null;
     }
+
     const image = await this.imageService.getImageByUserId(profile.userId, key);
+
     return image.message;
   }
 }

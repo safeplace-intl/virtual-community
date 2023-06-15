@@ -8,7 +8,7 @@ import {
 } from "../../core/dto/profile.dto.js";
 import { generateFileName } from "../../utils/S3keyEncryp.util.js";
 
-interface IProfileImageService {
+interface ImageService {
   generateSignedUrlByUserId(userId: number): Promise<S3SignedUrlResponse>;
   getImageByUserId(userId: number, key: string): Promise<S3MessageResponse>;
   deleteImageByUserId(userId: number, key: string): Promise<S3MessageResponse>;
@@ -18,7 +18,7 @@ interface IProfileImageService {
 @Service()
 export default class ProfileImageService
   extends S3Service
-  implements IProfileImageService
+  implements ImageService
 {
   constructor() {
     // calling super means that this service will inherit the methods from the S3Service class, including the generateSignedUrlByClient method, so it can call with this.generateSignedUrlByClient
@@ -60,11 +60,12 @@ export default class ProfileImageService
     key: string
   ): Promise<S3MessageResponse> {
     try {
-      const imageStr = await this.getImageFromS3({
+      const image = await this.getImageFromS3({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
         key: key,
       });
-      return imageStr;
+
+      return image;
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -75,11 +76,12 @@ export default class ProfileImageService
     key: string
   ): Promise<S3MessageResponse> {
     try {
-      const deleted = await this.deleteImageFromS3({
+      const deletedImage = await this.deleteImageFromS3({
         bucket: "spi-virtual-cmnty-profile-image-bucket",
         key: key,
       });
-      return deleted;
+
+      return deletedImage;
     } catch (error) {
       throw new Error((error as Error).message);
     }
