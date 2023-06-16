@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { createIntScalar } from "graphql-scalar";
 import { ArgsType, Field, Int } from "type-graphql";
 

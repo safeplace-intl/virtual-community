@@ -65,7 +65,7 @@ type Mutation {
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
   updatePost(updatePostInput: UpdatePostInput!): Post!
-  updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
+  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
 }
 
 type NumberProfileField {
@@ -111,6 +111,7 @@ type Profile {
   id: Float!
   namePronunciation: StringProfileField
   nickname: StringProfileField
+  profileImage: String
   profilePic: StringProfileField
   pronouns: StringProfileField
   tdaGradYear: NumberProfileField
@@ -122,6 +123,8 @@ type Profile {
 type Query {
   getPostById(postId: Float!): Post
   getPostsByUserId: [Post!]!
+  deleteProfileImageAndRestoreDefault: S3MessageResponse!
+  getS3SignedUrl: S3SignedUrlResponse!
   getUser(userId: Float!): User
 }
 
@@ -133,6 +136,16 @@ input RefreshTokenInput {
 input ResetPasswordInput {
   email: String!
   newPassword: String!
+}
+
+type S3MessageResponse {
+  message: String!
+  statusCode: Float!
+}
+
+type S3SignedUrlResponse {
+  signedUrl: String!
+  statusCode: Float!
 }
 
 type StringProfileField {
@@ -170,7 +183,6 @@ input UpdateProfileInput {
   homeCountry: StringProfileFieldInput
   namePronunciation: StringProfileFieldInput
   nickname: StringProfileFieldInput
-  profilePic: StringProfileFieldInput
   pronouns: StringProfileFieldInput
   tdaGradYear: NumberProfileFieldInput
   tdaGradYearBannerVisible: BooleanProfileFieldInput
