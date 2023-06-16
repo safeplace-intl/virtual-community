@@ -1,59 +1,64 @@
-import { Field, InputType, Int } from "type-graphql";
+import "reflect-metadata";
+
+import { Allow } from "class-validator";
+import { Field, InputType, ObjectType } from "type-graphql";
 
 import { PrivacyOption } from "../entities/profile.entity.js";
 
 @InputType()
 export class CreatePostInput {
-  @Field(() => String, { nullable: true })
+  @Allow() // bypassing validation temporarily
+  @Field({ nullable: true })
   content?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   image?: string;
 
-  @Field(() => Boolean)
+  @Field({ nullable: true })
   isDraft?: boolean;
 
-  @Field(() => Boolean)
+  @Field({ nullable: true })
   hasSensitiveTopic?: boolean;
 
-  @Field(() => PrivacyOption, { defaultValue: PrivacyOption.Community })
+  @Field(() => PrivacyOption, { nullable: true })
   visibleTo?: PrivacyOption;
-
-  @Field(() => Date, { nullable: true })
-  createdAt?: Date;
-
-  @Field(() => Date, { nullable: true })
-  updatedAt?: Date;
 }
 
 @InputType()
 export class UpdatePostInput {
-  @Field(() => String, { nullable: true })
+  @Allow() // bypassing validation temporarily
+  @Field()
+  postId!: number;
+
+  @Field({ nullable: true })
   content?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   image?: string;
 
-  @Field(() => Boolean, { nullable: true })
+  @Field({ nullable: true })
   hasSensitiveTopic?: boolean;
 
-  @Field(() => Int, { nullable: true })
+  @Field({ nullable: true })
   likes?: number;
 
-  @Field(() => Int, { nullable: true })
+  @Field({ nullable: true })
   dislikes?: number;
 
-  @Field(() => Boolean, { nullable: true })
+  @Field({ nullable: true })
   isDraft?: boolean;
 
-  @Field(() => PrivacyOption, { nullable: true })
+  @Field({ nullable: true })
   visibleTo?: PrivacyOption;
+}
 
-  @Field(() => Date, { nullable: true })
-  createdAt?: Date;
+@ObjectType()
+export class PostDeletedResponse {
+  @Field()
+  statusCode!: number;
 
-  @Field(() => Date, { nullable: true })
-  updatedAt?: Date;
+  @Field()
+  message!: string;
 }
 
 @InputType()

@@ -10,30 +10,30 @@ export class Post {
   @Field()
   userId!: number;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   content?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field({ nullable: true })
   image?: string;
 
-  @Field(() => Int, { defaultValue: 0 })
+  @Field({ defaultValue: 0 })
   likes!: number;
 
-  @Field(() => Int, { defaultValue: 0 })
+  @Field({ defaultValue: 0 })
   dislikes!: number;
 
-  @Field(() => Boolean, { defaultValue: false })
+  @Field({ defaultValue: false })
   isDraft!: boolean;
 
-  @Field(() => Boolean, { defaultValue: false })
+  @Field({ defaultValue: false })
   hasSensitiveTopic!: boolean;
 
   @Field(() => PrivacyOption, { defaultValue: PrivacyOption.Community })
   visibleTo!: PrivacyOption;
 
-  @Field(() => Date, { nullable: true })
-  createdAt?: Date;
+  @Field(() => Date)
+  createdAt!: Date;
 
-  @Field(() => Date, { nullable: true })
-  updatedAt?: Date;
+  @Field(() => Date)
+  updatedAt!: Date;
 }

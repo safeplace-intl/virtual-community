@@ -49,12 +49,10 @@ input CreateCommentInput {
 
 input CreatePostInput {
   content: String
-  createdAt: DateTime
-  hasSensitiveTopic: Boolean!
+  hasSensitiveTopic: Boolean
   image: String
-  isDraft: Boolean!
-  updatedAt: DateTime
-  visibleTo: PrivacyOption! = Community
+  isDraft: Boolean
+  visibleTo: PrivacyOption
 }
 
 input CreateUserInput {
@@ -83,9 +81,12 @@ type Mutation {
   deleteComment(deleteComment: Float!): Comment!
   dislikeComment(CommentId: Float!): Comment!
   likeComment(CommentId: Float!): Comment!
+  createPost(createPostInput: CreatePostInput!): Post!
+  deletePost(id: Float!): PostDeletedResponse!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
   updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
 }
 
@@ -101,16 +102,21 @@ input NumberProfileFieldInput {
 
 type Post {
   content: String
-  createdAt: DateTime
-  dislikes: Int!
+  createdAt: DateTime!
+  dislikes: Float!
   hasSensitiveTopic: Boolean!
   id: Float!
   image: String
   isDraft: Boolean!
-  likes: Int!
-  updatedAt: DateTime
+  likes: Float!
+  updatedAt: DateTime!
   userId: Float!
   visibleTo: PrivacyOption!
+}
+
+type PostDeletedResponse {
+  message: String!
+  statusCode: Float!
 }
 
 enum PrivacyOption {
@@ -138,6 +144,8 @@ type Profile {
 type Query {
   getCommentById(commentId: Float!): Comment
   getCommentsByPostId(postId: Float!): [Comment!]
+  getPostById(postId: Float!): Post
+  getPostsByUserId: [Post!]!
   getUser(userId: Float!): User
 }
 
@@ -170,14 +178,13 @@ type TokensPayload {
 
 input UpdatePostInput {
   content: String
-  createdAt: DateTime
-  dislikes: Int
+  dislikes: Float
   hasSensitiveTopic: Boolean
   image: String
   isDraft: Boolean
-  likes: Int
-  updatedAt: DateTime
-  visibleTo: PrivacyOption
+  likes: Float
+  postId: Float!
+  visibleTo: String
 }
 
 input UpdateProfileInput {
@@ -199,6 +206,6 @@ type User {
   id: Int!
   isActive: Boolean!
   passwordHash: String!
-  post: [Post!]!
+  posts: [Post!]!
   profile: Profile!
 }
