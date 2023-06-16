@@ -18,7 +18,7 @@ export class CreateProfileInput {
 
 @InputType()
 export class UpdateProfileInput {
-  @Allow()
+  @Allow() // bypassing validation temporarily
   @Field(() => StringProfileFieldInput, { nullable: true })
   fullName?: StringProfileFieldInput;
 

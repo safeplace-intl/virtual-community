@@ -41,7 +41,7 @@ export class ProfileResolver {
   //   }
   // }
 
-  // Temporarily mutation without context
+  // Temporary mutation without context
   @Mutation(() => Profile)
   async updateProfile(
     @Arg("userId", () => Float) userId: number,
