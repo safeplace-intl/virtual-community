@@ -17,7 +17,7 @@ export class CreateProfileInput {
 // client cannot know/update profilePic (which is the randomized string for the AWS filename)
 @InputType()
 export class UpdateProfileInput {
-  @Allow()
+  @Allow() // bypassing validation temporarily
   @Field(() => StringProfileFieldInput, { nullable: true })
   fullName?: StringProfileFieldInput;
 

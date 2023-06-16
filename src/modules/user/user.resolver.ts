@@ -1,5 +1,7 @@
+import { type Context } from "src/context.js";
 import {
   Arg,
+  Ctx,
   FieldResolver,
   Mutation,
   Query,
@@ -15,19 +17,21 @@ import {
 } from "../../core/dto/auth.dto.js";
 import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
+import { Post } from "../../core/entities/post.entity.js";
 import { Profile } from "../../core/entities/profile.entity.js";
 import { User } from "../../core/entities/user.entity.js";
 import { AuthService } from "../auth/auth.service.js";
 import ProfileService from "../profile/profile.service.js";
+import PostService from "../social-feed/post/post.service.js";
 import UserService from "./user.service.js";
-
 @Service()
 @Resolver(() => User)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
-    private readonly profileService: ProfileService
+    private readonly profileService: ProfileService,
+    private readonly postService: PostService
   ) {}
 
   @Query(() => User, { nullable: true })
@@ -92,5 +96,12 @@ export class UserResolver {
     const profile = await this.profileService.getProfileByUserId(user.id);
 
     return profile;
+  }
+
+  @FieldResolver(() => [Post])
+  async posts(@Root() user: User) {
+    const posts = await this.postService.getPostsByUserId(user.id);
+
+    return posts;
   }
 }
