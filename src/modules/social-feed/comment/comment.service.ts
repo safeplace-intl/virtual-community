@@ -1,4 +1,4 @@
-import { Comment } from "@prisma/client";
+import { Comment, Prisma } from "@prisma/client";
 import { CreateCommentInput } from "src/core/dto/social-feed.dto.js";
 import { Service } from "typedi";
 
@@ -28,6 +28,9 @@ export default class CommentService {
       const comment = await prisma.comment.findUnique({
         where: { id: commentId },
       });
+      if (!comment) {
+        throw new Error("Comment not found");
+      }
       if (comment.userId !== userId) {
         throw new Error("userId provided does not match the comments userId");
       } else {
@@ -50,11 +53,7 @@ export default class CommentService {
       const comments = await prisma.comment.findMany({
         where: { postId },
       });
-      if (comments.length === 0) {
-        throw new Error("Comments not found");
-      } else {
-        return comments;
-      }
+      return comments;
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -73,5 +72,45 @@ export default class CommentService {
     } catch (error) {
       throw new Error((error as Error).message);
     }
+  }
+  async likeComment(commentId: number, userId: number): Promise<Comment> {
+    const comment = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+    if (!comment) {
+      throw new Error("Comment not found");
+    }
+    if (comment.likedBy.includes(userId)) {
+      throw new Error("User has already liked the comment");
+    }
+    const updatedComment = await prisma.comment.update({
+      where: { id: commentId },
+      data: {
+        likedBy: { push: userId },
+        likes: { increment: 1 },
+      },
+    });
+    return updatedComment;
+  }
+
+  async dislikeComment(commentId: number, userId: number): Promise<Comment> {
+    const comment = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+    if (!comment) {
+      throw new Error("Comment not found");
+    }
+    if (comment.dislikedBy.includes(userId)) {
+      throw new Error("User has already disliked the comment");
+    }
+    const updatedComment = await prisma.comment.update({
+      where: { id: commentId },
+      data: {
+        dislikedBy: { push: userId },
+        dislikes: { increment: 1 },
+      },
+    });
+
+    return updatedComment;
   }
 }

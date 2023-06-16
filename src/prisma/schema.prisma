@@ -66,6 +66,8 @@ model Comment {
   content   String
   likes     Int      @default(0)
   dislikes  Int      @default(0)
+  likedBy   Int[]    
+  dislikedBy Int[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

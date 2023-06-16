@@ -1,14 +1,6 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
-import {
-  Arg,
-  Ctx,
-  FieldResolver,
-  Mutation,
-  Query,
-  Resolver,
-  Root,
-} from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
 import { CreateCommentInput } from "../../../core/dto/social-feed.dto.js";
@@ -45,5 +37,54 @@ export class CommentResolver {
       const comment = await this.commentService.createComment(params, userId);
       return comment;
     }
+  }
+
+  @Mutation(() => Comment)
+  async deleteComment(
+    @Arg("deleteComment") commentId: number,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    } else {
+      const deletedComment = await this.commentService.deleteComment(
+        commentId,
+        userId
+      );
+      return deletedComment;
+    }
+  }
+
+  @Mutation(() => Comment)
+  async likeComment(
+    @Arg("CommentId") commentId: number,
+    @Ctx() ctx: Context
+  ): Promise<Comment> {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    }
+    const likedComment = await this.commentService.likeComment(
+      commentId,
+      userId
+    );
+    return likedComment;
+  }
+
+  @Mutation(() => Comment)
+  async dislikeComment(
+    @Arg("CommentId") commentId: number,
+    @Ctx() ctx: Context
+  ): Promise<Comment> {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      throw new GraphQLError("User not found");
+    }
+    const dislikedComment = await this.commentService.dislikeComment(
+      commentId,
+      userId
+    );
+    return dislikedComment;
   }
 }

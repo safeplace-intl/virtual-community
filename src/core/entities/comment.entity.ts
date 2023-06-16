@@ -25,4 +25,10 @@ export class Comment {
 
   @Field(() => Date)
   updatedAt!: Date;
+
+  @Field(() => [Int], { defaultValue: [] })
+  likedBy!: number[];
+
+  @Field(() => [Int], { defaultValue: [] })
+  dislikedBy!: number[];
 }
