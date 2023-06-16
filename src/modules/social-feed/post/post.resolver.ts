@@ -1,6 +1,6 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
-import { Arg, Float, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Ctx } from "type-graphql";
 import { Service } from "typedi";
 

@@ -34,7 +34,6 @@ input CreatePostInput {
   hasSensitiveTopic: Boolean
   image: String
   isDraft: Boolean
-  userId: Float!
   visibleTo: PrivacyOption
 }
 

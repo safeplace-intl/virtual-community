@@ -1,12 +1,13 @@
+import "reflect-metadata";
+
+import { Allow } from "class-validator";
 import { Field, InputType, ObjectType } from "type-graphql";
 
 import { PrivacyOption } from "../entities/profile.entity.js";
 
 @InputType()
 export class CreatePostInput {
-  @Field()
-  userId!: number;
-
+  @Allow() // bypassing validation temporarily
   @Field({ nullable: true })
   content?: string;
 
@@ -25,6 +26,7 @@ export class CreatePostInput {
 
 @InputType()
 export class UpdatePostInput {
+  @Allow() // bypassing validation temporarily
   @Field()
   postId!: number;
 
