@@ -3,7 +3,7 @@ import { Service } from "typedi";
 
 import { AccountResponse } from "../../../core/dto/auth.dto.js";
 import { CreateCommentInput } from "../../../core/dto/social-feed.dto.js";
-import { DatabaseService } from "../../../prisma/database.service.js";
+import { DatabaseService } from "../../../database/database.service.js";
 
 interface ICommentService {
   getCommentsByPostId(userId: number): Promise<Comment[]>;

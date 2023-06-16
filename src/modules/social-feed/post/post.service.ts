@@ -6,7 +6,7 @@ import {
   PostDeletedResponse,
   UpdatePostInput,
 } from "../../../core/dto/social-feed.dto.js";
-import { DatabaseService } from "../../../prisma/database.service.js";
+import { DatabaseService } from "../../../database/database.service.js";
 
 interface IPostService {
   getPostsByUserId(userId: number): Promise<Post[]>;

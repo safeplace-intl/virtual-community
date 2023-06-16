@@ -149,7 +149,7 @@ type Query {
   getPostById(postId: Float!): Post
   getPostsByUserId: [Post!]!
   getS3SignedUrl: S3SignedUrlResponse!
-  getUser(userId: Float!): User
+  getUser: User
 }
 
 input RefreshTokenInput {

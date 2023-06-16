@@ -3,7 +3,7 @@ import { Service } from "typedi";
 
 import { AccountResponse } from "../../core/dto/auth.dto.js";
 import { CreateUserInput } from "../../core/dto/user.dto.js";
-import { DatabaseService } from "../../prisma/database.service.js";
+import { DatabaseService } from "../../database/database.service.js";
 import { AuthService } from "../auth/auth.service.js";
 import ProfileService from "../profile/profile.service.js";
 

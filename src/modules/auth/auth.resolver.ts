@@ -8,7 +8,7 @@ import {
   RefreshTokenInput,
   TokensPayload,
 } from "../../core/dto/auth.dto.js";
-import { prisma } from "../../prisma/index.js";
+import { prisma } from "../../database/index.js";
 import { AuthService } from "./auth.service.js";
 
 @Service()

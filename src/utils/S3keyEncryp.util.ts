@@ -8,7 +8,6 @@ export async function generateFileName(userId: number) {
     fileName.replace(/\//g, "");
     return fileName;
   } catch (err) {
-    console.error(err);
-    throw new Error("Error generating filename");
+    throw new Error((err as Error).message);
   }
 }

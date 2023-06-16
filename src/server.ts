@@ -12,16 +12,16 @@ import http from "http";
 
 import { type Context, decodeAuthHeader } from "./context.js";
 import {
+  disconnectDatabase,
+  initializeDatabase,
+  prisma,
+} from "./database/index.js";
+import {
   ServeClient,
   ServeClientStaticAssets,
 } from "./middlewares/client.middleware.js";
 import EnvInit from "./middlewares/env.middleware.js";
 import generalMiddleware from "./middlewares/general.middleware.js";
-import {
-  disconnectDatabase,
-  initializeDatabase,
-  prisma,
-} from "./prisma/index.js";
 import { schema } from "./schema.js";
 import { GetApplicationMode } from "./utils/mode.util.js";
 
@@ -72,6 +72,7 @@ app.use(
         //   throw new GraphQLError("User is not authenticated");
         // }
 
+        // ideally we do not want to return undefined because now in the resolvers we have to do an extra check
         return {
           user: user || undefined,
         };

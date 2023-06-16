@@ -1,8 +1,8 @@
 import { User } from "@prisma/client";
 import { beforeEach, describe, expect, test } from "vitest";
 
-import { DatabaseService } from "../../prisma/database.service";
-import mockPrisma from "../../prisma/prisma.mock";
+import { DatabaseService } from "../../database/database.service";
+import mockPrisma from "../../database/prisma.mock";
 import { AuthService } from "./auth.service.js";
 
 const mockDbService = new DatabaseService(mockPrisma);

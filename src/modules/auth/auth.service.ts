@@ -11,7 +11,7 @@ import {
 import {
   DatabaseService,
   // prismaDbService,
-} from "../../prisma/database.service.js";
+} from "../../database/database.service.js";
 
 export interface IAuthService {
   createTokens(userId: number): Promise<TokensPayload>;

@@ -6,7 +6,7 @@ import {
   UpdateProfileInput,
 } from "../../core/dto/profile.dto.js";
 import { PrivacyOption } from "../../core/entities/profile.entity.js";
-import { DatabaseService } from "../../prisma/database.service.js";
+import { DatabaseService } from "../../database/database.service.js";
 import ProfileImageService from "./profile-image.service.js";
 
 export interface IProfileService {

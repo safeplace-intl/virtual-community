@@ -35,9 +35,14 @@ export class UserResolver {
   ) {}
 
   @Query(() => User, { nullable: true })
-  async getUser(@Arg("userId") userId: number) {
-    const user = await this.userService.getUserById(userId);
-    return user;
+  async getUser(@Ctx() ctx: Context) {
+    if (ctx.user) {
+      const user = await this.userService.getUserById(ctx.user.id);
+
+      return user;
+    } else {
+      throw new Error("Tokens required to use context");
+    }
   }
 
   @Mutation(() => AuthPayload)
@@ -54,6 +59,7 @@ export class UserResolver {
       user,
       tokens,
     };
+
     return payload;
   }
 
@@ -71,6 +77,7 @@ export class UserResolver {
     @Arg("changePasswordInput") input: ChangePasswordInput
   ): Promise<User> {
     const updatedUser = await this.authService.changePassword(input);
+
     return updatedUser;
   }
 
@@ -88,6 +95,7 @@ export class UserResolver {
   @Mutation(() => AccountResponse)
   async deleteAccount(@Arg("id") id: number) {
     const deleteAccountResponse = await this.userService.deleteAccount(id);
+
     return deleteAccountResponse;
   }
 
