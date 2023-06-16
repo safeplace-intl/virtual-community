@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 
-import { navItems } from "../../menuitems";
+import { navItems } from "../../routes/menuitems";
 
 interface LeftNavBarProps {
   activeMenuItem: string;

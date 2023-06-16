@@ -47,12 +47,10 @@ input CreateCommentInput {
 
 input CreatePostInput {
   content: String
-  createdAt: DateTime
-  hasSensitiveTopic: Boolean!
+  hasSensitiveTopic: Boolean
   image: String
-  isDraft: Boolean!
-  updatedAt: DateTime
-  visibleTo: PrivacyOption! = Community
+  isDraft: Boolean
+  visibleTo: PrivacyOption
 }
 
 input CreateUserInput {
@@ -75,13 +73,16 @@ input LoginInput {
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
   createComment(createCommentInput: CreateCommentInput!): Comment!
+  createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deactivateAccount(email: String!): AccountResponse!
   deleteAccount(id: Float!): AccountResponse!
+  deletePost(id: Float!): PostDeletedResponse!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
-  updateProfile(updateProfileInput: UpdateProfileInput!, userId: Float!): Profile!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
 }
 
 type NumberProfileField {
@@ -96,16 +97,21 @@ input NumberProfileFieldInput {
 
 type Post {
   content: String
-  createdAt: DateTime
-  dislikes: Int!
+  createdAt: DateTime!
+  dislikes: Float!
   hasSensitiveTopic: Boolean!
   id: Float!
   image: String
   isDraft: Boolean!
-  likes: Int!
-  updatedAt: DateTime
+  likes: Float!
+  updatedAt: DateTime!
   userId: Float!
   visibleTo: PrivacyOption!
+}
+
+type PostDeletedResponse {
+  message: String!
+  statusCode: Float!
 }
 
 enum PrivacyOption {
@@ -122,6 +128,7 @@ type Profile {
   id: Float!
   namePronunciation: StringProfileField
   nickname: StringProfileField
+  profileImage: String
   profilePic: StringProfileField
   pronouns: StringProfileField
   tdaGradYear: NumberProfileField
@@ -133,6 +140,10 @@ type Profile {
 type Query {
   getCommentById(commentId: Float!): Comment
   getCommentsByPostId(postId: Float!): [Comment!]
+  getPostById(postId: Float!): Post
+  getPostsByUserId: [Post!]!
+  deleteProfileImageAndRestoreDefault: S3MessageResponse!
+  getS3SignedUrl: S3SignedUrlResponse!
   getUser(userId: Float!): User
 }
 
@@ -144,6 +155,16 @@ input RefreshTokenInput {
 input ResetPasswordInput {
   email: String!
   newPassword: String!
+}
+
+type S3MessageResponse {
+  message: String!
+  statusCode: Float!
+}
+
+type S3SignedUrlResponse {
+  signedUrl: String!
+  statusCode: Float!
 }
 
 type StringProfileField {
@@ -165,14 +186,13 @@ type TokensPayload {
 
 input UpdatePostInput {
   content: String
-  createdAt: DateTime
-  dislikes: Int
+  dislikes: Float
   hasSensitiveTopic: Boolean
   image: String
   isDraft: Boolean
-  likes: Int
-  updatedAt: DateTime
-  visibleTo: PrivacyOption
+  likes: Float
+  postId: Float!
+  visibleTo: String
 }
 
 input UpdateProfileInput {
@@ -182,7 +202,6 @@ input UpdateProfileInput {
   homeCountry: StringProfileFieldInput
   namePronunciation: StringProfileFieldInput
   nickname: StringProfileFieldInput
-  profilePic: StringProfileFieldInput
   pronouns: StringProfileFieldInput
   tdaGradYear: NumberProfileFieldInput
   tdaGradYearBannerVisible: BooleanProfileFieldInput
@@ -194,6 +213,6 @@ type User {
   id: Int!
   isActive: Boolean!
   passwordHash: String!
-  post: [Post!]!
+  posts: [Post!]!
   profile: Profile!
 }

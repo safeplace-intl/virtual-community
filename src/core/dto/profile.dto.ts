@@ -1,7 +1,5 @@
-import "reflect-metadata";
-
 import { Allow } from "class-validator";
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 
 import {
   BooleanProfileFieldInput,
@@ -16,9 +14,10 @@ export class CreateProfileInput {
   tdaGradYearBannerVisible!: BooleanProfileFieldInput;
 }
 
+// client cannot know/update profilePic (which is the randomized string for the AWS filename)
 @InputType()
 export class UpdateProfileInput {
-  @Allow()
+  @Allow() // bypassing validation temporarily
   @Field(() => StringProfileFieldInput, { nullable: true })
   fullName?: StringProfileFieldInput;
 
@@ -35,9 +34,6 @@ export class UpdateProfileInput {
   bio?: StringProfileFieldInput;
 
   @Field(() => StringProfileFieldInput, { nullable: true })
-  profilePic?: StringProfileFieldInput;
-
-  @Field(() => StringProfileFieldInput, { nullable: true })
   homeCountry?: StringProfileFieldInput;
 
   @Field(() => StringProfileFieldInput, { nullable: true })
@@ -51,4 +47,28 @@ export class UpdateProfileInput {
 
   @Field(() => BooleanProfileFieldInput, { nullable: true })
   tdaGradYearBannerVisible?: BooleanProfileFieldInput;
+}
+
+@ObjectType()
+export class S3SignedUrlResponse {
+  @Field()
+  statusCode!: number;
+
+  @Field()
+  signedUrl!: string;
+}
+
+@ObjectType()
+export class S3MessageResponse {
+  @Field()
+  statusCode!: number;
+
+  @Field()
+  message!: string;
+}
+
+export class S3SignedUrlAndKeyResponse {
+  statusCode!: number;
+  signedUrl!: string;
+  hashedFileName!: string;
 }
