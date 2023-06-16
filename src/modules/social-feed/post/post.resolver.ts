@@ -1,21 +1,33 @@
 import { GraphQLError } from "graphql";
-import { type Context } from "src/context.js";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import { Ctx } from "type-graphql";
 import { Service } from "typedi";
 
+import { type Context } from "../../../context.js";
 import {
   CreatePostInput,
   PostDeletedResponse,
   UpdatePostInput,
 } from "../../../core/dto/social-feed.dto.js";
+import { Comment } from "../../../core/entities/comment.entity.js";
 import { Post } from "../../../core/entities/post.entity.js";
+import CommentService from "../comment/comment.service.js";
 import PostService from "./post.service.js";
 
 @Service()
 @Resolver(() => Post)
 export class PostResolver {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly commentService: CommentService
+  ) {}
 
   @Query(() => Post, { nullable: true })
   async getPostById(@Arg("postId") postId: number) {
@@ -64,5 +76,12 @@ export class PostResolver {
     const deletePostResponse = await this.postService.deletePost(id);
 
     return deletePostResponse;
+  }
+
+  @FieldResolver(() => [Comment])
+  async comments(@Root() post: Post) {
+    const comments = await this.commentService.getCommentsByPostId(post.id);
+
+    return comments;
   }
 }

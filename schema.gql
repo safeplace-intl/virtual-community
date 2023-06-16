@@ -29,6 +29,24 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
+type Comment {
+  content: String!
+  createdAt: DateTime!
+  dislikedBy: [Int!]!
+  dislikes: Int!
+  id: Float!
+  likedBy: [Int!]!
+  likes: Int!
+  postId: Float!
+  updatedAt: DateTime!
+  userId: Float!
+}
+
+input CreateCommentInput {
+  content: String!
+  postId: Int!
+}
+
 input CreatePostInput {
   content: String
   hasSensitiveTopic: Boolean
@@ -56,11 +74,15 @@ input LoginInput {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): AuthPayload!
   deactivateAccount(email: String!): AccountResponse!
   deleteAccount(id: Float!): AccountResponse!
+  deleteComment(deleteComment: Float!): Comment!
   deletePost(id: Float!): PostDeletedResponse!
+  dislikeComment(CommentId: Float!): Comment!
+  likeComment(CommentId: Float!): Comment!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
@@ -79,6 +101,7 @@ input NumberProfileFieldInput {
 }
 
 type Post {
+  comments: [Comment!]!
   content: String
   createdAt: DateTime!
   dislikes: Float!
@@ -121,9 +144,10 @@ type Profile {
 }
 
 type Query {
+  deleteProfileImageAndRestoreDefault: S3MessageResponse!
+  getCommentById(commentId: Float!): Comment
   getPostById(postId: Float!): Post
   getPostsByUserId: [Post!]!
-  deleteProfileImageAndRestoreDefault: S3MessageResponse!
   getS3SignedUrl: S3SignedUrlResponse!
   getUser(userId: Float!): User
 }

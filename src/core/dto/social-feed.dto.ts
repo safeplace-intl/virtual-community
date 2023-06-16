@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { Allow } from "class-validator";
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 
 import { PrivacyOption } from "../entities/profile.entity.js";
 
@@ -59,4 +59,13 @@ export class PostDeletedResponse {
 
   @Field()
   message!: string;
+}
+
+@InputType()
+export class CreateCommentInput {
+  @Field(() => String)
+  content!: string;
+
+  @Field(() => Int)
+  postId!: number;
 }
