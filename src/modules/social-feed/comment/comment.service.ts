@@ -1,47 +1,71 @@
-import { Comment, Prisma } from "@prisma/client";
-import { CreateCommentInput } from "src/core/dto/social-feed.dto.js";
+import { Comment } from "@prisma/client";
 import { Service } from "typedi";
 
-import { prisma } from "../../../prisma/index.js";
+import { AccountResponse } from "../../../core/dto/auth.dto.js";
+import { CreateCommentInput } from "../../../core/dto/social-feed.dto.js";
+import { DatabaseService } from "../../../prisma/database.service.js";
+
+interface ICommentService {
+  getCommentsByPostId(userId: number): Promise<Comment[]>;
+  getCommentById(postId: number): Promise<Comment>;
+  createComment(
+    userInput: CreateCommentInput,
+    userId: number
+  ): Promise<Comment>;
+  deleteComment(commentId: number, userId: number): Promise<AccountResponse>;
+}
 
 @Service()
-export default class CommentService {
+export default class CommentService implements ICommentService {
+  private readonly databaseService: DatabaseService;
+
+  constructor(prismaDbService: DatabaseService) {
+    this.databaseService = prismaDbService.getInstance();
+  }
+
   async createComment(
     commentInput: CreateCommentInput,
     userId: number
   ): Promise<Comment> {
     try {
-      const comment = await prisma.comment.create({
+      const comment = await this.databaseService.comments.create({
         data: {
           userId: userId,
           postId: commentInput.postId,
           content: commentInput.content,
         },
       });
+
       return comment;
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
-  async deleteComment(commentId: number, userId: number): Promise<boolean> {
+
+  async deleteComment(
+    commentId: number,
+    userId: number
+  ): Promise<AccountResponse> {
     try {
-      const comment = await prisma.comment.findUnique({
+      const comment = await this.databaseService.comments.findUnique({
         where: { id: commentId },
       });
+
       if (!comment) {
         throw new Error("Comment not found");
       }
+
       if (comment.userId !== userId) {
         throw new Error("userId provided does not match the comments userId");
       } else {
-        const deletedComment = await prisma.comment.delete({
+        await this.databaseService.comments.delete({
           where: { id: commentId },
         });
-        if (!deletedComment) {
-          throw new Error("failed to deete comment");
-        }
 
-        return true;
+        return {
+          statusCode: 200,
+          message: "Comment deleted",
+        };
       }
     } catch (error) {
       throw new Error((error as Error).message);
@@ -50,9 +74,10 @@ export default class CommentService {
 
   async getCommentsByPostId(postId: number): Promise<Comment[]> {
     try {
-      const comments = await prisma.comment.findMany({
+      const comments = await this.databaseService.comments.find({
         where: { postId },
       });
+
       return comments;
     } catch (error) {
       throw new Error((error as Error).message);
@@ -61,49 +86,58 @@ export default class CommentService {
 
   async getCommentById(commentId: number): Promise<Comment> {
     try {
-      const comment = await prisma.comment.findUnique({
+      const comment = await this.databaseService.comments.findUnique({
         where: { id: commentId },
       });
 
       if (!comment) {
         throw new Error("Comment not found");
       }
+
       return comment;
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
+
   async likeComment(commentId: number, userId: number): Promise<Comment> {
-    const comment = await prisma.comment.findUnique({
+    const comment = await this.databaseService.comments.findUnique({
       where: { id: commentId },
     });
+
     if (!comment) {
       throw new Error("Comment not found");
     }
+
     if (comment.likedBy.includes(userId)) {
       throw new Error("User has already liked the comment");
     }
-    const updatedComment = await prisma.comment.update({
+
+    const updatedComment = await this.databaseService.comments.update({
       where: { id: commentId },
       data: {
         likedBy: { push: userId },
         likes: { increment: 1 },
       },
     });
+
     return updatedComment;
   }
 
   async dislikeComment(commentId: number, userId: number): Promise<Comment> {
-    const comment = await prisma.comment.findUnique({
+    const comment = await this.databaseService.comments.findUnique({
       where: { id: commentId },
     });
+
     if (!comment) {
       throw new Error("Comment not found");
     }
+
     if (comment.dislikedBy.includes(userId)) {
       throw new Error("User has already disliked the comment");
     }
-    const updatedComment = await prisma.comment.update({
+
+    const updatedComment = await this.databaseService.comments.update({
       where: { id: commentId },
       data: {
         dislikedBy: { push: userId },

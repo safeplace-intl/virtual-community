@@ -80,10 +80,9 @@ type Mutation {
   deactivateAccount(email: String!): AccountResponse!
   deleteAccount(id: Float!): AccountResponse!
   deleteComment(deleteComment: Float!): Comment!
+  deletePost(id: Float!): PostDeletedResponse!
   dislikeComment(CommentId: Float!): Comment!
   likeComment(CommentId: Float!): Comment!
-  createPost(createPostInput: CreatePostInput!): Post!
-  deletePost(id: Float!): PostDeletedResponse!
   login(loginInput: LoginInput!): AuthPayload!
   refreshToken(refreshTokenInput: RefreshTokenInput!): TokensPayload!
   resetPassword(resetPasswordInput: ResetPasswordInput!): User!
@@ -102,6 +101,7 @@ input NumberProfileFieldInput {
 }
 
 type Post {
+  comments: [Comment!]!
   content: String
   createdAt: DateTime!
   dislikes: Float!
@@ -144,11 +144,10 @@ type Profile {
 }
 
 type Query {
+  deleteProfileImageAndRestoreDefault: S3MessageResponse!
   getCommentById(commentId: Float!): Comment
-  getCommentsByPostId(postId: Float!): [Comment!]
   getPostById(postId: Float!): Post
   getPostsByUserId: [Post!]!
-  deleteProfileImageAndRestoreDefault: S3MessageResponse!
   getS3SignedUrl: S3SignedUrlResponse!
   getUser(userId: Float!): User
 }

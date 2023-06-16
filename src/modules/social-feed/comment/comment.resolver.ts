@@ -1,5 +1,6 @@
 import { GraphQLError } from "graphql";
 import { type Context } from "src/context.js";
+import { AccountResponse } from "src/core/dto/auth.dto.js";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Service } from "typedi";
 
@@ -15,14 +16,8 @@ export class CommentResolver {
   @Query(() => Comment, { nullable: true })
   async getCommentById(@Arg("commentId") commentId: number) {
     const comment = await this.commentService.getCommentById(commentId);
-    return comment;
-  }
 
-  //Potentially will be handled inside of the post resolver?
-  @Query(() => [Comment], { nullable: true })
-  async getCommentsByPostId(@Arg("postId") postId: number) {
-    const comments = await this.commentService.getCommentsByPostId(postId);
-    return comments;
+    return comment;
   }
 
   @Mutation(() => Comment)
@@ -31,10 +26,12 @@ export class CommentResolver {
     @Ctx() ctx: Context
   ) {
     const userId = ctx.user?.id;
+
     if (!userId) {
       throw new GraphQLError("User not found");
     } else {
       const comment = await this.commentService.createComment(params, userId);
+
       return comment;
     }
   }
@@ -43,8 +40,9 @@ export class CommentResolver {
   async deleteComment(
     @Arg("deleteComment") commentId: number,
     @Ctx() ctx: Context
-  ): Promise<boolean> {
+  ): Promise<AccountResponse> {
     const userId = ctx.user?.id;
+
     if (!userId) {
       throw new GraphQLError("User not found");
     } else {
@@ -52,6 +50,7 @@ export class CommentResolver {
         commentId,
         userId
       );
+
       return deletedComment;
     }
   }
@@ -62,13 +61,16 @@ export class CommentResolver {
     @Ctx() ctx: Context
   ): Promise<Comment> {
     const userId = ctx.user?.id;
+
     if (!userId) {
       throw new GraphQLError("User not found");
     }
+
     const likedComment = await this.commentService.likeComment(
       commentId,
       userId
     );
+
     return likedComment;
   }
 
@@ -78,13 +80,16 @@ export class CommentResolver {
     @Ctx() ctx: Context
   ): Promise<Comment> {
     const userId = ctx.user?.id;
+
     if (!userId) {
       throw new GraphQLError("User not found");
     }
+
     const dislikedComment = await this.commentService.dislikeComment(
       commentId,
       userId
     );
+
     return dislikedComment;
   }
 }

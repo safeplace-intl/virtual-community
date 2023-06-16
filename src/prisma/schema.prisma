@@ -58,16 +58,16 @@ model Post {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId    Int
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  content   String
-  likes     Int      @default(0)
-  dislikes  Int      @default(0)
-  likedBy   Int[]    
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId     Int
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  content    String
+  likes      Int      @default(0)
+  dislikes   Int      @default(0)
+  likedBy    Int[]
   dislikedBy Int[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

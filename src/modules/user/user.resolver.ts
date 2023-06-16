@@ -99,18 +99,9 @@ export class UserResolver {
   }
 
   @FieldResolver(() => [Post])
-  async posts(@Root() user: User, @Ctx() context: Context) {
-    if (context.user?.id !== user.id) {
-      throw new Error("Unauthorized access");
-    }
-    const posts = await this.postService.getPostsByUserId(context.user?.id);
+  async posts(@Root() user: User) {
+    const posts = await this.postService.getPostsByUserId(user.id);
+
     return posts;
   }
-
-  // @FieldResolver(() => [Post])
-  // async posts(@Root() user: User) {
-  //   const posts = await this.postService.getPostsByUserId(user.id);
-
-  //   return posts;
-  // }
 }

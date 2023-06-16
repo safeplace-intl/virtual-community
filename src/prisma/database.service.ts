@@ -1,4 +1,4 @@
-import { Post, Profile, User } from "@prisma/client";
+import { Comment, Post, Profile, User } from "@prisma/client";
 import { Service } from "typedi";
 
 // This is the only file where we will ever touch prisma. The service and interfaces hide the underlying implementation of prisma from the rest of the application. This is a good thing because it allows us to swap out prisma for another ORM or database client in the future without having to change any of the code that uses it. This is the power of dependency injection and the repository pattern. When we add more models, we will need to create new repositories for them and add them to the DatabaseClient interface. Other modules will only know of the database client interface and not the underlying implementation. This is the power of abstraction.
@@ -19,6 +19,8 @@ interface FindUniqueWhereOptions {
     id?: number;
     email?: string;
     userId?: number;
+    postId?: number;
+    commentId?: number;
   };
 }
 
@@ -27,6 +29,8 @@ interface WhereOptions {
     id?: number;
     email?: string;
     userId?: number;
+    postId?: number;
+    commentId?: number;
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
@@ -102,6 +106,7 @@ export class ProfileRepository implements BaseRepository<Profile> {
     return await this.database.profile.findUnique(findUniqueOpts);
   }
 }
+
 export class PostRepository implements BaseRepository<Post> {
   private readonly database;
 
@@ -134,15 +139,46 @@ export class PostRepository implements BaseRepository<Post> {
   }
 }
 
+export class CommentRepository implements BaseRepository<Comment> {
+  private readonly database;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(database: any) {
+    this.database = database;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async create(createData: any): Promise<Comment> {
+    return await this.database.comment.create(createData);
+  }
+
+  async update(updateOpts: WhereOptions): Promise<Comment> {
+    return await this.database.comment.update(updateOpts);
+  }
+
+  async delete(deleteOpts: DeleteOptions): Promise<Comment> {
+    return await this.database.comment.delete(deleteOpts);
+  }
+
+  async find(findOpts: WhereOptions): Promise<Comment[]> {
+    return await this.database.comment.findMany(findOpts);
+  }
+
+  async findUnique(
+    findUniqueOpts: FindUniqueWhereOptions
+  ): Promise<Comment | null> {
+    return await this.database.comment.findUnique(findUniqueOpts);
+  }
+}
+
 export interface DatabaseClient {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
-  getUserRepository(): Promise<UserRepository>;
-  getProfileRepository(): Promise<ProfileRepository>;
   getInstance(): DatabaseClient;
   users: UserRepository;
   profiles: ProfileRepository;
   posts: PostRepository;
+  comments: CommentRepository;
 }
 
 @Service()
@@ -150,6 +186,7 @@ export class DatabaseService implements DatabaseClient {
   users;
   profiles;
   posts;
+  comments;
   protected database;
 
   constructor() {
@@ -157,6 +194,7 @@ export class DatabaseService implements DatabaseClient {
     this.users = new UserRepository(this.database);
     this.profiles = new ProfileRepository(this.database);
     this.posts = new PostRepository(this.database);
+    this.comments = new CommentRepository(this.database);
   }
 
   async connect(): Promise<void> {
@@ -165,17 +203,6 @@ export class DatabaseService implements DatabaseClient {
 
   async disconnect(): Promise<void> {
     return this.database.$disconnect();
-  }
-
-  async getUserRepository(): Promise<UserRepository> {
-    return this.users;
-  }
-
-  async getProfileRepository(): Promise<ProfileRepository> {
-    return this.profiles;
-  }
-  async getPostRepository(): Promise<PostRepository> {
-    return this.posts;
   }
 
   getInstance() {
